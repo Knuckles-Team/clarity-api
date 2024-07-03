@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/clarity-api)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/clarity-api)
 
-*Version: 0.0.1*
+*Version: 0.0.2*
 
 **Microsoft Clarity Data Export API**
 
