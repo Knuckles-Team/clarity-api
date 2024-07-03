@@ -72,6 +72,7 @@ This repository is actively maintained - Contributions are welcome!
 # coding: utf-8
 import clarity_api
 
+# Use token generated from the steps above
 token = "<TOKEN>"
 url = "https://www.clarity.ms"
 client = clarity_api.Api(url=url, token=token)
