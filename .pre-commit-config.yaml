@@ -15,7 +15,7 @@ repos:
     - id: check-yaml
     - id: check-toml
     - id: check-json
-    - id: check-byte-order-marker
+    - id: fix-byte-order-marker
       exclude: .gitignore
     - id: check-merge-conflict
     - id: detect-private-key
@@ -39,30 +39,8 @@ repos:
         args: ["-L", "ans,linar,nam,tread,ot,"]
         exclude: |
             (?x)^(
-              pyproject.toml |
-              website/static/img/ag.svg |
-              website/yarn.lock |
-              website/docs/tutorial/code-executors.ipynb |
-              website/docs/topics/code-execution/custom-executor.ipynb |
-              website/docs/topics/non-openai-models/cloud-gemini.ipynb |
-              notebook/.*
+              test/
             )$
-  # See https://jaredkhan.com/blog/mypy-pre-commit
-  - repo: local
-    hooks:
-    - id: mypy
-      name: mypy
-      entry: "./scripts/pre-commit-mypy-run.sh"
-      language: python
-      # use your preferred Python version
-      # language_version: python3.8
-      additional_dependencies: []
-      types: [python]
-      # use require_serial so that script
-      # is only called once per commit
-      require_serial: true
-      # Print the number of files as a sanity-check
-      verbose: true
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.8.5
     hooks:

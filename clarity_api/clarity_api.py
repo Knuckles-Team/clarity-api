@@ -3,36 +3,17 @@
 
 import requests
 import urllib3
-from typing import Union
 from pydantic import ValidationError
 
-try:
-    from clarity_api.clarity_models import InputModel, Response
-except ModuleNotFoundError:
-    from clarity_models import InputModel, Response
-try:
-    from clarity_api.decorators import require_auth
-except ModuleNotFoundError:
-    from decorators import require_auth
-try:
-    from clarity_api.exceptions import (
-        AuthError,
-        UnauthorizedError,
-        ParameterError,
-        MissingParameterError,
-    )
-except ModuleNotFoundError:
-    from exceptions import (
-        AuthError,
-        UnauthorizedError,
-        ParameterError,
-        MissingParameterError,
-    )
-try:
-    from clarity_api.utils import process_response
-except ModuleNotFoundError:
-    from utils import process_response
 
+from clarity_api.decorators import require_auth
+
+from clarity_api.exceptions import (
+    AuthError,
+    UnauthorizedError,
+    ParameterError,
+    MissingParameterError,
+)
 
 class Api(object):
 
@@ -79,7 +60,7 @@ class Api(object):
     #                                              Data Export API                                                     #
     ####################################################################################################################
     @require_auth
-    def get_data_export(self, **kwargs) -> Union[Response, requests.Response]:
+    def get_data_export(self, api_parameters) -> requests.Response:
         """
         Retrieve data insights for a project
 
@@ -92,16 +73,14 @@ class Api(object):
         Raises:
             ParameterError: If the provided parameters are invalid based on the BranchModel.
         """
-        input_model = InputModel(**kwargs)
         try:
             response = self._session.get(
                 url=f"{self.url}/export-data/api/v1/project-live-insights",
-                params=input_model.api_parameters,
+                params=api_parameters,
                 headers=self.headers,
                 verify=self.verify,
             )
 
         except ValidationError as e:
             raise ParameterError(f"Invalid parameters: {e.errors()}")
-        response = process_response(response=response)
         return response
