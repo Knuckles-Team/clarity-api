@@ -1,24 +1,34 @@
 # AGENTS.md
 
+> Claude Code loads this file via `CLAUDE.md` (`@AGENTS.md` import) — the two stay
+> in sync. Edit **this** file, not `CLAUDE.md`.
+
 ## Tech Stack & Architecture
-- Language/Version: Python 3.10+
-- Core Libraries: `agent-utilities`, `fastmcp`, `pydantic-ai`
+- Language/Version: Python 3.11+
+- Core Libraries: `agent-utilities`, `fastmcp`, `pydantic-ai`, `requests`
 - Key principles: Functional patterns, Pydantic for data validation, asynchronous tool execution.
-- Architecture:
+- Architecture (layered, intentionally thin for a single-endpoint connector):
     - `mcp_server.py`: Main MCP server entry point and tool registration.
-    - `agent.py`: Pydantic AI agent definition and logic.
-    - `skills/`: Directory containing modular agent skills (if applicable).
-    - `agent/`: Internal agent logic and prompt templates.
+    - `agent_server.py`: Pydantic AI A2A agent server.
+    - `mcp/`: Transport layer — MCP tool registration; tools depend on an
+      injected client via `Depends(get_client)`.
+    - `services/`: Application-service layer — `InsightsService` wraps the
+      injected client with the data-export use case (`CONCEPT:CLA-001`).
+    - `api/`: Adapter layer — modular REST client mixins composed into the
+      `Api` facade.
+    - `clarity_models.py` / `models.py`: Pydantic request/response models.
+  > Note: a fuller domain/ports split would be over-engineering for a connector
+  > exposing a single Clarity endpoint; the service seam above is the right
+  > altitude. See `docs/concepts.md` for the `CONCEPT:CLA-*` registry.
 
 ### Architecture Diagram
 ```mermaid
 graph TD
     User([User/A2A]) --> Server[A2A Server / FastAPI]
     Server --> Agent[Pydantic AI Agent]
-    Agent --> Skills[Modular Skills]
     Agent --> MCP[MCP Server / FastMCP]
-    MCP --> Client[API Client / Wrapper]
-    Client --> ExternalAPI([External Service API])
+    MCP --> Client[Clarity Api Client]
+    Client --> ExternalAPI([Microsoft Clarity Data Export API])
 ```
 
 ### Workflow Diagram
@@ -28,7 +38,7 @@ sequenceDiagram
     participant S as Server
     participant A as Agent
     participant T as MCP Tool
-    participant API as External API
+    participant API as Clarity API
 
     U->>S: Request
     S->>A: Process Query
@@ -48,61 +58,25 @@ pip install .[all]
 pre-commit run --all-files
 
 # Execution Commands
-# Run MCP Server (if applicable)
-python3 mcp_server.py
-# Run Agent (if applicable)
-python3 agent.py
+# clarity-mcp
+clarity_api.mcp_server:mcp_server
+# clarity-agent
+clarity_api.agent_server:agent_server
 
 ## Project Structure Quick Reference
-- MCP Entry Point → `mcp_server.py`
-- Agent Entry Point → `agent.py`
+- MCP Entry Point → `clarity_api/mcp_server.py`
+- Agent Entry Point → `clarity_api/agent_server.py`
 - Source Code → `clarity_api/`
-- Skills → `skills/` (if exists)
-
-### File Tree
-```text
-├── .gitattributes
-├── .github
-│   └── workflows
-│       └── pipeline.yml
-├── .gitignore
-├── .pre-commit-config.yaml
-├── LICENSE
-├── README.md
-├── clarity_api
-│   ├── __init__.py
-│   ├── clarity_api.py
-│   ├── clarity_models.py
-│   ├── decorators.py
-│   ├── exceptions.py
-│   └── version.py
-├── requirements.txt
-├── setup.py
-└── test
-    ├── conftest.py
-    ├── test_clarity_api.py
-    └── test_clarity_models.py
-```
+- REST client → `clarity_api/api/`
+- MCP tools → `clarity_api/mcp/`
 
 ## Code Style & Conventions
 **Always:**
-- Use `agent-utilities` for common patterns (e.g., `create_mcp_server`, `create_agent`).
+- Use `agent-utilities` for common patterns (e.g., `create_mcp_server`, `create_agent_server`).
 - Define input/output models using Pydantic.
 - Include descriptive docstrings for all tools (they are used as tool descriptions for LLMs).
 - Check for optional dependencies using `try/except ImportError`.
-
-**Good example:**
-```python
-from agent_utilities import create_mcp_server
-from mcp.server.fastmcp import FastMCP
-
-mcp = create_mcp_server("my-agent")
-
-@mcp.tool()
-async def my_tool(param: str) -> str:
-    """Description for LLM."""
-    return f"Result: {param}"
-```
+- Preserve the original `Api`/`get_data_export` contract.
 
 ## Dos and Don'ts
 **Do:**
@@ -120,55 +94,12 @@ async def my_tool(param: str) -> str:
 - Run lint/test via `pre-commit`.
 - Use `agent-utilities` base classes.
 
-**Ask first:**
-- Major refactors of `mcp_server.py` or `agent.py`.
-- Deleting or renaming public tool functions.
-
 **Never do:**
 - Commit `.env` files or secrets.
 - Modify `agent-utilities` or `universal-skills` files from within this package.
 
-## When Stuck
-- Propose a plan first before making large changes.
-- Check `agent-utilities` documentation for existing helpers.
-
-## Quality Bar — Leave the Codebase Clean (REQUIRED)
-
-After completing any code change, run the project's pre-commit suite and drive it
-**fully green** before committing:
-
-```bash
-pre-commit run --all-files
-```
-
-Resolve **every** issue it reports — failures, lint errors, type errors, and
-warnings — **including problems that pre-date your change and were not caused by
-your edits**. The standing goal is a clean, working codebase with **no errors and
-no warnings**. Do not silence checks (`# noqa`, `# type: ignore`, `SKIP=`,
-`--no-verify`) to force green unless the exception is already documented in this
-file as a known, unavoidable limitation. Only commit once `pre-commit run
---all-files` passes cleanly; if a check legitimately cannot pass, stop and explain
-why rather than bypassing it.
-
-## Working with Git Worktrees (multi-session)
-
-Multiple agents/sessions work the `agent-packages/*` repos concurrently. **Do not
-edit the canonical checkout** (`/home/apps/workspace/agent-packages/<repo>`) — a
-background `repository-manager` sync can reset its working tree and discard
-uncommitted edits. Take your own git worktree on your own branch instead:
-
-```bash
-# preferred — repository-manager MCP:
-rm_worktree add <repo> <your-branch>      # -> /home/apps/worktrees/<repo>/<your-branch>
-
-# raw-git fallback:
-git -C agent-packages/<repo> checkout main
-git -C agent-packages/<repo> worktree add /home/apps/worktrees/<repo>/<branch> -b <branch>
-```
-
-Work in the worktree, **commit often** (commits survive a working-tree reset),
-then merge to main locally (`rm_worktree merge <repo> <branch>`, or `git merge
---no-ff`). Each session must use a **distinct branch** — git allows a branch in
-only one worktree, which is what keeps concurrent sessions from colliding.
-Worktrees live under `/home/apps/worktrees/` (outside the workspace scan, so the
-sync leaves them alone). Push only when asked.
+## ⛔ Keep the Repository Root Pristine — No Scratch / Temp / Debug Files
+The repository ROOT must contain only canonical project files (packaging, config,
+docs, lockfiles). Never write one-off/debug/migration scripts, logs, data dumps,
+or build artifacts anywhere in the repo. Tests go in `tests/` (pytest). Scratch
+work goes in `~/workspace/scratch/`; command output in `~/workspace/reports/`.

@@ -1,0 +1,86 @@
+#!/usr/bin/python
+"""Tests for the clarity-api pydantic models.
+
+Covers ``CONCEPT:CLA-003`` (Input Validation & Parameter Modeling).
+"""
+
+import pytest
+
+from clarity_api.clarity_models import InputModel, Response
+
+
+@pytest.mark.concept("CLA-003")
+def test_concept_cla_003_input_model():
+    num_of_days = 2
+    dimension1 = "OS"
+    dimension2 = "Country"
+    dimension_3 = "channel"
+    input_model = InputModel(
+        number_of_days=num_of_days,  # type: ignore
+        dimension_1=dimension1,  # type: ignore
+        dimension_2=dimension2,  # type: ignore
+        dimension_3=dimension_3,  # type: ignore
+    )
+    assert input_model.numOfDays == num_of_days
+    assert input_model.dimension1 == dimension1
+    assert input_model.dimension2 == dimension2
+    assert input_model.dimension3 == dimension_3.capitalize()
+    assert input_model.api_parameters == {
+        "numOfDays": num_of_days,
+        "dimension1": dimension1,
+        "dimension2": dimension2,
+        "dimension3": dimension_3.capitalize(),
+    }
+
+
+@pytest.mark.concept("CLA-003")
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("browser", "Browser"),
+        ("os", "OS"),
+        ("country", "Country"),
+        ("URL", "URL"),
+    ],
+)
+def test_concept_cla_003_dimension_normalization(raw, expected):
+    """CLA-003: dimension aliases are normalized to their canonical casing."""
+    model = InputModel(number_of_days=1, dimension_1=raw)  # type: ignore[call-arg]
+    assert model.dimension1 == expected
+    assert model.api_parameters["dimension1"] == expected  # type: ignore[index]
+
+
+@pytest.mark.concept("CLA-003")
+def test_response_model():
+    data = [
+        {
+            "metricName": "Traffic",
+            "information": [
+                {
+                    "totalSessionCount": "9554",
+                    "totalBotSessionCount": "8369",
+                    "distantUserCount": "189733",
+                    "PagesPerSessionPercentage": 1.0931,
+                    "OS": "Other",
+                },
+                {
+                    "totalSessionCount": "291942",
+                    "totalBotSessionCount": "31076",
+                    "distantUserCount": "212836",
+                    "PagesPerSessionPercentage": 2.2609,
+                    "OS": "Android",
+                },
+            ],
+        }
+    ]
+    response = Response(data=data)  # type: ignore
+    assert response.data[0].information[0].model_dump() == data[0]["information"][0]  # type: ignore
+
+
+@pytest.mark.concept("CLA-003")
+def test_models_reexported_from_models_module():
+    from clarity_api.models import InputModel as M
+    from clarity_api.models import Response as R
+
+    assert M is InputModel
+    assert R is Response

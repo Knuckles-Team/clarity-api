@@ -1,0 +1,75 @@
+# Tasks: Code Enhancement: clarity-api
+
+Generated: 2026-06-10T14:09:12.767885+00:00
+Skipped informational: 4
+
+- [ ] [P] **T001** [Dependency Audit] Minor update: agent-utilities 0.2.40 (installed) -> 0.47.0
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T002** [Dependency Audit] Minor update: requests 2.32.5 (installed) -> 2.34.2
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T003** [Dependency Audit] Minor update: urllib3 2.6.3 (installed) -> 2.7.0
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T004** [Dependency Audit] Minor update: pytest-asyncio 1.3.0 (installed) -> 1.4.0
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T005** [Test Coverage] Test suite lacks intent diversity (only one type)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T006** [Test Coverage] 13 potential doc-test drift items
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T007** [Documentation & Governance] README.md missing sections: overview
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T008** [Documentation & Governance] README.md is short (170 lines) — consider expanding
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T009** [Documentation & Governance] README missing: Has a Table of Contents
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T010** [Documentation & Governance] README missing: Has architecture overview or diagram
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T011** [Documentation & Governance] README missing: Has agent_server.py deployment configurations
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T012** [Architecture & Design Patterns] No discernible layer architecture (no domain/service/adapter separation)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T013** [Architecture & Design Patterns] Low dependency injection ratio: 8%
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T014** [Concept Traceability] Low traceability ratio: 0% concepts fully traced
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T015** [Concept Traceability] 7 orphaned concepts (only in one source)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T016** [Concept Traceability] 23 test functions missing concept markers
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T017** [Concept Traceability] 23 significant functions (>10 lines) missing concept markers in docstrings
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T018** [Linting & Formatting] Total lint findings: 0 (high/error: 0, medium/warning: 0, low: 0)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T019** [Pre-Commit Compliance] 2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit
+  - Priority: P2-Medium | Effort: Small
+- [ ] [P] **T020** [Test Execution] Moderate pass rate: 81% (17/21)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T021** [Test Execution] FAILED: tests/test_mcp_registration.py::test_insights_tool_registers
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T022** [Test Execution] FAILED: tests/test_mcp_registration.py::test_get_mcp_instance_builds
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T023** [Test Execution] FAILED: tests/test_startup.py::test_mcp_server_imports
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T024** [Test Execution] FAILED: tests/test_startup.py::test_versions_match_package
+  - Priority: P4-Enhancement | Effort: Large
+- [ ] [P] **T025** [Changelog Audit] CHANGELOG.md exists but could not be parsed — check format compliance
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T026** [Changelog Audit] No changelog entries within the last 30 days
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T027** [Changelog Audit] keepachangelog not installed — pip install 'universal-skills[code-enhancer]'
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T028** [Pytest Quality] Test directory lacks subdirectory organization (consider unit/, integration/, e2
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T029** [Pytest Quality] Low fixture usage: only 9% of tests use fixtures
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T030** [Pytest Quality] No @pytest.mark.parametrize usage — consider data-driven tests
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T031** [Pytest Quality] 6 tests use weak assertions (assert result is not None, assert True, etc.)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T032** [Environment Variables] Only 20% of env vars documented in README.md
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T033** [Environment Variables] Undocumented env vars: AUTH_TYPE, CLARITY_SSL_VERIFY, ENABLE_OTEL, EUNOMIA_POLIC
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T034** [Environment Variables] 4 Python env vars not in .env.example: CLARITY_TOKEN, FASTMCP_LOG_LEVEL, NO_COLO
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T035** [XDG Compliance (KG)] Check skipped: required agent-utilities/networkx dependencies not found.
+  - Priority: P2-Medium | Effort: Medium

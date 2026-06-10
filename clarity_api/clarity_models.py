@@ -1,29 +1,14 @@
 #!/usr/bin/python
-# coding: utf-8
 import logging
+from typing import Any
 
-from typing import Union, Dict, Optional, Any, List
 from pydantic import (
+    AliasChoices,
     BaseModel,
     ConfigDict,
-    AliasChoices,
     Field,
     field_validator,
 )
-
-try:
-    from clarity_api.decorators import require_auth
-except ModuleNotFoundError:
-    pass
-try:
-    from clarity_api.exceptions import (
-        AuthError,
-        UnauthorizedError,
-        ParameterError,
-        MissingParameterError,
-    )
-except ModuleNotFoundError:
-    pass
 
 logging.basicConfig(
     level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -31,8 +16,11 @@ logging.basicConfig(
 
 
 class InputModel(BaseModel):
-    """
-    Pydantic model representing information about a branch.
+    """Validated query parameters for the Clarity Data Export endpoint.
+
+    CONCEPT:CLA-003 — Input Validation & Parameter Modeling. Normalizes and
+    validates the ``number_of_days`` date range and the up-to-three breakdown
+    dimensions before they are sent to the Clarity API.
 
     Attributes:
         numOfDays (Union[int, str]): The number of days to return.
@@ -45,31 +33,32 @@ class InputModel(BaseModel):
 
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
-    numOfDays: Optional[Union[int, str]] = Field(
+    numOfDays: int | str | None = Field(
         description="Number of days to save",
         validation_alias=AliasChoices("numOfDays", "number_of_days"),
         default=None,
     )
-    dimension1: Optional[str] = Field(
+    dimension1: str | None = Field(
         description="Dimension 1",
         validation_alias=AliasChoices("dimension1", "dimension_1"),
         default=None,
     )
-    dimension2: Optional[str] = Field(
+    dimension2: str | None = Field(
         description="Dimension 2",
         validation_alias=AliasChoices("dimension2", "dimension_2"),
         default=None,
     )
-    dimension3: Optional[str] = Field(
+    dimension3: str | None = Field(
         description="Dimension 3",
         validation_alias=AliasChoices("dimension3", "dimension_3"),
         default=None,
     )
-    api_parameters: Optional[Dict] = Field(description="API Parameters", default=None)
+    api_parameters: dict | None = Field(description="API Parameters", default=None)
 
     def model_post_init(self, __context):
-        """
-        Build the API parameters
+        """Build the validated ``api_parameters`` dict from the input fields.
+
+        CONCEPT:CLA-003 — Input Validation & Parameter Modeling.
         """
         self.api_parameters = {}
         if self.numOfDays:
@@ -130,41 +119,43 @@ class InputModel(BaseModel):
             try:
                 return valid_dimensions[v.lower()]
             except KeyError:
-                raise ValueError("Invalid dimension")
+                raise ValueError("Invalid dimension") from None
 
 
 class Information(BaseModel):
     model_config = ConfigDict(extra="allow")
-    totalSessionCount: str = Field(
+    totalSessionCount: str | None = Field(
         default=None, description="The total number of sessions."
     )
-    totalBotSessionCount: str = Field(
+    totalBotSessionCount: str | None = Field(
         default=None, description="The total number of bot sessions."
     )
-    distantUserCount: str = Field(default=None, description="The distant user count.")
-    PagesPerSessionPercentage: float = Field(
+    distantUserCount: str | None = Field(
+        default=None, description="The distant user count."
+    )
+    PagesPerSessionPercentage: float | None = Field(
         default=None, description="The pages per session percentage."
     )
-    OS: str = Field(default=None, description="The operating system.")
+    OS: str | None = Field(default=None, description="The operating system.")
 
 
 class Metric(BaseModel):
     model_config = ConfigDict(extra="allow")
-    metricName: str = Field(
+    metricName: str | None = Field(
         default=None, description="The name of the returned metric."
     )
-    information: List[Information] = Field(
+    information: list[Information] | None = Field(
         default=None, description="Result containing available responses."
     )
 
 
 class Response(BaseModel):
-    data: Optional[List[Metric]] = Field(default=None, description="Metrics returned.")
-    error: Optional[Any] = Field(default=None, description="Response error code")
-    status_code: Union[str, int] = Field(
+    data: list[Metric] | None = Field(default=None, description="Metrics returned.")
+    error: Any | None = Field(default=None, description="Response error code")
+    status_code: str | int | None = Field(
         default=None, description="Response status code"
     )
-    json_output: Optional[Union[List, Dict]] = Field(
+    json_output: list | dict | None = Field(
         default=None, description="Response JSON data"
     )
-    raw_output: Optional[bytes] = Field(default=None, description="Response Raw bytes")
+    raw_output: bytes | None = Field(default=None, description="Response Raw bytes")
