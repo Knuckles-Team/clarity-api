@@ -1,7 +1,7 @@
 #!/usr/bin/python
-# coding: utf-8
 
 import functools
+
 from clarity_api.exceptions import LoginRequiredError
 
 

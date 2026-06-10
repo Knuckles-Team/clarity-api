@@ -1,44 +1,20 @@
 #!/usr/bin/python
 # coding: utf-8
+"""Tests for the clarity-api pydantic models."""
 
-import os
-import sys
-
-import pytest
-from conftest import reason
-
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-try:
-    import clarity_api
-    from clarity_api.clarity_models import (
-        InputModel,
-        Response,
-    )
-
-except ImportError:
-    skip = True
-    raise ("ERROR IMPORTING", ImportError)
-else:
-    skip = False
-
-reason = "do not run on MacOS or windows OR dependency is not installed OR " + reason
+from clarity_api.clarity_models import InputModel, Response
 
 
-@pytest.mark.skipif(
-    sys.platform in ["darwin"] or skip,
-    reason=reason,
-)
 def test_input_model():
     num_of_days = 2
     dimension1 = "OS"
     dimension2 = "Country"
     dimension_3 = "channel"
     input_model = InputModel(
-        number_of_days=num_of_days,
-        dimension_1=dimension1,
-        dimension_2=dimension2,
-        dimension_3=dimension_3,
+        number_of_days=num_of_days,  # type: ignore
+        dimension_1=dimension1,  # type: ignore
+        dimension_2=dimension2,  # type: ignore
+        dimension_3=dimension_3,  # type: ignore
     )
     assert input_model.numOfDays == num_of_days
     assert input_model.dimension1 == dimension1
@@ -52,10 +28,6 @@ def test_input_model():
     }
 
 
-@pytest.mark.skipif(
-    sys.platform in ["darwin"] or skip,
-    reason=reason,
-)
 def test_response_model():
     data = [
         {
@@ -78,10 +50,12 @@ def test_response_model():
             ],
         }
     ]
-    response = Response(data=data)
-    assert response.data[0].information[0].model_dump() == data[0]["information"][0]
+    response = Response(data=data)  # type: ignore
+    assert response.data[0].information[0].model_dump() == data[0]["information"][0]  # type: ignore
 
 
-if __name__ == "__main__":
-    test_input_model()
-    test_response_model()
+def test_models_reexported_from_models_module():
+    from clarity_api.models import InputModel as M, Response as R
+
+    assert M is InputModel
+    assert R is Response

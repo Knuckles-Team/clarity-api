@@ -1,86 +1,12 @@
 #!/usr/bin/python
-# coding: utf-8
+"""Backward-compatibility shim for ``clarity_api.clarity_api.Api``.
 
-import requests
-import urllib3
-from pydantic import ValidationError
+The real implementation now lives in the modular :mod:`clarity_api.api`
+sub-package and is composed by :mod:`clarity_api.api_client`. This module
+re-exports ``Api`` so that existing imports
+(``from clarity_api.clarity_api import Api``) keep working unchanged.
+"""
 
+from clarity_api.api_client import Api
 
-from clarity_api.decorators import require_auth
-
-from clarity_api.exceptions import (
-    AuthError,
-    UnauthorizedError,
-    ParameterError,
-    MissingParameterError,
-)
-
-class Api(object):
-
-    def __init__(
-        self,
-        url: str = None,
-        token: str = None,
-        verify: bool = True,
-    ):
-        if url is None:
-            raise MissingParameterError
-
-        self._session = requests.Session()
-        self.url = url
-        self.headers = None
-        self.verify = verify
-
-        if self.verify is False:
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-        if token:
-            self.headers = {
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json",
-            }
-        else:
-            raise MissingParameterError
-
-        response = self._session.get(
-            url=f"{self.url}/projects", headers=self.headers, verify=self.verify
-        )
-
-        if response.status_code == 403:
-            print(f"Unauthorized Error: {response.content}")
-            raise UnauthorizedError
-        elif response.status_code == 401:
-            print(f"Authentication Error: {response.content}")
-            raise AuthError
-        elif response.status_code == 404:
-            print(f"Parameter Error: {response.content}")
-            raise ParameterError
-
-    ####################################################################################################################
-    #                                              Data Export API                                                     #
-    ####################################################################################################################
-    @require_auth
-    def get_data_export(self, api_parameters) -> requests.Response:
-        """
-        Retrieve data insights for a project
-
-        Args:
-            **kwargs: Additional keyword arguments to initialize the BranchModel.
-
-        Returns:
-            Response: The response object from the GET request.
-
-        Raises:
-            ParameterError: If the provided parameters are invalid based on the BranchModel.
-        """
-        try:
-            response = self._session.get(
-                url=f"{self.url}/export-data/api/v1/project-live-insights",
-                params=api_parameters,
-                headers=self.headers,
-                verify=self.verify,
-            )
-
-        except ValidationError as e:
-            raise ParameterError(f"Invalid parameters: {e.errors()}")
-        return response
+__all__ = ["Api"]
