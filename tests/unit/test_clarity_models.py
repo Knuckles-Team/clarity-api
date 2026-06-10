@@ -1,11 +1,16 @@
 #!/usr/bin/python
-# coding: utf-8
-"""Tests for the clarity-api pydantic models."""
+"""Tests for the clarity-api pydantic models.
+
+Covers ``CONCEPT:CLA-003`` (Input Validation & Parameter Modeling).
+"""
+
+import pytest
 
 from clarity_api.clarity_models import InputModel, Response
 
 
-def test_input_model():
+@pytest.mark.concept("CLA-003")
+def test_concept_cla_003_input_model():
     num_of_days = 2
     dimension1 = "OS"
     dimension2 = "Country"
@@ -28,6 +33,24 @@ def test_input_model():
     }
 
 
+@pytest.mark.concept("CLA-003")
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("browser", "Browser"),
+        ("os", "OS"),
+        ("country", "Country"),
+        ("URL", "URL"),
+    ],
+)
+def test_concept_cla_003_dimension_normalization(raw, expected):
+    """CLA-003: dimension aliases are normalized to their canonical casing."""
+    model = InputModel(number_of_days=1, dimension_1=raw)  # type: ignore[call-arg]
+    assert model.dimension1 == expected
+    assert model.api_parameters["dimension1"] == expected  # type: ignore[index]
+
+
+@pytest.mark.concept("CLA-003")
 def test_response_model():
     data = [
         {
@@ -54,8 +77,10 @@ def test_response_model():
     assert response.data[0].information[0].model_dump() == data[0]["information"][0]  # type: ignore
 
 
+@pytest.mark.concept("CLA-003")
 def test_models_reexported_from_models_module():
-    from clarity_api.models import InputModel as M, Response as R
+    from clarity_api.models import InputModel as M
+    from clarity_api.models import Response as R
 
     assert M is InputModel
     assert R is Response

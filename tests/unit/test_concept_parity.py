@@ -1,5 +1,7 @@
 """Concept-parity tests for clarity-api.
 
+Implements ``CONCEPT:CLA-006`` (Concept Traceability Governance):
+
 1. Every ``CONCEPT:CLA-*`` tag used in tool docstrings/source must be documented
    in ``docs/concepts.md``.
 2. Every agent-utilities 5-Pillar concept referenced locally must be registered
@@ -9,7 +11,12 @@
 import os
 import re
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import pytest
+
+# tests/unit/test_concept_parity.py -> project root is three levels up.
+ROOT_DIR = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 
 
 def _resolve_master_overview() -> str:
@@ -77,8 +84,9 @@ def _extract_concepts_from_overview(filepath):
     return concepts
 
 
-def test_local_concepts_documented():
-    """Every CLA-* concept used in code must appear in docs/concepts.md."""
+@pytest.mark.concept("CLA-006")
+def test_concept_cla_006_local_concepts_documented():
+    """CLA-006: every CLA-* concept used in code must appear in docs/concepts.md."""
     with open(CONCEPTS_DOC, encoding="utf-8") as f:
         documented = set(re.findall(r"CONCEPT:(CLA-\d+)", f.read()))
 
@@ -89,8 +97,9 @@ def test_local_concepts_documented():
     )
 
 
-def test_concept_parity_with_master_registry():
-    """Every agent-utilities pillar concept used locally must be registered upstream."""
+@pytest.mark.concept("CLA-006")
+def test_concept_cla_006_parity_with_master_registry():
+    """CLA-006: every pillar concept used locally must be registered upstream."""
     master = _extract_concepts_from_overview(MASTER_OVERVIEW_PATH)
     pillars = ("ORCH-", "KG-", "AHE-", "ECO-", "OS-")
     local = {

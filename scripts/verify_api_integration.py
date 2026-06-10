@@ -92,6 +92,7 @@ class MethodCallVisitor(ast.NodeVisitor):
             "client",
             "api",
             "self",
+            "service",
         ):
             self.called_methods.add(node.attr)
         self.generic_visit(node)

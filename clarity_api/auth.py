@@ -32,8 +32,9 @@ def get_client(
 ) -> Api:
     """Factory function to create the Clarity ``Api`` client.
 
-    Supports OIDC delegation and fixed credentials (token). Used as the
-    ``Depends(get_client)`` dependency for the MCP tools.
+    CONCEPT:CLA-002 — Credential & Auth Factory. Supports OIDC delegation
+    (RFC 8693 token exchange) and fixed credentials (``CLARITY_TOKEN``). Used as
+    the ``Depends(get_client)`` dependency for the MCP tools.
     """
     from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,

@@ -16,8 +16,11 @@ logging.basicConfig(
 
 
 class InputModel(BaseModel):
-    """
-    Pydantic model representing information about a branch.
+    """Validated query parameters for the Clarity Data Export endpoint.
+
+    CONCEPT:CLA-003 — Input Validation & Parameter Modeling. Normalizes and
+    validates the ``number_of_days`` date range and the up-to-three breakdown
+    dimensions before they are sent to the Clarity API.
 
     Attributes:
         numOfDays (Union[int, str]): The number of days to return.
@@ -53,8 +56,9 @@ class InputModel(BaseModel):
     api_parameters: dict | None = Field(description="API Parameters", default=None)
 
     def model_post_init(self, __context):
-        """
-        Build the API parameters
+        """Build the validated ``api_parameters`` dict from the input fields.
+
+        CONCEPT:CLA-003 — Input Validation & Parameter Modeling.
         """
         self.api_parameters = {}
         if self.numOfDays:

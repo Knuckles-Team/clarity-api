@@ -7,11 +7,19 @@
 - Language/Version: Python 3.11+
 - Core Libraries: `agent-utilities`, `fastmcp`, `pydantic-ai`, `requests`
 - Key principles: Functional patterns, Pydantic for data validation, asynchronous tool execution.
-- Architecture:
+- Architecture (layered, intentionally thin for a single-endpoint connector):
     - `mcp_server.py`: Main MCP server entry point and tool registration.
     - `agent_server.py`: Pydantic AI A2A agent server.
-    - `api/`: Modular REST client mixins composed into the `Api` facade.
-    - `mcp/`: Modular MCP tool registration modules.
+    - `mcp/`: Transport layer — MCP tool registration; tools depend on an
+      injected client via `Depends(get_client)`.
+    - `services/`: Application-service layer — `InsightsService` wraps the
+      injected client with the data-export use case (`CONCEPT:CLA-001`).
+    - `api/`: Adapter layer — modular REST client mixins composed into the
+      `Api` facade.
+    - `clarity_models.py` / `models.py`: Pydantic request/response models.
+  > Note: a fuller domain/ports split would be over-engineering for a connector
+  > exposing a single Clarity endpoint; the service seam above is the right
+  > altitude. See `docs/concepts.md` for the `CONCEPT:CLA-*` registry.
 
 ### Architecture Diagram
 ```mermaid

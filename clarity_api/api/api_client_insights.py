@@ -24,6 +24,10 @@ class ClarityApiInsights(ClarityApiBase):
     ) -> requests.Response:
         """Retrieve dashboard data insights for a project.
 
+        CONCEPT:CLA-001 — Data Export / Live Insights. Implements the
+        ``GET /export-data/api/v1/project-live-insights`` call backing the
+        ``clarity_insights`` MCP tool.
+
         Accepts either a pre-built ``api_parameters`` dict or keyword arguments
         (``number_of_days``/``numOfDays``, ``dimension_1``/``dimension1``, etc.),
         which are validated and normalized via :class:`InputModel`.

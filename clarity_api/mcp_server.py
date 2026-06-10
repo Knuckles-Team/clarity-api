@@ -39,7 +39,10 @@ DEFAULT_CLARITY_TOKEN = os.getenv("CLARITY_TOKEN", None)
 
 
 def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
-    """Initialize and return the Clarity MCP instance, args, and middlewares."""
+    """Initialize and return the Clarity MCP instance, args, and middlewares.
+
+    CONCEPT:CLA-005 — Package & Server Bootstrap.
+    """
     load_dotenv(find_dotenv())
     os.environ["FASTMCP_LOG_LEVEL"] = "ERROR"
     os.environ["TERM"] = "dumb"

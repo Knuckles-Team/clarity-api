@@ -32,6 +32,50 @@ down by up to three dimensions.
 
 This repository is actively maintained — contributions are welcome!
 
+## Table of Contents
+
+- [Architecture](#architecture)
+- [Key Features](#key-features)
+- [Available MCP Tools](#available-mcp-tools)
+- [Dynamic Tool Selection](#dynamic-tool-selection)
+- [Environment Variables](#environment-variables)
+- [Configuration](#configuration)
+- [Agent](#agent)
+- [Usage (Python client)](#usage-python-client)
+- [Security & Governance](#security--governance)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+
+## Architecture
+
+`clarity-api` follows the standard agent-package layering: a typed REST client at
+the bottom, an action-routed MCP tool layer in the middle, and an optional
+Pydantic-AI A2A agent server on top. The MCP tool depends on an injected client
+via `Depends(get_client)`, which resolves credentials (OIDC delegation or a fixed
+`CLARITY_TOKEN`) before talking to the Microsoft Clarity REST API.
+
+```mermaid
+graph TD
+    User(["User / A2A Client"]) --> Agent["clarity-agent<br/>Pydantic-AI A2A Server"]
+    Agent --> MCP["clarity-mcp<br/>FastMCP Server"]
+    MCP --> Tool["clarity_insights tool<br/>(CONCEPT:CLA-001)"]
+    Tool -->|Depends get_client| Auth["get_client<br/>auth.py"]
+    Tool --> Service["InsightsService<br/>clarity_api/services/"]
+    Auth --> Client["Api facade<br/>clarity_api/api/"]
+    Service --> Client
+    Client --> Clarity(["Microsoft Clarity<br/>Data Export REST API"])
+```
+
+| Layer | Module | Responsibility |
+|-------|--------|----------------|
+| Agent | `clarity_api/agent_server.py` | Pydantic-AI A2A server, AG-UI web interface |
+| Tooling | `clarity_api/mcp/`, `clarity_api/mcp_server.py` | Action-routed MCP tool registration |
+| Service | `clarity_api/services/` | `InsightsService` — dependency-injected data-export use case |
+| Auth seam | `clarity_api/auth.py` | `get_client` dependency: OIDC delegation / fixed token |
+| Client | `clarity_api/api/` | `ClarityApiBase` + `ClarityApiInsights` mixins composed into `Api` |
+| Models | `clarity_api/clarity_models.py` | Pydantic request/response validation |
+
 ## Key Features
 
 - **Typed Python client** — `clarity_api.api_client.Api`, composed from modular per-domain
@@ -63,6 +107,45 @@ Each tool domain is gated behind an env toggle so deployments can trim their sur
 | Toggle | Default | Domain |
 |--------|---------|--------|
 | `INSIGHTSTOOL` | `True` | `clarity_insights` |
+
+## Environment Variables
+
+All runtime configuration is supplied via environment variables (or a `.env`
+file — see [`.env.example`](.env.example)). Never commit real tokens.
+
+### Clarity credentials
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CLARITY_URL` | `https://www.clarity.ms` | Base URL of the Microsoft Clarity instance. |
+| `CLARITY_TOKEN` | _(none)_ | Bearer API token generated in the Clarity project settings. Required unless OIDC delegation is enabled. |
+| `CLARITY_SSL_VERIFY` | `True` | Whether to verify TLS certificates when calling the Clarity API. |
+
+### MCP server / transport
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TRANSPORT` | `stdio` | MCP transport: `stdio`, `streamable-http`, or `sse`. |
+| `HOST` | `0.0.0.0` | Bind host for HTTP transports. |
+| `PORT` | `8000` | Bind port for HTTP transports. |
+| `AUTH_TYPE` | `none` | MCP server auth scheme inherited from `agent-utilities` (e.g. `none`, `oidc`). |
+| `FASTMCP_LOG_LEVEL` | `ERROR` | FastMCP log verbosity. Set to `ERROR` at startup to suppress log spam. |
+| `INSIGHTSTOOL` | `True` | Toggle registration of the `clarity_insights` tool (see [Dynamic Tool Selection](#dynamic-tool-selection)). |
+
+### Telemetry & access governance
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ENABLE_OTEL` | `True` | Enable OpenTelemetry export of traces/metrics. |
+| `EUNOMIA_TYPE` | `none` | Eunomia authorization mode: `none`, `embedded`, or `remote`. |
+| `EUNOMIA_POLICY_FILE` | `mcp_policies.json` | Path to the local Eunomia policy file (embedded mode). |
+
+### Build / terminal (set automatically — usually no action needed)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `UV_COMPILE_BYTECODE` | `1` | Set in the Docker image to precompile bytecode for faster cold starts. |
+| `NO_COLOR` / `TERM` | `1` / `dumb` | Terminal-control variables set at MCP startup to keep stdio transport output machine-clean. Not app configuration — listed for completeness. |
 
 ## Configuration
 
@@ -100,12 +183,56 @@ docker compose -f docker/mcp.compose.yml up -d
 
 ## Agent
 
+The `clarity-agent` entry point (`clarity_api/agent_server.py`) starts a
+Pydantic-AI A2A server that auto-discovers the MCP tools and exposes an AG-UI web
+interface.
+
+### Run locally
+
 ```bash
 clarity-agent --web --provider openai --model-id gpt-4o
 ```
 
 The agent reads its identity from `clarity_api/agent_data/IDENTITY.md` and discovers
 tools via `mcp_config.json`.
+
+### Deploy with Docker Compose
+
+`docker/agent.compose.yml` runs the MCP server and the agent server side by side;
+the agent connects to the MCP server over `MCP_URL`:
+
+```yaml
+services:
+  clarity-api-mcp:
+    image: knucklessg1/clarity-api:latest
+    restart: always
+    env_file: [ ../.env ]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - TRANSPORT=streamable-http
+    ports: [ "8000:8000" ]
+
+  clarity-api-agent:
+    image: knucklessg1/clarity-api:latest
+    restart: always
+    depends_on: [ clarity-api-mcp ]
+    command: [ "clarity-agent" ]
+    env_file: [ ../.env ]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=9017
+      - MCP_URL=http://clarity-api-mcp:8000/mcp
+      - PROVIDER=${PROVIDER:-openai}
+      - MODEL_ID=${MODEL_ID:-gpt-4o}
+      - ENABLE_WEB_UI=True
+      - ENABLE_OTEL=True
+    ports: [ "9017:9017" ]
+```
+
+```bash
+docker compose -f docker/agent.compose.yml up -d
+```
 
 ## Usage (Python client)
 
@@ -127,8 +254,8 @@ print("JSON Output:", response.json())
 
 `clarity-api` inherits enterprise infrastructure from `agent-utilities`: JWT/OIDC
 authentication, OpenTelemetry instrumentation, HashiCorp Vault secret resolution,
-append-only audit logging (`CONCEPT:OS-5.4`), prompt-injection defense
-(`CONCEPT:OS-5.1`), and the guardrail engine (`CONCEPT:OS-5.3`). The connector stays
+append-only audit logging (agent-utilities `OS-5.4`), prompt-injection defense
+(`OS-5.1`), and the guardrail engine (`OS-5.3`). The connector stays
 inactive until `CLARITY_URL` and `CLARITY_TOKEN` are configured. Never commit `.env`
 files or tokens.
 

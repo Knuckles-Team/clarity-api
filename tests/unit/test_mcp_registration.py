@@ -13,7 +13,9 @@ async def _list_tool_names(mcp) -> set:
 
 
 @pytest.mark.asyncio
-async def test_insights_tool_registers():
+@pytest.mark.concept("CLA-001")
+async def test_concept_cla_001_insights_tool_registers():
+    """CLA-001: the data-export tool registers on a bare FastMCP instance."""
     from fastmcp import FastMCP
 
     from clarity_api.mcp import register_insights_tools
@@ -26,7 +28,9 @@ async def test_insights_tool_registers():
 
 
 @pytest.mark.asyncio
-async def test_get_mcp_instance_builds():
+@pytest.mark.concept("CLA-001")
+async def test_concept_cla_001_get_mcp_instance_builds():
+    """CLA-001: the assembled MCP server exposes the data-export tool."""
     from clarity_api.mcp_server import get_mcp_instance
 
     mcp, args, middlewares, registered_tags = get_mcp_instance()

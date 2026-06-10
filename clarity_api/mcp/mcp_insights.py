@@ -13,6 +13,7 @@ from fastmcp.dependencies import Depends
 from pydantic import Field
 
 from clarity_api.auth import get_client
+from clarity_api.services import InsightsService
 
 
 def _serialize(response: Any) -> Any:
@@ -59,8 +60,8 @@ def register_insights_tools(mcp: FastMCP):
         except Exception as e:
             return {"error": f"Invalid params_json: {e}"}
 
-        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        service = InsightsService(client=client, serializer=_serialize)
 
         if action == "get_data_export":
-            return _serialize(client.get_data_export(**kwargs))
+            return service.get_data_export(**kwargs)
         raise ValueError(f"Unknown action: {action}")
