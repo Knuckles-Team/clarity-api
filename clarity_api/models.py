@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """Pydantic input/output models for clarity-api.
 
 Re-exports the canonical models defined in :mod:`clarity_api.clarity_models`
@@ -8,8 +7,8 @@ location used across the agent-package ecosystem.
 """
 
 from clarity_api.clarity_models import (
-    InputModel,
     Information,
+    InputModel,
     Metric,
     Response,
 )

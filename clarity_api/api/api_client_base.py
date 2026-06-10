@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """HTTP/REST base client for the Microsoft Clarity Data Export API.
 
 Provides the shared ``requests.Session``, bearer-token authentication header,

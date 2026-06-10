@@ -1,8 +1,6 @@
 #!/usr/bin/python
 import warnings
 
-from fastmcp import FastMCP
-
 # Filter RequestsDependencyWarning early to prevent log spam
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")

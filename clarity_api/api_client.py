@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """Top-level Clarity API client facade.
 
 Composes the per-domain client mixins from :mod:`clarity_api.api` into a single

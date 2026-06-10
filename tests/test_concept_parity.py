@@ -10,10 +10,34 @@ import os
 import re
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WORKSPACE_DIR = os.path.dirname(os.path.dirname(ROOT_DIR))
-MASTER_OVERVIEW_PATH = os.path.join(
-    WORKSPACE_DIR, "agent-utilities", "docs", "overview.md"
-)
+
+
+def _resolve_master_overview() -> str:
+    """Locate the canonical agent-utilities concept registry.
+
+    The registry lives in the ``agent-utilities`` sibling of the
+    ``agent-packages/agents/<project>`` checkout. When this project is run from
+    a git worktree (e.g. ``/home/apps/worktrees/clarity-api``) the registry is
+    NOT a sibling of the worktree, so resolve against the canonical workspace.
+    """
+    candidates = [
+        # Sibling layout: <workspace>/agent-utilities/docs/overview.md
+        os.path.join(
+            os.path.dirname(os.path.dirname(ROOT_DIR)),
+            "agent-utilities",
+            "docs",
+            "overview.md",
+        ),
+        # Canonical workspace checkout (used when running from a worktree).
+        "/home/apps/workspace/agent-packages/agent-utilities/docs/overview.md",
+    ]
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    return candidates[0]
+
+
+MASTER_OVERVIEW_PATH = _resolve_master_overview()
 CONCEPTS_DOC = os.path.join(ROOT_DIR, "docs", "concepts.md")
 
 

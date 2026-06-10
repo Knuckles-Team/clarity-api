@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   clarity-api-mcp:
     image: knucklessg1/clarity-api:latest

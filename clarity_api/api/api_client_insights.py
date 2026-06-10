@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """Insights / Data Export domain client for the Microsoft Clarity API.
 
 Wraps the ``GET /export-data/api/v1/project-live-insights`` endpoint, exposing
@@ -11,9 +10,9 @@ import requests
 from pydantic import ValidationError
 
 from clarity_api.api.api_client_base import ClarityApiBase
+from clarity_api.clarity_models import InputModel
 from clarity_api.decorators import require_auth
 from clarity_api.exceptions import ParameterError
-from clarity_api.clarity_models import InputModel
 
 
 class ClarityApiInsights(ClarityApiBase):
@@ -52,5 +51,5 @@ class ClarityApiInsights(ClarityApiBase):
                 verify=self.verify,
             )
         except ValidationError as e:
-            raise ParameterError(f"Invalid parameters: {e.errors()}")
+            raise ParameterError(f"Invalid parameters: {e.errors()}") from e
         return response

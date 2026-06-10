@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """Clarity API client package.
 
 Exposes the HTTP base client and the per-domain client mixins that compose the
