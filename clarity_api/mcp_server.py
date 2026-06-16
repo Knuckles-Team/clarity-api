@@ -27,7 +27,7 @@ from fastmcp.utilities.logging import get_logger
 
 from clarity_api.mcp import register_insights_tools
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 print(f"Clarity MCP v{__version__}", file=sys.stderr)
 
 logger = get_logger(name="mcp_server")
