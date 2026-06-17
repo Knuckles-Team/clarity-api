@@ -8,22 +8,35 @@ Implements ``CONCEPT:CLA-001`` (Data Export / Live Insights) at the
 application-service boundary.
 """
 
-from typing import Any
+from typing import Any, Protocol
 
-from clarity_api.api_client import Api
+import requests
+
+
+class DataExportClient(Protocol):
+    """Structural type for the only client capability this service needs.
+
+    Captures the actual dependency contract — a client exposing
+    ``get_data_export`` — so both the concrete
+    :class:`~clarity_api.api_client.Api` and lightweight test doubles satisfy
+    it without an inheritance coupling.
+    """
+
+    def get_data_export(self, **kwargs: Any) -> requests.Response: ...
 
 
 class InsightsService:
     """Use-case service for Clarity insights, built around an injected client.
 
     Args:
-        client: A configured :class:`~clarity_api.api_client.Api` instance,
-            typically resolved via ``Depends(get_client)``.
+        client: Any client exposing ``get_data_export`` — typically a
+            configured :class:`~clarity_api.api_client.Api` instance resolved
+            via ``Depends(get_client)``.
         serializer: Callable that converts a ``requests.Response`` into an
             MCP-serializable structure. Injected for testability.
     """
 
-    def __init__(self, client: Api, serializer: Any) -> None:
+    def __init__(self, client: DataExportClient, serializer: Any) -> None:
         self._client = client
         self._serialize = serializer
 
