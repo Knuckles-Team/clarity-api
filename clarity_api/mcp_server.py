@@ -20,21 +20,22 @@ import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server, load_config
+from agent_utilities.mcp_utilities import (
+    create_mcp_server,
+    load_config,
+    register_tool_surface,
+)
 from fastmcp.utilities.logging import get_logger
 
-from clarity_api.mcp import register_insights_tools
+from clarity_api.api_client import Api
+from clarity_api.auth import get_client
+from clarity_api.mcp import register_insights_tools  # noqa: F401
 
 __version__ = "1.4.0"
 print(f"Clarity MCP v{__version__}", file=sys.stderr)
 
 logger = get_logger(name="mcp_server")
 logger.setLevel(logging.DEBUG)
-
-DEFAULT_CLARITY_SSL_VERIFY = to_boolean(string=os.getenv("CLARITY_SSL_VERIFY", "True"))
-DEFAULT_CLARITY_URL = os.getenv("CLARITY_URL", "https://www.clarity.ms")
-DEFAULT_CLARITY_TOKEN = os.getenv("CLARITY_TOKEN", None)
 
 
 def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
@@ -56,14 +57,17 @@ def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
         ),
     )
 
-    DEFAULT_INSIGHTSTOOL = to_boolean(os.getenv("INSIGHTSTOOL", "True"))
-    if DEFAULT_INSIGHTSTOOL:
-        register_insights_tools(mcp)
+    registered_tags = register_tool_surface(
+        mcp,
+        client_cls=Api,
+        get_client=get_client,
+        service="clarity-api",
+        tools_module=sys.modules[__name__],
+    )
 
     for mw in middlewares:
         mcp.add_middleware(mw)
 
-    registered_tags: list[str] = []
     return mcp, args, middlewares, registered_tags
 
 

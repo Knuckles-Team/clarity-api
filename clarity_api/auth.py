@@ -12,10 +12,10 @@ Environment variables:
 - ``CLARITY_SSL_VERIFY`` — whether to verify TLS certificates (default ``True``).
 """
 
-import os
 import threading
 
-from agent_utilities.base_utilities import get_logger, to_boolean
+from agent_utilities.base_utilities import get_logger
+from agent_utilities.core.config import setting
 from agent_utilities.core.exceptions import AuthError, UnauthorizedError
 
 local = threading.local()
@@ -25,9 +25,9 @@ logger = get_logger(__name__)
 
 
 def get_client(
-    instance: str = os.getenv("CLARITY_URL", "https://www.clarity.ms"),
-    token: str | None = os.getenv("CLARITY_TOKEN", None),
-    verify: bool = to_boolean(string=os.getenv("CLARITY_SSL_VERIFY", "True")),
+    instance: str | None = None,
+    token: str | None = None,
+    verify: bool | None = None,
     config: dict | None = None,
 ) -> Api:
     """Factory function to create the Clarity ``Api`` client.
@@ -36,6 +36,13 @@ def get_client(
     (RFC 8693 token exchange) and fixed credentials (``CLARITY_TOKEN``). Used as
     the ``Depends(get_client)`` dependency for the MCP tools.
     """
+    if instance is None:
+        instance = setting("CLARITY_URL", "https://www.clarity.ms")
+    if token is None:
+        token = setting("CLARITY_TOKEN", None)
+    if verify is None:
+        verify = setting("CLARITY_SSL_VERIFY", True)
+
     from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,
         get_user_identity,
