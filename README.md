@@ -95,7 +95,7 @@ _Auto-generated — do not edit (synced by the `mcp-readme-table` pre-commit hoo
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `clarity_insights` | `DATA-EXPORTTOOL` | Retrieve Microsoft Clarity dashboard data insights for a project. |
+| `clarity_insights` | `INSIGHTSTOOL` | Retrieve Microsoft Clarity dashboard data insights for a project. |
 
 _1 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
