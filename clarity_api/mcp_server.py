@@ -21,8 +21,7 @@ import sys
 from typing import Any
 
 from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server
-from dotenv import find_dotenv, load_dotenv
+from agent_utilities.mcp_utilities import create_mcp_server, load_config
 from fastmcp.utilities.logging import get_logger
 
 from clarity_api.mcp import register_insights_tools
@@ -43,7 +42,7 @@ def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
 
     CONCEPT:CLA-005 — Package & Server Bootstrap.
     """
-    load_dotenv(find_dotenv())
+    load_config()
     os.environ["FASTMCP_LOG_LEVEL"] = "ERROR"
     os.environ["TERM"] = "dumb"
     os.environ["NO_COLOR"] = "1"
