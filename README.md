@@ -89,9 +89,16 @@ graph TD
 
 ## Available MCP Tools
 
-| Tool | Concept | Actions | Description |
-|------|---------|---------|-------------|
-| `clarity_insights` | `CONCEPT:CLA-001` | `get_data_export` | Export Clarity dashboard data / live insights |
+_Auto-generated — do not edit (synced by the `mcp-readme-table` pre-commit hook)._
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `clarity_insights` | `DATA-EXPORTTOOL` | Retrieve Microsoft Clarity dashboard data insights for a project. |
+
+_1 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
 
 ### Parameters
 - `number_of_days` (1, 2, or 3): last 24, 48, or 72 hours.
