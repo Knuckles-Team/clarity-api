@@ -28,6 +28,12 @@ test = [
 clarity-mcp = "clarity_api.mcp_server:mcp_server"
 clarity-agent = "clarity_api.agent_server:agent_server"
 
+[project.entry-points."agent_utilities.skill_providers"]
+clarity-api = "clarity_api.skills"
+
+[project.entry-points."agent_utilities.prompt_providers"]
+clarity-api = "clarity_api.prompts"
+
 [tool.setuptools]
 include-package-data = true
 
@@ -46,7 +52,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-clarity_api = [ "mcp_config.json", "agent_data/**",]
+clarity_api = [ "mcp_config.json", "agent_data/**", "prompts/**", "skills/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]

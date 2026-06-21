@@ -1,5 +1,5 @@
 include README.md
 include requirements.txt
-recursive-include clarity_api *.py
+recursive-include clarity_api *.py *.json *.md *.yaml *.yml
 recursive-include clarity_api *.json
 recursive-include clarity_api/agent_data *
