@@ -52,7 +52,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-clarity_api = [ "mcp_config.json", "agent_data/**", "prompts/**", "skills/**",]
+clarity_api = [ "mcp_config.json", "prompts/**", "skills/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]

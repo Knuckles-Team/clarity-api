@@ -1,6 +1,6 @@
 services:
   clarity-api-mcp:
-    image: knucklessg1/clarity-api:latest
+    image: knucklessg1/clarity-api:mcp
     container_name: clarity-api-mcp
     hostname: clarity-api-mcp
     restart: always
