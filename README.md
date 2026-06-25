@@ -156,6 +156,14 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 
 ## Configuration
 
+> **Install the slim `[mcp]` extra.** The examples below install
+> `clarity-api[mcp]` — the MCP-server extra that pulls only the FastMCP /
+> FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
+> agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
+> `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
+> Use the full `[agent]` extra only when you need the integrated Pydantic AI agent
+> (see [Installation](#installation)).
+
 ### stdio (local agent integration)
 
 ```json
@@ -163,7 +171,7 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
   "mcpServers": {
     "clarity-api": {
       "command": "uv",
-      "args": ["run", "--with", "clarity-api", "clarity-mcp"],
+      "args": ["run", "--with", "clarity-api[mcp]", "clarity-mcp"],
       "env": {
         "CLARITY_URL": "https://www.clarity.ms",
         "CLARITY_TOKEN": "<YOUR_CLARITY_TOKEN>"
@@ -184,9 +192,16 @@ clarity-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ### Docker
 
 ```bash
-docker pull knucklessg1/clarity-api:latest
+docker pull knucklessg1/clarity-api:mcp
 docker compose -f docker/mcp.compose.yml up -d
 ```
+
+> The `:mcp` tag is the **slim MCP-server image** (built from
+> `docker/Dockerfile --target mcp`, installing `clarity-api[mcp]`). The default
+> `:latest` tag is the **full agent image** (`--target agent`, `clarity-api[agent]`)
+> which also bundles the Pydantic AI agent and the epistemic-graph engine — use it
+> when you run `clarity-agent` (the agent), not just the MCP server. See
+> [Container images](#container-images-mcp-vs-agent).
 
 <!-- BEGIN GENERATED: additional-deployment-options -->
 ### Additional Deployment Options
@@ -226,7 +241,7 @@ the agent connects to the MCP server over `MCP_URL`:
 ```yaml
 services:
   clarity-api-mcp:
-    image: knucklessg1/clarity-api:latest
+    image: knucklessg1/clarity-api:mcp
     restart: always
     env_file: [ ../.env ]
     environment:
@@ -283,16 +298,52 @@ files or tokens.
 
 ## Installation
 
+Pick the extra that matches what you want to run:
+
+| Extra | Installs | Use when |
+|-------|----------|----------|
+| _(none)_ | the bare `Api` Python client (`requests`) | You only use the `clarity_api.Api` client |
+| `clarity-api[mcp]` | Slim MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
+| `clarity-api[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `clarity-api[all]` | Everything (`mcp` + `agent`) | Development / both surfaces |
+
 ```bash
-python -m pip install "clarity-api[all]"
+# MCP server only (recommended for tool hosting — slim deps)
+uv pip install "clarity-api[mcp]"
+
+# Full agent runtime (Pydantic AI + epistemic-graph engine)
+uv pip install "clarity-api[agent]"
+
+# Everything (development)
+uv pip install "clarity-api[all]"      # or: python -m pip install "clarity-api[all]"
 ```
 
-| Extra | Use for |
-|-------|---------|
-| _(none)_ | the `Api` client |
-| `mcp` | the `clarity-mcp` MCP server |
-| `agent` | the `clarity-agent` A2A agent |
-| `all` | everything |
+### Container images (`:mcp` vs `:agent`)
+
+One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+
+| Image tag | Build target | Contents | Entrypoint |
+|-----------|--------------|----------|------------|
+| `knucklessg1/clarity-api:mcp` | `--target mcp` | `clarity-api[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `clarity-mcp` |
+| `knucklessg1/clarity-api:latest` | `--target agent` (default) | `clarity-api[agent]` — **full** agent runtime + epistemic-graph engine | `clarity-agent` |
+
+```bash
+docker build --target mcp   -t knucklessg1/clarity-api:mcp    docker/   # slim MCP server
+docker build --target agent -t knucklessg1/clarity-api:latest docker/   # full agent
+```
+
+`docker/mcp.compose.yml` runs the slim `:mcp` server; `docker/agent.compose.yml` runs the
+agent (`:latest`) with a co-located `:mcp` sidecar.
+
+### Knowledge-graph database (`epistemic-graph`)
+
+The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
+transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
+across multiple agents — run **epistemic-graph as its own database container** and point the
+agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
+config, and the full database architecture (with diagrams) are documented in the
+[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+The slim `[mcp]` server does **not** require the database.
 
 ### Obtaining Access Tokens
 **Note**: Only project admins can manage access tokens.
