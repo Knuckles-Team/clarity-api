@@ -1,0 +1,14 @@
+{
+  "_comment": "Tier-1 mcp_tool source preset(s) for clarity-api (AU-KG.ingest.mcp-tool-connector). The clarity_insights tool returns a {data:[{metricName, information:[...]}]} export; each metric becomes a :BehaviorInsight-shaped document. For full typed-node ingestion (project/session/insight/dimension + summary) use the native clarity_ingest_insights tool. Contributed presets win over the central MCP_TOOL_PRESETS.",
+  "clarity-insights": {
+    "server": "clarity-api",
+    "tool": "clarity_insights",
+    "action": "get_data_export",
+    "params": { "action": "get_data_export", "params_json": "{\"number_of_days\": 3}" },
+    "records_path": "data.data",
+    "id_field": "metricName",
+    "title_field": "metricName",
+    "text_field": "metricName",
+    "doc_type": "clarity-insight"
+  }
+}

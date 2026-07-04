@@ -44,10 +44,25 @@ class InsightsService:
         """Execute a Clarity data export and return a serialized payload.
 
         CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Strips ``None`` values
-        from ``kwargs`` and delegates to the injected client, then serializes.
+        from ``kwargs`` and delegates to the injected client, then serializes. As a
+        best-effort side effect it natively ingests the export into the epistemic-graph
+        knowledge graph (typed :ClaritySession/:BehaviorInsight nodes + a :Document
+        summary); the ingest no-ops when no engine is reachable.
         """
         clean = {k: v for k, v in kwargs.items() if v is not None}
-        return self._serialize(self._client.get_data_export(**clean))
+        response = self._client.get_data_export(**clean)
+        self._ingest(response, clean)
+        return self._serialize(response)
+
+    @staticmethod
+    def _ingest(response: Any, params: dict[str, Any]) -> None:
+        """Best-effort native KG ingestion of an export response (never raises)."""
+        try:
+            from clarity_api.kg_ingest import ingest_response
+
+            ingest_response(response, params)
+        except Exception:  # noqa: BLE001 — KG ingest is a non-fatal side effect
+            pass
 
 
 __all__ = ["InsightsService"]

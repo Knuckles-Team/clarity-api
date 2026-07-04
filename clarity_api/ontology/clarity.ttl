@@ -1,0 +1,121 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://knuckles.team/kg#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Microsoft Clarity behavioral-analytics ontology — projects, session-analytics
+# snapshots, metric insights, and their dimension breakdowns. All classes and
+# properties live in the shared `:` (kg#) namespace; only the owl:Ontology node
+# gets the per-package IRI. Backs the clarity-api MCP surface (clarity_insights /
+# clarity_ingest_insights over the Data Export / Live Insights endpoint).
+#
+# NOTE: reuses the shared :Document (export summaries) and :Person (project owner).
+# The base ontology's :Session (an orchestration anchor) and :Insight (a call/doc
+# takeaway) carry different meanings, so Clarity defines its own web-analytics
+# :ClaritySession and :BehaviorInsight rather than overloading those.
+
+:ClarityProject a owl:Class ;
+    rdfs:label "Clarity Project" ;
+    rdfs:comment "A Microsoft Clarity project the API token is scoped to; the container for behavioral-analytics data (clarity_insights)." .
+
+:ClaritySession a owl:Class ;
+    rdfs:label "Clarity Session Snapshot" ;
+    rdfs:comment "An aggregate session-analytics reading for a project over a numOfDays window and dimension breakdown — total/bot session counts and distinct users from the Data Export endpoint." .
+
+:BehaviorInsight a owl:Class ;
+    rdfs:label "Behavior Insight" ;
+    rdfs:comment "One named metric result returned by the Clarity Data Export (e.g. Traffic, EngagementTime, ScrollDepth), scoped to a time window and up to three dimensions." .
+
+:BehaviorDimension a owl:Class ;
+    rdfs:label "Behavior Dimension" ;
+    rdfs:comment "A breakdown facet of a Clarity metric (Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL)." .
+
+# --- links (owl:ObjectProperty) ---
+
+:belongsToProject a owl:ObjectProperty ;
+    rdfs:label "belongs to project" ;
+    rdfs:comment "Links a ClaritySession snapshot or BehaviorInsight to its ClarityProject." ;
+    rdfs:range :ClarityProject .
+
+:hasInsight a owl:ObjectProperty ;
+    rdfs:label "has insight" ;
+    rdfs:comment "Links a ClaritySession snapshot to a BehaviorInsight measured in the same export." ;
+    rdfs:domain :ClaritySession ;
+    rdfs:range :BehaviorInsight .
+
+:brokenDownBy a owl:ObjectProperty ;
+    rdfs:label "broken down by" ;
+    rdfs:comment "Links a BehaviorInsight to a BehaviorDimension it was segmented by." ;
+    rdfs:domain :BehaviorInsight ;
+    rdfs:range :BehaviorDimension .
+
+:summarizedBy a owl:ObjectProperty ;
+    rdfs:label "summarized by" ;
+    rdfs:comment "Links a ClaritySession snapshot to the :Document that narrates its metrics for semantic search." ;
+    rdfs:domain :ClaritySession ;
+    rdfs:range :Document .
+
+:ownedBy a owl:ObjectProperty ;
+    rdfs:label "owned by" ;
+    rdfs:comment "Links a ClarityProject to the Person who owns/administers it." ;
+    rdfs:domain :ClarityProject ;
+    rdfs:range :Person .
+
+# --- fields (owl:DatatypeProperty) ---
+
+:externalToolId a owl:DatatypeProperty ;
+    rdfs:label "external tool id" ;
+    rdfs:comment "Stable external identifier of a Clarity object in its source system." ;
+    rdfs:range xsd:string .
+
+:metricName a owl:DatatypeProperty ;
+    rdfs:label "metric name" ;
+    rdfs:comment "Name of the Clarity metric a BehaviorInsight carries (e.g. Traffic, EngagementTime)." ;
+    rdfs:domain :BehaviorInsight ;
+    rdfs:range xsd:string .
+
+:numOfDays a owl:DatatypeProperty ;
+    rdfs:label "number of days" ;
+    rdfs:comment "Size of the trailing date-range window (1, 2, or 3) the export covers." ;
+    rdfs:range xsd:integer .
+
+:dimensionName a owl:DatatypeProperty ;
+    rdfs:label "dimension name" ;
+    rdfs:comment "Canonical name of a BehaviorDimension (Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL)." ;
+    rdfs:domain :BehaviorDimension ;
+    rdfs:range xsd:string .
+
+:totalSessionCount a owl:DatatypeProperty ;
+    rdfs:label "total session count" ;
+    rdfs:comment "Total number of user sessions in a ClaritySession snapshot." ;
+    rdfs:domain :ClaritySession ;
+    rdfs:range xsd:integer .
+
+:totalBotSessionCount a owl:DatatypeProperty ;
+    rdfs:label "total bot session count" ;
+    rdfs:comment "Number of sessions attributed to bots in a ClaritySession snapshot." ;
+    rdfs:domain :ClaritySession ;
+    rdfs:range xsd:integer .
+
+:distinctUserCount a owl:DatatypeProperty ;
+    rdfs:label "distinct user count" ;
+    rdfs:comment "Distinct-user count reported for a ClaritySession snapshot." ;
+    rdfs:domain :ClaritySession ;
+    rdfs:range xsd:integer .
+
+:pagesPerSessionPercentage a owl:DatatypeProperty ;
+    rdfs:label "pages per session percentage" ;
+    rdfs:comment "Pages-per-session percentage reported for a ClaritySession snapshot." ;
+    rdfs:domain :ClaritySession ;
+    rdfs:range xsd:decimal .
+
+<http://knuckles.team/kg/clarity> a owl:Ontology ;
+    rdfs:label "Clarity Behavioral-Analytics Ontology" ;
+    rdfs:comment """Microsoft Clarity behavioral-analytics model — projects, aggregate
+    session-analytics snapshots, named metric insights, and their dimension breakdowns —
+    federated into the agent-utilities knowledge-graph hub. Reuses the shared :Document
+    and :Person classes.""" ;
+    owl:imports <http://knuckles.team/kg/enterprise> .

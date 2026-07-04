@@ -31,6 +31,12 @@ clarity-agent = "clarity_api.agent_server:agent_server"
 [project.entry-points."agent_utilities.skill_providers"]
 clarity-api = "clarity_api.skills"
 
+[project.entry-points."agent_utilities.ontology_providers"]
+clarity-api = "clarity_api.ontology"
+
+[project.entry-points."agent_utilities.source_connector_providers"]
+clarity-api = "clarity_api.connectors"
+
 [project.entry-points."agent_utilities.prompt_providers"]
 clarity-api = "clarity_api.prompts"
 
@@ -52,7 +58,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-clarity_api = [ "mcp_config.json", "prompts/**", "skills/**",]
+clarity_api = [ "mcp_config.json", "prompts/**", "skills/**", "ontology/**", "connectors/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]
