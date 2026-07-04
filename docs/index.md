@@ -21,7 +21,7 @@ with typed, deterministic MCP tools and an optional Pydantic-AI agent server. It
   mixins. It validates credentials against `GET /projects` and exposes
   `get_data_export` for live dashboard insights.
 - **Action-routed MCP tool** — the consolidated, togglable `clarity_insights` tool
-  (`CONCEPT:CLA-001`) that minimizes token overhead in LLM contexts.
+  (`CONCEPT:CY-OS.governance.data-export-live-insights`) that minimizes token overhead in LLM contexts.
 - **An A2A agent server** — a Pydantic-AI graph agent (console script `clarity-agent`)
   that calls the MCP tool surface and exposes an AG-UI web interface.
 

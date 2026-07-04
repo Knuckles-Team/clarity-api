@@ -20,7 +20,7 @@ DEFAULT_AGENT_SYSTEM_PROMPT = None
 
 
 def agent_server():
-    """Start the Pydantic-AI A2A agent server (CONCEPT:CLA-005)."""
+    """Start the Pydantic-AI A2A agent server (CONCEPT:CY-OS.governance.package-server-bootstrap)."""
     from agent_utilities import (
         build_system_prompt_from_workspace,
         create_agent_parser,

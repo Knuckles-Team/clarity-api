@@ -1,6 +1,6 @@
 """Tests for the ``auth.get_client`` dependency factory.
 
-Covers ``CONCEPT:CLA-002`` (Credential & Auth Factory).
+Covers ``CONCEPT:CY-OS.identity.credential-auth-factory-supports`` (Credential & Auth Factory).
 """
 
 import importlib.util
@@ -28,7 +28,7 @@ def configured_env(monkeypatch):
     monkeypatch.setenv("CLARITY_SSL_VERIFY", "False")
 
 
-@pytest.mark.concept("CLA-002")
+@pytest.mark.concept("CY-OS.identity.credential-auth-factory-supports")
 def test_concept_cla_002_get_client_returns_api(configured_env):
     """CLA-002: the fixed-credential path returns a validated ``Api`` instance."""
     from clarity_api.api_client import Api
@@ -43,7 +43,7 @@ def test_concept_cla_002_get_client_returns_api(configured_env):
     assert client.headers["Authorization"] == "Bearer mock_token"
 
 
-@pytest.mark.concept("CLA-002")
+@pytest.mark.concept("CY-OS.identity.credential-auth-factory-supports")
 def test_concept_cla_002_get_client_data_export(configured_env):
     """CLA-002: a client built by the factory can perform a data export."""
     from clarity_api.auth import get_client

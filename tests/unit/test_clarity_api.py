@@ -1,12 +1,12 @@
 """Smoke test that the public package imports and exposes the Api class.
 
-Covers ``CONCEPT:CLA-001`` (Data Export / Live Insights) via the public surface.
+Covers ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights) via the public surface.
 """
 
 import pytest
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_concept_cla_001_package_exposes_api():
     """CLA-001: the top-level package re-exports the ``Api`` class."""
     import clarity_api
@@ -15,7 +15,7 @@ def test_concept_cla_001_package_exposes_api():
     assert clarity_api.Api.__name__ == "Api"
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_concept_cla_001_get_data_export_via_public_api():
     """CLA-001: the public ``Api`` performs a data export end to end."""
     import clarity_api

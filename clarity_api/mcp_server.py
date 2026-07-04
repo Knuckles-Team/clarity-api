@@ -41,7 +41,7 @@ logger.setLevel(logging.DEBUG)
 def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
     """Initialize and return the Clarity MCP instance, args, and middlewares.
 
-    CONCEPT:CLA-005 — Package & Server Bootstrap.
+    CONCEPT:CY-OS.governance.package-server-bootstrap — Package & Server Bootstrap.
     """
     load_config()
     os.environ["FASTMCP_LOG_LEVEL"] = "ERROR"

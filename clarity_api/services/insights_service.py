@@ -4,7 +4,7 @@ Sits between the MCP tool (transport) and the ``Api`` client (adapter),
 providing a thin, dependency-injected seam that keeps tool-registration code
 free of business logic.
 
-Implements ``CONCEPT:CLA-001`` (Data Export / Live Insights) at the
+Implements ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights) at the
 application-service boundary.
 """
 
@@ -43,7 +43,7 @@ class InsightsService:
     def get_data_export(self, **kwargs: Any) -> Any:
         """Execute a Clarity data export and return a serialized payload.
 
-        CONCEPT:CLA-001 — Data Export / Live Insights. Strips ``None`` values
+        CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Strips ``None`` values
         from ``kwargs`` and delegates to the injected client, then serializes.
         """
         clean = {k: v for k, v in kwargs.items() if v is not None}

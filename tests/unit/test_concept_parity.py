@@ -1,6 +1,6 @@
 """Concept-parity tests for clarity-api.
 
-Implements ``CONCEPT:CLA-006`` (Concept Traceability Governance):
+Implements ``CONCEPT:CY-OS.governance.cla`` (Concept Traceability Governance):
 
 1. Every ``CONCEPT:CLA-*`` tag used in tool docstrings/source must be documented
    in ``docs/concepts.md``.
@@ -84,7 +84,7 @@ def _extract_concepts_from_overview(filepath):
     return concepts
 
 
-@pytest.mark.concept("CLA-006")
+@pytest.mark.concept("CY-OS.governance.cla")
 def test_concept_cla_006_local_concepts_documented():
     """CLA-006: every CLA-* concept used in code must appear in docs/concepts.md."""
     with open(CONCEPTS_DOC, encoding="utf-8") as f:
@@ -97,7 +97,7 @@ def test_concept_cla_006_local_concepts_documented():
     )
 
 
-@pytest.mark.concept("CLA-006")
+@pytest.mark.concept("CY-OS.governance.cla")
 def test_concept_cla_006_parity_with_master_registry():
     """CLA-006: every pillar concept used locally must be registered upstream."""
     master = _extract_concepts_from_overview(MASTER_OVERVIEW_PATH)

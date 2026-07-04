@@ -1,6 +1,6 @@
 """Tests for the dependency-injected ``InsightsService`` use-case layer.
 
-Covers ``CONCEPT:CLA-001`` (Data Export / Live Insights) at the service seam.
+Covers ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights) at the service seam.
 """
 
 import pytest
@@ -17,7 +17,7 @@ def service() -> InsightsService:
     return InsightsService(client=client, serializer=_serialize)
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_concept_cla_001_service_returns_serialized_payload(service):
     """CLA-001: the service returns a status/data envelope from the client."""
     payload = service.get_data_export(number_of_days=2, dimension_1="OS")
@@ -25,7 +25,7 @@ def test_concept_cla_001_service_returns_serialized_payload(service):
     assert "data" in payload["data"]
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_concept_cla_001_service_strips_none_kwargs():
     """CLA-001: ``None`` kwargs are dropped before reaching the client."""
     captured = {}

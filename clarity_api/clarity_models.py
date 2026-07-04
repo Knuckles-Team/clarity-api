@@ -18,7 +18,7 @@ logging.basicConfig(
 class InputModel(BaseModel):
     """Validated query parameters for the Clarity Data Export endpoint.
 
-    CONCEPT:CLA-003 — Input Validation & Parameter Modeling. Normalizes and
+    CONCEPT:CY-OS.governance.input-validation-parameter-modeling — Input Validation & Parameter Modeling. Normalizes and
     validates the ``number_of_days`` date range and the up-to-three breakdown
     dimensions before they are sent to the Clarity API.
 
@@ -58,7 +58,7 @@ class InputModel(BaseModel):
     def model_post_init(self, __context):
         """Build the validated ``api_parameters`` dict from the input fields.
 
-        CONCEPT:CLA-003 — Input Validation & Parameter Modeling.
+        CONCEPT:CY-OS.governance.input-validation-parameter-modeling — Input Validation & Parameter Modeling.
         """
         self.api_parameters = {}
         if self.numOfDays:

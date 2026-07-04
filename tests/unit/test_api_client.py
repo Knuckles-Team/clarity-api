@@ -1,7 +1,7 @@
 """Tests for the Clarity Api client facade and backward-compat shim.
 
-Covers ``CONCEPT:CLA-001`` (Data Export / Live Insights) and
-``CONCEPT:CLA-004`` (REST Base Client).
+Covers ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights) and
+``CONCEPT:CY-OS.governance.rest-base-client-owns`` (REST Base Client).
 """
 
 import pytest
@@ -15,14 +15,14 @@ def client() -> Api:
     return Api(url="https://www.clarity.ms", token="mock_token", verify=False)
 
 
-@pytest.mark.concept("CLA-004")
+@pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 def test_api_facade_importable():
     """The facade ``Api`` symbol is importable from the canonical module."""
     assert Api.__name__ == "Api"
     assert hasattr(Api, "get_data_export")
 
 
-@pytest.mark.concept("CLA-004")
+@pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 def test_backward_compat_import():
     """The original ``clarity_api.clarity_api`` import path must keep working."""
     from clarity_api.api_client import Api as FacadeApi
@@ -31,7 +31,7 @@ def test_backward_compat_import():
     assert LegacyApi is FacadeApi
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_concept_cla_001_construction_and_data_export(client):
     """CLA-001: constructing the client and exporting data returns metrics."""
     response = client.get_data_export(number_of_days=2, dimension_1="OS")
@@ -41,7 +41,7 @@ def test_concept_cla_001_construction_and_data_export(client):
     assert body["data"][0]["metricName"] == "Traffic"
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 @pytest.mark.parametrize(
     "params",
     [
@@ -56,14 +56,14 @@ def test_concept_cla_001_data_export_parametrized(client, params):
     assert response.status_code == 200
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_concept_cla_001_data_export_with_api_parameters_dict(client):
     """CLA-001: a pre-built ``api_parameters`` dict bypasses kwarg modeling."""
     response = client.get_data_export(api_parameters={"numOfDays": 1})
     assert response.status_code == 200
 
 
-@pytest.mark.concept("CLA-004")
+@pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 def test_concept_cla_004_api_request_helper(client):
     """CLA-004: the base ``api_request`` helper issues arbitrary REST calls."""
     response = client.api_request(method="GET", endpoint="/projects")

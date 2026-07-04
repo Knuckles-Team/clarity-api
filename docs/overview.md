@@ -16,10 +16,10 @@ All agents in the ecosystem inherit enterprise-grade infrastructure from `agent-
 | **JWT/OIDC Authentication** | ✅ Built-in | `agent-utilities[auth]` — Authlib JWKS + API key middleware |
 | **OpenTelemetry Instrumentation** | ✅ Built-in | `agent-utilities[logfire]` — OTLP export, FastAPI auto-instrumentation |
 | **HashiCorp Vault Integration** | ✅ Built-in | `agent-utilities[vault]` — `secret://`, `env://`, `vault://` URI schemes |
-| **Audit Logging** | ✅ Built-in | Append-only compliance trail with 30+ action types (agent-utilities OS-5.4) |
-| **Token Usage Analytics** | ✅ Built-in | 4-bucket tracking with budget alerting (agent-utilities OS-5.4) |
+| **Audit Logging** | ✅ Built-in | Append-only compliance trail with 30+ action types (agent-utilities AU-OS.governance.wasm-micro-agent-sandbox) |
+| **Token Usage Analytics** | ✅ Built-in | 4-bucket tracking with budget alerting (agent-utilities AU-OS.governance.wasm-micro-agent-sandbox) |
 | **Prompt Injection Defense** | ✅ Built-in | 25+ pattern scanner + jailbreak taxonomy (agent-utilities OS-5.1) |
-| **Guardrail Engine** | ✅ Built-in | Input/output interception with block/redact/warn (agent-utilities OS-5.3) |
+| **Guardrail Engine** | ✅ Built-in | Input/output interception with block/redact/warn (agent-utilities AU-OS.governance.reactive-multi-axis-budget) |
 | **Resource Scheduling** | ✅ Built-in | Priority queuing + preemption limits (agent-utilities OS-5.2) |
 
 ## Concept Registry
@@ -28,9 +28,9 @@ This project implements or inherits the following ecosystem concepts:
 
 | Concept ID | Description | Source |
 |:-----------|:------------|:-------|
-| CLA-001 | Data Export / Live Insights | `clarity-api` (this project) |
+| CY-OS.governance.data-export-live-insights | Data Export / Live Insights | `clarity-api` (this project) |
 | ECO-4.1 | MCP & Universal Skills | `agent-utilities` (inherited) |
-| ECO-4.2 | A2A Network & Consensus | `agent-utilities` (inherited) |
+| AU-ECO.toolkit.journey-map-narrative | A2A Network & Consensus | `agent-utilities` (inherited) |
 
 > 📖 **Full Registry**: See [`agent-utilities/docs/overview.md`](https://github.com/Knuckles-Team/agent-utilities/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
 

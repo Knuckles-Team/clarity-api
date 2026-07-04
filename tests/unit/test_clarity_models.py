@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Tests for the clarity-api pydantic models.
 
-Covers ``CONCEPT:CLA-003`` (Input Validation & Parameter Modeling).
+Covers ``CONCEPT:CY-OS.governance.input-validation-parameter-modeling`` (Input Validation & Parameter Modeling).
 """
 
 import pytest
@@ -9,7 +9,7 @@ import pytest
 from clarity_api.clarity_models import InputModel, Response
 
 
-@pytest.mark.concept("CLA-003")
+@pytest.mark.concept("CY-OS.governance.input-validation-parameter-modeling")
 def test_concept_cla_003_input_model():
     num_of_days = 2
     dimension1 = "OS"
@@ -33,7 +33,7 @@ def test_concept_cla_003_input_model():
     }
 
 
-@pytest.mark.concept("CLA-003")
+@pytest.mark.concept("CY-OS.governance.input-validation-parameter-modeling")
 @pytest.mark.parametrize(
     ("raw", "expected"),
     [
@@ -50,7 +50,7 @@ def test_concept_cla_003_dimension_normalization(raw, expected):
     assert model.api_parameters["dimension1"] == expected  # type: ignore[index]
 
 
-@pytest.mark.concept("CLA-003")
+@pytest.mark.concept("CY-OS.governance.input-validation-parameter-modeling")
 def test_response_model():
     data = [
         {
@@ -77,7 +77,7 @@ def test_response_model():
     assert response.data[0].information[0].model_dump() == data[0]["information"][0]  # type: ignore
 
 
-@pytest.mark.concept("CLA-003")
+@pytest.mark.concept("CY-OS.governance.input-validation-parameter-modeling")
 def test_models_reexported_from_models_module():
     from clarity_api.models import InputModel as M
     from clarity_api.models import Response as R

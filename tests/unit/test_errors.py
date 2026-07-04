@@ -1,7 +1,7 @@
 """Negative / error-path tests for the Clarity REST base client.
 
-Covers ``CONCEPT:CLA-004`` (REST Base Client) credential-validation failures and
-``CONCEPT:CLA-003`` (Input Validation) rejection of bad parameters.
+Covers ``CONCEPT:CY-OS.governance.rest-base-client-owns`` (REST Base Client) credential-validation failures and
+``CONCEPT:CY-OS.governance.input-validation-parameter-modeling`` (Input Validation) rejection of bad parameters.
 """
 
 from unittest.mock import patch
@@ -27,7 +27,7 @@ def _response_with_status(status_code: int) -> Response:
     return resp
 
 
-@pytest.mark.concept("CLA-004")
+@pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 @pytest.mark.parametrize(
     ("status_code", "expected_exc"),
     [
@@ -46,21 +46,21 @@ def test_concept_cla_004_credential_validation_errors(status_code, expected_exc)
             Api(url="https://www.clarity.ms", token="mock_token", verify=False)
 
 
-@pytest.mark.concept("CLA-004")
+@pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 def test_concept_cla_004_missing_token_raises():
     """CLA-004: omitting the token fails fast with MissingParameterError."""
     with pytest.raises(MissingParameterError):
         Api(url="https://www.clarity.ms", token=None, verify=False)
 
 
-@pytest.mark.concept("CLA-004")
+@pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 def test_concept_cla_004_missing_url_raises():
     """CLA-004: omitting the URL fails fast with MissingParameterError."""
     with pytest.raises(MissingParameterError):
         Api(url=None, token="mock_token", verify=False)
 
 
-@pytest.mark.concept("CLA-003")
+@pytest.mark.concept("CY-OS.governance.input-validation-parameter-modeling")
 @pytest.mark.parametrize("bad_days", ["not-a-number", "abc"])
 def test_concept_cla_003_invalid_days_rejected(bad_days):
     """CLA-003: a non-integer day count is rejected during validation."""
@@ -68,7 +68,7 @@ def test_concept_cla_003_invalid_days_rejected(bad_days):
         InputModel(number_of_days=bad_days)  # type: ignore[call-arg]
 
 
-@pytest.mark.concept("CLA-003")
+@pytest.mark.concept("CY-OS.governance.input-validation-parameter-modeling")
 def test_concept_cla_003_invalid_dimension_rejected():
     """CLA-003: an unknown dimension value raises a validation error."""
     with pytest.raises(ValidationError):

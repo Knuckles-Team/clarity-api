@@ -13,7 +13,7 @@
     - `mcp/`: Transport layer — MCP tool registration; tools depend on an
       injected client via `Depends(get_client)`.
     - `services/`: Application-service layer — `InsightsService` wraps the
-      injected client with the data-export use case (`CONCEPT:CLA-001`).
+      injected client with the data-export use case (`CONCEPT:CY-OS.governance.data-export-live-insights`).
     - `api/`: Adapter layer — modular REST client mixins composed into the
       `Api` facade.
     - `clarity_models.py` / `models.py`: Pydantic request/response models.
@@ -185,7 +185,7 @@ alone).
 Working in parallel with other sessions/worktrees? **Reserve a concept id before you write its `CONCEPT:` marker** so two sessions never collide:
 
 ```bash
-agent-utilities --json concept reserve --ns KG-2   # or a package prefix, e.g. KEY
+agent-utilities --json concept reserve --ns EG-KG.compute.backend   # or a package prefix, e.g. KEY
 ```
 
 Full protocol (ledger, merge=union, reconcile, MCP/REST): <https://knuckles-team.github.io/agent-utilities/concept_coordination/>

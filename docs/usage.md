@@ -46,7 +46,7 @@ clarity-mcp --transport sse --port 8000
 
 | Tool | Concept | Actions | Description |
 |------|---------|---------|-------------|
-| `clarity_insights` | `CONCEPT:CLA-001` | `get_data_export` | Export Clarity dashboard data / live insights |
+| `clarity_insights` | `CONCEPT:CY-OS.governance.data-export-live-insights` | `get_data_export` | Export Clarity dashboard data / live insights |
 
 Tools take an `action` plus a JSON `params_json` payload:
 

@@ -32,7 +32,7 @@ def get_client(
 ) -> Api:
     """Factory function to create the Clarity ``Api`` client.
 
-    CONCEPT:CLA-002 — Credential & Auth Factory. Supports OIDC delegation
+    CONCEPT:CY-OS.identity.credential-auth-factory-supports — Credential & Auth Factory. Supports OIDC delegation
     (RFC 8693 token exchange) and fixed credentials (``CLARITY_TOKEN``). Used as
     the ``Depends(get_client)`` dependency for the MCP tools.
     """

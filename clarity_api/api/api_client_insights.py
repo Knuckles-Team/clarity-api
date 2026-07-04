@@ -24,7 +24,7 @@ class ClarityApiInsights(ClarityApiBase):
     ) -> requests.Response:
         """Retrieve dashboard data insights for a project.
 
-        CONCEPT:CLA-001 — Data Export / Live Insights. Implements the
+        CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Implements the
         ``GET /export-data/api/v1/project-live-insights`` call backing the
         ``clarity_insights`` MCP tool.
 

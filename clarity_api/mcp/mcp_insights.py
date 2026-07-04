@@ -1,6 +1,6 @@
 """MCP tools for Microsoft Clarity data export / insights operations.
 
-Implements ``CONCEPT:CLA-001`` (Data Export / Live Insights) using the
+Implements ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights) using the
 action-routed dynamic tool pattern: a single tool dispatches on ``action`` with
 a JSON ``params_json`` payload.
 """
@@ -49,7 +49,7 @@ def register_insights_tools(mcp: FastMCP):
     ) -> Any:
         """Retrieve Microsoft Clarity dashboard data insights for a project.
 
-        CONCEPT:CLA-001 — Data Export / Live Insights. Pulls live insights over
+        CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Pulls live insights over
         a date range, optionally broken down by up to three dimensions.
         """
         if ctx:

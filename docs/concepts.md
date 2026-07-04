@@ -14,12 +14,12 @@ docstring marker on the implementing function), **docs** (this registry), and
 
 | Concept ID | Name | Implementation | Test |
 |------------|------|----------------|------|
-| `CONCEPT:CLA-001` | Data Export / Live Insights | `clarity_insights` MCP tool + `ClarityApiInsights.get_data_export` (`/export-data/api/v1/project-live-insights`) | `test_concept_cla_001_*` |
-| `CONCEPT:CLA-002` | Credential & Auth Factory | `clarity_api.auth.get_client` — OIDC delegation (RFC 8693) / fixed-token resolution | `test_concept_cla_002_*` |
-| `CONCEPT:CLA-003` | Input Validation & Parameter Modeling | `clarity_api.clarity_models.InputModel` — date-range + dimension validation | `test_concept_cla_003_*` |
-| `CONCEPT:CLA-004` | REST Base Client | `clarity_api.api.api_client_base.ClarityApiBase` — session, bearer auth, fail-fast credential validation | `test_concept_cla_004_*` |
-| `CONCEPT:CLA-005` | Package & Server Bootstrap | `clarity_api.__init__` lazy loading, `mcp_server.mcp_server`, `agent_server.agent_server` entry points | `test_concept_cla_005_*` |
-| `CONCEPT:CLA-006` | Concept Traceability Governance | `tests/unit/test_concept_parity.py` parity gates: every `CLA-*` tag is documented and every inherited pillar concept is registered upstream | `test_concept_cla_006_*` |
+| `CONCEPT:CY-OS.governance.data-export-live-insights` | Data Export / Live Insights | `clarity_insights` MCP tool + `ClarityApiInsights.get_data_export` (`/export-data/api/v1/project-live-insights`) | `test_concept_cla_001_*` |
+| `CONCEPT:CY-OS.identity.credential-auth-factory-supports` | Credential & Auth Factory | `clarity_api.auth.get_client` — OIDC delegation (RFC 8693) / fixed-token resolution | `test_concept_cla_002_*` |
+| `CONCEPT:CY-OS.governance.input-validation-parameter-modeling` | Input Validation & Parameter Modeling | `clarity_api.clarity_models.InputModel` — date-range + dimension validation | `test_concept_cla_003_*` |
+| `CONCEPT:CY-OS.governance.rest-base-client-owns` | REST Base Client | `clarity_api.api.api_client_base.ClarityApiBase` — session, bearer auth, fail-fast credential validation | `test_concept_cla_004_*` |
+| `CONCEPT:CY-OS.governance.package-server-bootstrap` | Package & Server Bootstrap | `clarity_api.__init__` lazy loading, `mcp_server.mcp_server`, `agent_server.agent_server` entry points | `test_concept_cla_005_*` |
+| `CONCEPT:CY-OS.governance.cla` | Concept Traceability Governance | `tests/unit/test_concept_parity.py` parity gates: every `CLA-*` tag is documented and every inherited pillar concept is registered upstream | `test_concept_cla_006_*` |
 
 ## Cross-Project References (from agent-utilities)
 
@@ -33,8 +33,8 @@ docstring marker on the implementing function), **docs** (this registry), and
 | ORCH-1.2 | Confidence-Gated Router | agent-utilities |
 | OS-5.1 | Prompt Injection Defense | agent-utilities |
 | OS-5.2 | Cognitive Scheduler | agent-utilities |
-| OS-5.3 | Guardrail Engine | agent-utilities |
-| OS-5.4 | Audit Logging | agent-utilities |
+| AU-OS.governance.reactive-multi-axis-budget | Guardrail Engine | agent-utilities |
+| AU-OS.governance.wasm-micro-agent-sandbox | Audit Logging | agent-utilities |
 | KG-2.0 | Knowledge Graph Core | agent-utilities |
 
 ## Synergy with agent-utilities

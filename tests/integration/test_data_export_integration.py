@@ -2,7 +2,7 @@
 
 Exercises the full ``clarity_insights`` MCP tool -> ``get_client`` -> Clarity
 client wiring (HTTP mocked via the shared conftest fixtures), covering
-``CONCEPT:CLA-001`` (Data Export / Live Insights). Test names intentionally
+``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights). Test names intentionally
 mirror the README feature headings so documented capabilities stay covered.
 """
 
@@ -22,7 +22,7 @@ def export_client():
     )
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_integration_available_mcp_tools_data_export_dimensions(export_client):
     """Integration: data export with multiple dimension breakdowns returns data."""
     response = export_client.get_data_export(
@@ -35,7 +35,7 @@ def test_integration_available_mcp_tools_data_export_dimensions(export_client):
     assert metrics[0]["metricName"] == "Traffic"
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_integration_usage_python_client_configuration(export_client):
     """Integration: the documented Python-client usage flow works end to end."""
     response = export_client.get_data_export(number_of_days=1)
@@ -46,7 +46,7 @@ def test_integration_usage_python_client_configuration(export_client):
     assert int(info["totalSessionCount"]) > 0
 
 
-@pytest.mark.concept("CLA-001")
+@pytest.mark.concept("CY-OS.governance.data-export-live-insights")
 def test_integration_serialize_wraps_response_for_transport():
     """Integration: ``_serialize`` produces an MCP-safe status/data envelope."""
 

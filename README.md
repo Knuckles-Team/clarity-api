@@ -59,7 +59,7 @@ via `Depends(get_client)`, which resolves credentials (OIDC delegation or a fixe
 graph TD
     User(["User / A2A Client"]) --> Agent["clarity-agent<br/>Pydantic-AI A2A Server"]
     Agent --> MCP["clarity-mcp<br/>FastMCP Server"]
-    MCP --> Tool["clarity_insights tool<br/>(CONCEPT:CLA-001)"]
+    MCP --> Tool["clarity_insights tool<br/>(CONCEPT:CY-OS.governance.data-export-live-insights)"]
     Tool -->|Depends get_client| Auth["get_client<br/>auth.py"]
     Tool --> Service["InsightsService<br/>clarity_api/services/"]
     Auth --> Client["Api facade<br/>clarity_api/api/"]
@@ -80,7 +80,7 @@ graph TD
 
 - **Typed Python client** — `clarity_api.api_client.Api`, composed from modular per-domain
   mixins in `clarity_api/api/`, validating credentials against `GET /projects`.
-- **Action-routed MCP tool** — `clarity_insights` (`CONCEPT:CLA-001`) consolidates the
+- **Action-routed MCP tool** — `clarity_insights` (`CONCEPT:CY-OS.governance.data-export-live-insights`) consolidates the
   Data Export surface to minimize LLM token overhead.
 - **A2A agent server** — `clarity-agent` auto-discovers the MCP tools and exposes an
   AG-UI web interface.
@@ -352,8 +352,8 @@ print("JSON Output:", response.json())
 
 `clarity-api` inherits enterprise infrastructure from `agent-utilities`: JWT/OIDC
 authentication, OpenTelemetry instrumentation, HashiCorp Vault secret resolution,
-append-only audit logging (agent-utilities `OS-5.4`), prompt-injection defense
-(`OS-5.1`), and the guardrail engine (`OS-5.3`). The connector stays
+append-only audit logging (agent-utilities `AU-OS.governance.wasm-micro-agent-sandbox`), prompt-injection defense
+(`OS-5.1`), and the guardrail engine (`AU-OS.governance.reactive-multi-axis-budget`). The connector stays
 inactive until `CLARITY_URL` and `CLARITY_TOKEN` are configured. Never commit `.env`
 files or tokens.
 

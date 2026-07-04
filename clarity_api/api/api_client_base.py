@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class ClarityApiBase:
     """Base HTTP client for Microsoft Clarity.
 
-    CONCEPT:CLA-004 — REST Base Client. Owns the shared ``requests.Session``,
+    CONCEPT:CY-OS.governance.rest-base-client-owns — REST Base Client. Owns the shared ``requests.Session``,
     bearer-token header, SSL-verify handling, and fail-fast credential
     validation against ``GET /projects``.
 
@@ -50,7 +50,7 @@ class ClarityApiBase:
         verify: bool = True,
         debug: bool = False,
     ):
-        """Initialize the session and validate credentials (CONCEPT:CLA-004)."""
+        """Initialize the session and validate credentials (CONCEPT:CY-OS.governance.rest-base-client-owns)."""
         if debug:
             logger.setLevel(logging.DEBUG)
             logger.debug("Debug mode enabled")
@@ -103,7 +103,7 @@ class ClarityApiBase:
     ) -> requests.Response:
         """Execute an arbitrary REST request against the Clarity instance.
 
-        CONCEPT:CLA-004 — REST Base Client.
+        CONCEPT:CY-OS.governance.rest-base-client-owns — REST Base Client.
 
         Args:
             method: HTTP method (GET, POST, PUT, DELETE, PATCH).
