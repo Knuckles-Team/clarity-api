@@ -1,5 +1,6 @@
 ---
 name: clarity-analytics-ingestion
+skill_type: skill
 description: >-
   Natively ingest a Microsoft Clarity behavioral-analytics export into the
   epistemic-graph knowledge graph via the clarity-api MCP server — pushing typed

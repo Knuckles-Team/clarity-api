@@ -1,5 +1,6 @@
 ---
 name: clarity-behavioral-insights
+skill_type: skill
 description: >-
   Export and interpret Microsoft Clarity behavioral-analytics via the clarity-api
   MCP server — pull dashboard "live insights" (sessions, bot traffic, distinct
