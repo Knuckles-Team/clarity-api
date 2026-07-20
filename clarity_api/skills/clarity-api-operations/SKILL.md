@@ -1,5 +1,6 @@
 ---
 name: clarity-api-operations
+skill_type: skill
 description: >-
   Operate clarity-api through its governed MCP and GraphOS capabilities, including clarity analytics ingestion, clarity behavioral insights. Use when a request requires this provider's read, change, automation, ingestion, troubleshooting, or evidence workflows.
 ---
