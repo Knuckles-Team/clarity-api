@@ -25,7 +25,6 @@ def configured_env(monkeypatch):
     """Set the standard Clarity credentials in the environment."""
     monkeypatch.setenv("CLARITY_URL", "https://www.clarity.ms")
     monkeypatch.setenv("CLARITY_TOKEN", "mock_token")
-    monkeypatch.setenv("CLARITY_SSL_VERIFY", "False")
 
 
 @pytest.mark.concept("CY-OS.identity.credential-auth-factory-supports")
@@ -34,9 +33,7 @@ def test_concept_cla_002_get_client_returns_api(configured_env):
     from clarity_api.api_client import Api
     from clarity_api.auth import get_client
 
-    client = get_client(
-        instance="https://www.clarity.ms", token="mock_token", verify=False
-    )
+    client = get_client(instance="https://www.clarity.ms", token="mock_token")
     assert isinstance(client, Api)
     assert client.url == "https://www.clarity.ms"
     assert client.headers is not None
@@ -48,9 +45,7 @@ def test_concept_cla_002_get_client_data_export(configured_env):
     """CLA-002: a client built by the factory can perform a data export."""
     from clarity_api.auth import get_client
 
-    client = get_client(
-        instance="https://www.clarity.ms", token="mock_token", verify=False
-    )
+    client = get_client(instance="https://www.clarity.ms", token="mock_token")
     response = client.get_data_export(number_of_days=1)
     assert response.status_code == 200
     assert "data" in response.json()

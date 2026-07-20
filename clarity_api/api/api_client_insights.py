@@ -52,7 +52,6 @@ class ClarityApiInsights(ClarityApiBase):
                 url=f"{self.url}/export-data/api/v1/project-live-insights",
                 params=api_parameters,
                 headers=self.headers,
-                verify=self.verify,
             )
         except ValidationError as e:
             raise ParameterError(f"Invalid parameters: {e.errors()}") from e

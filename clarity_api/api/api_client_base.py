@@ -2,7 +2,7 @@
 """HTTP/REST base client for the Microsoft Clarity Data Export API.
 
 Provides the shared ``requests.Session``, bearer-token authentication header,
-SSL-verify handling, base-URL normalization, and credential validation that all
+named TLS-profile handling, base-URL normalization, and credential validation that all
 domain client mixins build on. Validation hits ``GET /projects`` during
 ``__init__`` to fail fast on bad credentials — preserving the original
 ``clarity_api.clarity_api.Api`` contract.
@@ -11,7 +11,10 @@ domain client mixins build on. Validation hits ``GET /projects`` during
 import logging
 
 import requests
-import urllib3
+from agent_utilities.core.transport_security import (
+    ResolvedTLSProfile,
+    resolve_configured_tls_profile,
+)
 
 from clarity_api.exceptions import (
     AuthError,
@@ -27,13 +30,13 @@ class ClarityApiBase:
     """Base HTTP client for Microsoft Clarity.
 
     CONCEPT:CY-OS.governance.rest-base-client-owns — REST Base Client. Owns the shared ``requests.Session``,
-    bearer-token header, SSL-verify handling, and fail-fast credential
+    bearer-token header, named TLS-profile handling, and fail-fast credential
     validation against ``GET /projects``.
 
     Args:
         url: Base URL of the Clarity instance (e.g. ``https://www.clarity.ms``).
         token: Bearer API token generated from the Clarity project settings.
-        verify: Whether to verify TLS certificates. Defaults to ``True``.
+        tls_profile: Resolved mandatory-verification transport policy.
         debug: Enable verbose logging when ``True``.
 
     Raises:
@@ -47,7 +50,7 @@ class ClarityApiBase:
         self,
         url: str | None = None,
         token: str | None = None,
-        verify: bool = True,
+        tls_profile: ResolvedTLSProfile | None = None,
         debug: bool = False,
     ):
         """Initialize the session and validate credentials (CONCEPT:CY-OS.governance.rest-base-client-owns)."""
@@ -60,14 +63,11 @@ class ClarityApiBase:
         if url is None:
             raise MissingParameterError
 
-        self._session = requests.Session()
+        self.tls_profile = tls_profile or resolve_configured_tls_profile("clarity")
+        self._session = self.tls_profile.configure_requests_session(requests.Session())
         self.url = url.rstrip("/")
         self.headers: dict | None = None
-        self.verify = verify
         self.debug = debug
-
-        if self.verify is False:
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         if token:
             self.headers = {
@@ -80,19 +80,23 @@ class ClarityApiBase:
         response = self._session.get(
             url=f"{self.url}/projects",
             headers=self.headers,
-            verify=self.verify,
             timeout=10,
         )
 
         if response.status_code == 403:
-            logger.error(f"Unauthorized Error: {response.content!r}")
+            logger.error("Clarity authorization rejected the request")
             raise UnauthorizedError
         elif response.status_code == 401:
-            logger.error(f"Authentication Error: {response.content!r}")
+            logger.error("Clarity authentication rejected the request")
             raise AuthError
         elif response.status_code == 404:
-            logger.error(f"Parameter Error: {response.content!r}")
+            logger.error("Clarity resource lookup failed")
             raise ParameterError
+
+    def close(self) -> None:
+        """Release transport resources and runtime-only TLS material."""
+        self._session.close()
+        self.tls_profile.cleanup()
 
     def api_request(
         self,
@@ -121,5 +125,4 @@ class ClarityApiBase:
             params=params,
             json=json,
             headers=self.headers,
-            verify=self.verify,
         )

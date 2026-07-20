@@ -7,7 +7,7 @@
         "clarity-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "condensed",
+        "MCP_TOOL_MODE": "intent",
         "CLARITY_TOKEN": "your_clarity_token_here",
         "CLARITY_URL": "https://www.clarity.ms",
         "INSIGHTSTOOL": "True"

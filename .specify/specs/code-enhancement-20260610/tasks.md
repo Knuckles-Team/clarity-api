@@ -67,7 +67,7 @@ Skipped informational: 4
   - Priority: P2-Medium | Effort: Medium
 - [ ] [P] **T032** [Environment Variables] Only 20% of env vars documented in README.md
   - Priority: P2-Medium | Effort: Medium
-- [ ] [P] **T033** [Environment Variables] Undocumented env vars: AUTH_TYPE, CLARITY_SSL_VERIFY, ENABLE_OTEL, EUNOMIA_POLIC
+- [ ] [P] **T033** [Environment Variables] Undocumented env vars: AUTH_TYPE, TLS_PROFILE, ENABLE_OTEL, EUNOMIA_POLIC
   - Priority: P2-Medium | Effort: Medium
 - [ ] [P] **T034** [Environment Variables] 4 Python env vars not in .env.example: CLARITY_TOKEN, FASTMCP_LOG_LEVEL, NO_COLO
   - Priority: P2-Medium | Effort: Medium

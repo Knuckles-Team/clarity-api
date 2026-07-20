@@ -29,8 +29,8 @@ pip install -e ".[all]"
 ## Docker
 
 ```bash
-docker pull knucklessg1/clarity-api:latest
-docker run --rm -e CLARITY_URL -e CLARITY_TOKEN knucklessg1/clarity-api:latest
+docker pull example/clarity-api@sha256:<digest>
+docker run --rm -e CLARITY_URL -e CLARITY_TOKEN example/clarity-api@sha256:<digest>
 ```
 
 ## Extras matrix
@@ -39,7 +39,7 @@ docker run --rm -e CLARITY_URL -e CLARITY_TOKEN knucklessg1/clarity-api:latest
 |-------|----------|---------|
 | _(none)_ | `agent-utilities`, `requests`, `pydantic`, `python-dotenv` | the `Api` client |
 | `mcp` | `agent-utilities[mcp]` | the `clarity-mcp` MCP server |
-| `agent` | `agent-utilities[agent,logfire]` | the `clarity-agent` A2A agent |
+| `agent` | `agent-utilities[agent-runtime,logfire]` | the `clarity-agent` A2A agent |
 | `all` | `clarity-api[mcp,agent]` | everything |
 | `test` | pytest tooling | running the test suite |
 
@@ -51,7 +51,7 @@ Configure these environment variables (or a `.env` file — see `.env.example`):
 |----------|---------|-------------|
 | `CLARITY_URL` | `https://www.clarity.ms` | Base URL of the Clarity instance |
 | `CLARITY_TOKEN` | _(unset)_ | Bearer API token from project settings |
-| `CLARITY_SSL_VERIFY` | `True` | Verify TLS certificates |
+| `TLS_PROFILE` / `TLS_PROFILE_REF` | _(system trust)_ | AgentConfig transport profile; verification remains mandatory |
 
 > **Note**: Only Clarity project admins can generate API tokens
 > (`Settings` → `Data Export` → `Generate new API token`).

@@ -9,7 +9,6 @@ Authentication priority:
 Environment variables:
 - ``CLARITY_URL`` — base URL of the Clarity instance (default ``https://www.clarity.ms``).
 - ``CLARITY_TOKEN`` — bearer API token.
-- ``CLARITY_SSL_VERIFY`` — whether to verify TLS certificates (default ``True``).
 """
 
 import threading
@@ -17,6 +16,10 @@ import threading
 from agent_utilities.base_utilities import get_logger
 from agent_utilities.core.config import setting
 from agent_utilities.core.exceptions import AuthError, UnauthorizedError
+from agent_utilities.core.transport_security import (
+    ResolvedTLSProfile,
+    resolve_configured_tls_profile,
+)
 
 local = threading.local()
 from clarity_api.api_client import Api
@@ -27,7 +30,7 @@ logger = get_logger(__name__)
 def get_client(
     instance: str | None = None,
     token: str | None = None,
-    verify: bool | None = None,
+    tls_profile: ResolvedTLSProfile | None = None,
     config: dict | None = None,
 ) -> Api:
     """Factory function to create the Clarity ``Api`` client.
@@ -40,8 +43,7 @@ def get_client(
         instance = setting("CLARITY_URL", "https://www.clarity.ms")
     if token is None:
         token = setting("CLARITY_TOKEN", None)
-    if verify is None:
-        verify = setting("CLARITY_SSL_VERIFY", True)
+    profile = tls_profile or resolve_configured_tls_profile("clarity")
 
     from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,
@@ -58,7 +60,6 @@ def get_client(
                 config=config,
                 audience=(config or {}).get("audience", instance),
                 scopes=(config or {}).get("delegated_scopes", "api"),
-                verify=verify,
             )
             identity = get_user_identity()
             logger.info(
@@ -68,21 +69,24 @@ def get_client(
                     "instance": instance,
                 },
             )
-            return Api(url=instance, token=delegated_token, verify=verify)
+            return Api(url=instance, token=delegated_token, tls_profile=profile)
         except Exception as e:
             logger.error(
                 "OIDC delegation failed for Clarity",
-                extra={"error_type": type(e).__name__, "error_message": str(e)},
+                extra={
+                    "error_type": type(e).__name__,
+                    "error_message": type(e).__name__,
+                },
             )
-            raise RuntimeError(f"Token exchange failed: {str(e)}") from e
+            raise RuntimeError(f"Token exchange failed: {type(e).__name__}") from e
 
     # --- Path 2: Fixed Credentials (CLARITY_TOKEN) ---
     logger.info("Using fixed credentials for Clarity API")
     try:
-        return Api(url=instance, token=token, verify=verify)
+        return Api(url=instance, token=token, tls_profile=profile)
     except (AuthError, UnauthorizedError) as e:
         raise RuntimeError(
             f"AUTHENTICATION ERROR: The Clarity credentials provided are not valid for '{instance}'. "
             f"Please check your CLARITY_TOKEN and CLARITY_URL environment variables. "
-            f"Error details: {str(e)}"
+            f"Error details: {type(e).__name__}"
         ) from e

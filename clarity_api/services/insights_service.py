@@ -45,9 +45,9 @@ class InsightsService:
 
         CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Strips ``None`` values
         from ``kwargs`` and delegates to the injected client, then serializes. As a
-        best-effort side effect it natively ingests the export into the epistemic-graph
+        authoritative side effect it natively ingests the export into the epistemic-graph
         knowledge graph (typed :ClaritySession/:BehaviorInsight nodes + a :Document
-        summary); the ingest no-ops when no engine is reachable.
+        summary); native ingestion failures propagate.
         """
         clean = {k: v for k, v in kwargs.items() if v is not None}
         response = self._client.get_data_export(**clean)
@@ -56,13 +56,10 @@ class InsightsService:
 
     @staticmethod
     def _ingest(response: Any, params: dict[str, Any]) -> None:
-        """Best-effort native KG ingestion of an export response (never raises)."""
-        try:
-            from clarity_api.kg_ingest import ingest_response
+        """Authoritatively ingest an export response into the native KG."""
+        from clarity_api.kg_ingest import ingest_response
 
-            ingest_response(response, params)
-        except Exception:  # noqa: BLE001 — KG ingest is a non-fatal side effect
-            pass
+        ingest_response(response, params)
 
 
 __all__ = ["InsightsService"]

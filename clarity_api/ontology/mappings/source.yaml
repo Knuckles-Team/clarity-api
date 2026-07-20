@@ -1,0 +1,20 @@
+schema_version: '1'
+connector: clarity-api
+ontology_source: clarity
+sync:
+- preset: clarity-insights
+  server: clarity-api
+  tool: clarity_insights
+  action: get_data_export
+  records_path: data.data
+  id_field: metricName
+  title_field: metricName
+  text_field: metricName
+  updated_field: null
+  doc_type: clarity-insight
+  tool_schema_sha256: e3babeaf7463193911114f36ee5d748f18e290c5d80adef1d44ad399142e73b8
+governance:
+  default_acl: quarantine
+  identity: opaque-reference
+  tenant: required-at-materialization
+  provenance: required-at-materialization

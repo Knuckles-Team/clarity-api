@@ -12,7 +12,6 @@ reason = "Unit tests using mocks"
 def mock_env(monkeypatch):
     monkeypatch.setenv("CLARITY_URL", "https://test.clarity.ms")
     monkeypatch.setenv("CLARITY_TOKEN", "mock_token")
-    monkeypatch.setenv("CLARITY_SSL_VERIFY", "False")
 
 
 @pytest.fixture(scope="session", autouse=True)

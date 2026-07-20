@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clarity API Operations"
+  short_description: "Help with Clarity API Operations tasks"
+  default_prompt: "Use $clarity-api-operations to complete a governed provider workflow."

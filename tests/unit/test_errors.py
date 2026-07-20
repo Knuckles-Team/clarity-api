@@ -43,21 +43,21 @@ def test_concept_cla_004_credential_validation_errors(status_code, expected_exc)
         return_value=_response_with_status(status_code),
     ):
         with pytest.raises(expected_exc):
-            Api(url="https://www.clarity.ms", token="mock_token", verify=False)
+            Api(url="https://www.clarity.ms", token="mock_token")
 
 
 @pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 def test_concept_cla_004_missing_token_raises():
     """CLA-004: omitting the token fails fast with MissingParameterError."""
     with pytest.raises(MissingParameterError):
-        Api(url="https://www.clarity.ms", token=None, verify=False)
+        Api(url="https://www.clarity.ms", token=None)
 
 
 @pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
 def test_concept_cla_004_missing_url_raises():
     """CLA-004: omitting the URL fails fast with MissingParameterError."""
     with pytest.raises(MissingParameterError):
-        Api(url=None, token="mock_token", verify=False)
+        Api(url=None, token="mock_token")
 
 
 @pytest.mark.concept("CY-OS.governance.input-validation-parameter-modeling")

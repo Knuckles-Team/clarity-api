@@ -20,9 +20,7 @@ def test_concept_cla_001_get_data_export_via_public_api():
     """CLA-001: the public ``Api`` performs a data export end to end."""
     import clarity_api
 
-    client = clarity_api.Api(
-        url="https://www.clarity.ms", token="mock_token", verify=False
-    )
+    client = clarity_api.Api(url="https://www.clarity.ms", token="mock_token")
     response = client.get_data_export(number_of_days=3, dimension_1="OS")
     assert response.status_code == 200
     assert "data" in response.json()

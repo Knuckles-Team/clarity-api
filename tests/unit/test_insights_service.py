@@ -10,10 +10,20 @@ from clarity_api.mcp.mcp_insights import _serialize
 from clarity_api.services import InsightsService
 
 
+@pytest.fixture(autouse=True)
+def isolate_native_ingest(monkeypatch):
+    """Keep service-seam assertions independent of governed graph authority."""
+    monkeypatch.setattr(
+        InsightsService,
+        "_ingest",
+        staticmethod(lambda _response, _params: None),
+    )
+
+
 @pytest.fixture
 def service() -> InsightsService:
     """An ``InsightsService`` wired to a mocked client and the real serializer."""
-    client = Api(url="https://www.clarity.ms", token="mock_token", verify=False)
+    client = Api(url="https://www.clarity.ms", token="mock_token")
     return InsightsService(client=client, serializer=_serialize)
 
 

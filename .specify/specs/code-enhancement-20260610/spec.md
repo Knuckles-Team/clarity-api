@@ -47,7 +47,7 @@
 - **FR-030**: No @pytest.mark.parametrize usage — consider data-driven tests
 - **FR-031**: 6 tests use weak assertions (assert result is not None, assert True, etc.)
 - **FR-032**: Only 20% of env vars documented in README.md
-- **FR-033**: Undocumented env vars: AUTH_TYPE, CLARITY_SSL_VERIFY, ENABLE_OTEL, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, FASTMCP_LOG_LEVEL, HOST, NO_COLOR, PORT, TERM
+- **FR-033**: Undocumented env vars: AUTH_TYPE, TLS_PROFILE, ENABLE_OTEL, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, FASTMCP_LOG_LEVEL, HOST, NO_COLOR, PORT, TERM
 - **FR-034**: 4 Python env vars not in .env.example: CLARITY_TOKEN, FASTMCP_LOG_LEVEL, NO_COLOR, TERM
 - **FR-035**: Check skipped: required agent-utilities/networkx dependencies not found.
 

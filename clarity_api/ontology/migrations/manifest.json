@@ -1,0 +1,6 @@
+{
+  "connector": "clarity-api",
+  "current_ontology_source": "clarity",
+  "migrations": [],
+  "schema_version": "1"
+}

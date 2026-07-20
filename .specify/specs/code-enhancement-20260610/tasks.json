@@ -417,8 +417,8 @@
   },
   {
     "id": "T033",
-    "title": "[Environment Variables] Undocumented env vars: AUTH_TYPE, CLARITY_SSL_VERIFY, ENABLE_OTEL, EUNOMIA_POLIC",
-    "description": "Undocumented env vars: AUTH_TYPE, CLARITY_SSL_VERIFY, ENABLE_OTEL, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, FASTMCP_LOG_LEVEL, HOST, NO_COLOR, PORT, TERM",
+    "title": "[Environment Variables] Undocumented env vars: AUTH_TYPE, TLS_PROFILE, ENABLE_OTEL, EUNOMIA_POLIC",
+    "description": "Undocumented env vars: AUTH_TYPE, TLS_PROFILE, ENABLE_OTEL, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, FASTMCP_LOG_LEVEL, HOST, NO_COLOR, PORT, TERM",
     "domain": "Environment Variables",
     "priority": "P2-Medium",
     "effort": "Medium",

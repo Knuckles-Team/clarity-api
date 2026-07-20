@@ -17,9 +17,7 @@ from clarity_api.mcp.mcp_insights import _serialize
 @pytest.fixture
 def export_client():
     """A configured Clarity client built through the auth factory."""
-    return get_client(
-        instance="https://www.clarity.ms", token="mock_token", verify=False
-    )
+    return get_client(instance="https://www.clarity.ms", token="mock_token")
 
 
 @pytest.mark.concept("CY-OS.governance.data-export-live-insights")

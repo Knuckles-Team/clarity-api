@@ -24,7 +24,7 @@ def _resolve_master_overview() -> str:
 
     The registry lives in the ``agent-utilities`` sibling of the
     ``agent-packages/agents/<project>`` checkout. When this project is run from
-    a git worktree (e.g. ``/home/apps/worktrees/clarity-api``) the registry is
+    a git worktree (for example, under a configured worktree root) the registry is
     NOT a sibling of the worktree, so resolve against the canonical workspace.
     """
     candidates = [
@@ -35,8 +35,16 @@ def _resolve_master_overview() -> str:
             "docs",
             "overview.md",
         ),
-        # Canonical workspace checkout (used when running from a worktree).
-        "/home/apps/workspace/agent-packages/agent-utilities/docs/overview.md",
+        # Canonical package root override (used when running from a worktree).
+        os.path.join(
+            os.environ.get(
+                "AGENT_PACKAGES_ROOT",
+                os.path.dirname(os.path.dirname(ROOT_DIR)),
+            ),
+            "agent-utilities",
+            "docs",
+            "overview.md",
+        ),
     ]
     for path in candidates:
         if os.path.exists(path):

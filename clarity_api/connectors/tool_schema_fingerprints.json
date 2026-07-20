@@ -1,0 +1,8 @@
+{
+  "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+  "connector": "clarity-api",
+  "schema_version": "1",
+  "tools": {
+    "clarity_insights": "e3babeaf7463193911114f36ee5d748f18e290c5d80adef1d44ad399142e73b8"
+  }
+}

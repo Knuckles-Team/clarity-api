@@ -39,8 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Migrated packaging from `setup.py` to a golden `pyproject.toml`.
-- Mapped credentials to standardized env vars `CLARITY_URL`, `CLARITY_TOKEN`,
-  and `CLARITY_SSL_VERIFY`.
+- Mapped credentials to standardized endpoint and token settings and moved
+  transport trust to AgentConfig named TLS profiles.
 - Refactored the `Api` client into a facade over the modular `api/` sub-package
   while preserving the original `Api`/`get_data_export` contract.
 

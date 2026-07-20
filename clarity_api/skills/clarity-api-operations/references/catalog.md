@@ -1,0 +1,6 @@
+# Provider workflow catalog
+
+Load only the workflow relevant to the current request.
+
+- [clarity-analytics-ingestion](../../clarity-analytics-ingestion/WORKFLOW.md): Natively ingest a Microsoft Clarity behavioral-analytics export into the epistemic-graph knowledge graph via the clarity-api MCP server — pushing typed :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension nodes plus a :Document summary with their :belongsToProject / :hasInsight / :brokenDownBy links. Use when the agent must persist Clarity metrics into the KG for cross-source reasoning or semantic search. Do NOT use to merely read/return metrics (use clarity-behavioral-insights) or for non-Clarity sources.
+- [clarity-behavioral-insights](../../clarity-behavioral-insights/WORKFLOW.md): Export and interpret Microsoft Clarity behavioral-analytics via the clarity-api MCP server — pull dashboard "live insights" (sessions, bot traffic, distinct users, pages-per-session) over a 1-3 day window, optionally segmented by up to three dimensions (Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL). Use when the agent must read Clarity metrics, compare traffic by a dimension, or summarize recent behavioral trends. Do NOT use to push those metrics into the knowledge graph (use clarity-analytics-ingestion) or for any non-Clarity web analytics.

@@ -11,6 +11,9 @@ from __future__ import annotations
 
 import json
 
+import pytest
+from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
+
 from clarity_api.kg_ingest import (
     ingest_documents,
     ingest_entities,
@@ -48,6 +51,7 @@ _EXPORT = [
 class _FakeTxn:
     def __init__(self):
         self.nodes = {}
+        self.edges = []
         self.committed = False
 
     def begin(self, graph=None):
@@ -57,23 +61,18 @@ class _FakeTxn:
     def add_node(self, txn, node_id, props):
         self.nodes[node_id] = props
 
+    def add_edge(self, txn, src, dst, props):
+        self.edges.append((src, dst, props))
+
     def commit(self, txn):
         self.committed = True
         return True
 
 
-class _FakeEdges:
-    def __init__(self):
-        self.edges = []
-
-    def add(self, src, dst, props):
-        self.edges.append((src, dst, props))
-
 
 class _FakeClient:
     def __init__(self):
         self.txn = _FakeTxn()
-        self.edges = _FakeEdges()
 
 
 class _FakeResponse:
@@ -88,10 +87,10 @@ def test_ingest_entities_writes_nodes_and_edges():
     c = _FakeClient()
     res = ingest_entities(
         [
-            {"id": "a", "type": "ClarityProject", "name": "p"},
-            {"id": "b", "type": "ClaritySession"},
+            {"id": "a", "node_type": "ClarityProject", "name": "p"},
+            {"id": "b", "node_type": "ClaritySession"},
         ],
-        [{"source": "b", "target": "a", "type": "belongsToProject"}],
+        [{"source": "b", "target": "a", "relationship": "belongsToProject"}],
         client=c,
         graph="__commons__",
     )
@@ -101,7 +100,7 @@ def test_ingest_entities_writes_nodes_and_edges():
     # provenance is stamped
     assert c.txn.nodes["a"]["source"] == "clarity-api"
     assert c.txn.nodes["a"]["domain"] == "clarity"
-    assert c.edges.edges == [("b", "a", {"type": "belongsToProject"})]
+    assert c.txn.edges == [("b", "a", {"relationship": "belongsToProject"})]
 
 
 def test_ingest_documents_writes_document_nodes():
@@ -113,7 +112,7 @@ def test_ingest_documents_writes_document_nodes():
     )
     assert res == {"nodes": 1, "edges": 0}
     node = c.txn.nodes["clarity:doc:x"]
-    assert node["type"] == "Document"
+    assert node["node_type"] == "Document"
     assert node["text"] == "hello"
     assert node["created_at"]  # stamped
 
@@ -125,10 +124,10 @@ def test_map_export_builds_typed_nodes_and_links():
     by_id = {e["id"]: e for e in entities}
 
     # project
-    assert by_id["clarity:project:acme"]["type"] == "ClarityProject"
+    assert by_id["clarity:project:acme"]["node_type"] == "ClarityProject"
     # session snapshot aggregates counts across the first count-bearing metric
     sess = by_id["clarity:session:acme:3:OS"]
-    assert sess["type"] == "ClaritySession"
+    assert sess["node_type"] == "ClaritySession"
     assert sess["totalSessionCount"] == 140
     assert sess["totalBotSessionCount"] == 15
     assert sess["distinctUserCount"] == 125
@@ -136,7 +135,7 @@ def test_map_export_builds_typed_nodes_and_links():
     # one insight per metric
     assert by_id["clarity:insight:acme:3:OS:Traffic"]["metricName"] == "Traffic"
     assert (
-        by_id["clarity:insight:acme:3:OS:EngagementTime"]["type"] == "BehaviorInsight"
+        by_id["clarity:insight:acme:3:OS:EngagementTime"]["node_type"] == "BehaviorInsight"
     )
     # dimension node
     assert by_id["clarity:dimension:OS"]["dimensionName"] == "OS"
@@ -144,7 +143,7 @@ def test_map_export_builds_typed_nodes_and_links():
     assert documents[0]["id"] == "clarity:doc:acme:3:OS"
     assert "acme" in documents[0]["text"]
 
-    rel_types = {r["type"] for r in relationships}
+    rel_types = {r["relationship"] for r in relationships}
     assert {
         "belongsToProject",
         "hasInsight",
@@ -185,17 +184,18 @@ def test_ingest_response_parses_bare_list():
     assert "clarity:project:acme" in c.txn.nodes
 
 
-def test_ingest_response_noops_on_empty_payload():
-    c = _FakeClient()
-    assert ingest_response(_FakeResponse({"data": []}), {}, client=c) is None
-    assert ingest_response(_FakeResponse("nonsense"), {}, client=c) is None
+def test_ingest_response_materializes_empty_snapshot():
+    first = ingest_response(_FakeResponse({"data": []}), {}, client=_FakeClient())
+    second = ingest_response(_FakeResponse("nonsense"), {}, client=_FakeClient())
+    assert first == {"nodes": 2, "edges": 2, "documents": 1}
+    assert second == first
 
 
-def test_ingest_noops_without_engine():
-    # No injected client + no reachable engine -> clean no-op.
-    assert ingest_entities([{"id": "a", "type": "ClarityProject"}]) is None
+def test_ingest_rejects_legacy_structural_fields():
+    with pytest.raises(NativeIngestError, match="canonical node_type"):
+        ingest_entities([{"id": "legacy", "type": "Legacy"}], client=_FakeClient())
 
 
-def test_ingest_empty_is_noop():
-    assert ingest_entities([], client=_FakeClient()) is None
-    assert ingest_documents([], client=_FakeClient()) is None
+def test_ingest_empty_is_rejected():
+    with pytest.raises(NativeIngestError, match="at least one entity"):
+        ingest_entities([], client=_FakeClient())

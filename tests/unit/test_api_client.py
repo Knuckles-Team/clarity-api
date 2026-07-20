@@ -12,7 +12,7 @@ from clarity_api.api_client import Api
 @pytest.fixture
 def client() -> Api:
     """A credential-validated Clarity ``Api`` client (HTTP mocked via conftest)."""
-    return Api(url="https://www.clarity.ms", token="mock_token", verify=False)
+    return Api(url="https://www.clarity.ms", token="mock_token")
 
 
 @pytest.mark.concept("CY-OS.governance.rest-base-client-owns")
