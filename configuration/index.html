@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://knuckles-team.github.io/clarity-api/usage/">
+        <link rel="canonical" href="https://knuckles-team.github.io/clarity-api/configuration/">
       
       
-        <link rel="prev" href="../deployment/">
+        <link rel="prev" href="../installation/">
       
       
-        <link rel="next" href="../concepts/">
+        <link rel="next" href="../deployment/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Usage (API / CLI / MCP) - clarity-api</title>
+        <title>Configuration, trust, and privacy - clarity-api</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#usage" class="md-skip">
+        <a href="#configuration-trust-and-privacy" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage (API / CLI / MCP)
+              Configuration, trust, and privacy
             
           </span>
         </div>
@@ -291,9 +291,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../configuration/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -329,11 +331,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../usage/" class="md-tabs__link">
         
   
   
@@ -501,10 +501,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration, trust, and privacy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -520,6 +547,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capability-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capability configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-values-and-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime values and secrets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS trust
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy-and-data-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy and data governance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -555,37 +657,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Usage (API / CLI / MCP)
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -601,104 +676,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#python-api-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Api client
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Python Api client">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mcp-server-clarity-mcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MCP server (clarity-mcp)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="MCP server (clarity-mcp)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#available-mcp-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Available MCP tools
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dynamic-tool-selection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dynamic tool selection
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agent-server-clarity-agent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent server (clarity-agent)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -757,77 +734,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#python-api-client" class="md-nav__link">
+  <a href="#capability-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Python Api client
+        Capability configuration
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Python Api client">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#mcp-server-clarity-mcp" class="md-nav__link">
+  <a href="#runtime-values-and-secrets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MCP server (clarity-mcp)
+        Runtime values and secrets
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="MCP server (clarity-mcp)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#available-mcp-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Available MCP tools
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dynamic-tool-selection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dynamic tool selection
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#agent-server-clarity-agent" class="md-nav__link">
+  <a href="#tls-trust" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Agent server (clarity-agent)
+        TLS trust
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy-and-data-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy and data governance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment verification
       
     </span>
   </a>
@@ -854,113 +808,70 @@
   
 
 
-<h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
-<h2 id="python-api-client">Python <code>Api</code> client<a class="headerlink" href="#python-api-client" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">clarity_api</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">clarity_api</span><span class="o">.</span><span class="n">Api</span><span class="p">(</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://www.clarity.ms&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">token</span><span class="o">=</span><span class="s2">&quot;&lt;CLARITY_TOKEN&gt;&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_export</span><span class="p">(</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">number_of_days</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">dimension_1</span><span class="o">=</span><span class="s2">&quot;OS&quot;</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">dimension_2</span><span class="o">=</span><span class="s2">&quot;Channel&quot;</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
-</span></code></pre></div>
-<p>The original <code>from clarity_api.clarity_api import Api</code> import continues to work; it
-re-exports the same facade.</p>
-<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Values</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>number_of_days</code> / <code>numOfDays</code></td>
-<td>1, 2, 3</td>
-<td>Last 24, 48, or 72 hours</td>
-</tr>
-<tr>
-<td><code>dimension_1</code> / <code>dimension1</code></td>
-<td>see below</td>
-<td>First breakdown dimension</td>
-</tr>
-<tr>
-<td><code>dimension_2</code> / <code>dimension2</code></td>
-<td>see below</td>
-<td>Second breakdown dimension</td>
-</tr>
-<tr>
-<td><code>dimension_3</code> / <code>dimension3</code></td>
-<td>see below</td>
-<td>Third breakdown dimension</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Dimension options</strong>: <code>Browser</code>, <code>Device</code>, <code>Country</code>, <code>OS</code>, <code>Source</code>, <code>Medium</code>,
-<code>Campaign</code>, <code>Channel</code>, <code>URL</code>.</p>
-<h2 id="mcp-server-clarity-mcp">MCP server (<code>clarity-mcp</code>)<a class="headerlink" href="#mcp-server-clarity-mcp" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>clarity-mcp<span class="w">                                       </span><span class="c1"># stdio (default)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>clarity-mcp<span class="w"> </span>--transport<span class="w"> </span>streamable-http<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>clarity-mcp<span class="w"> </span>--transport<span class="w"> </span>sse<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
-</span></code></pre></div>
-<h3 id="available-mcp-tools">Available MCP tools<a class="headerlink" href="#available-mcp-tools" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Concept</th>
-<th>Actions</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>clarity_insights</code></td>
-<td><code>CONCEPT:CY-OS.governance.data-export-live-insights</code></td>
-<td><code>get_data_export</code></td>
-<td>Export Clarity dashboard data / live insights</td>
-</tr>
-</tbody>
-</table>
-<p>Tools take an <code>action</code> plus a JSON <code>params_json</code> payload:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;get_data_export&quot;</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;params_json&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{\&quot;number_of_days\&quot;: 3, \&quot;dimension_1\&quot;: \&quot;OS\&quot;}&quot;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="dynamic-tool-selection">Dynamic tool selection<a class="headerlink" href="#dynamic-tool-selection" title="Permanent link">&para;</a></h3>
-<p>Each tool domain is gated behind an env toggle so deployments can trim their
-surface:</p>
-<table>
-<thead>
-<tr>
-<th>Toggle</th>
-<th>Default</th>
-<th>Domain</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>INSIGHTSTOOL</code></td>
-<td><code>True</code></td>
-<td><code>clarity_insights</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="agent-server-clarity-agent">Agent server (<code>clarity-agent</code>)<a class="headerlink" href="#agent-server-clarity-agent" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>clarity-agent<span class="w"> </span>--web<span class="w"> </span>--provider<span class="w"> </span>openai<span class="w"> </span>--model-id<span class="w"> </span>gpt-4o
-</span></code></pre></div>
-<p>The agent auto-discovers the MCP tools via <code>mcp_config.json</code> and exposes an
-AG-UI web interface.</p>
+<h1 id="configuration-trust-and-privacy">Configuration, trust, and privacy<a class="headerlink" href="#configuration-trust-and-privacy" title="Permanent link">&para;</a></h1>
+<p>This page is the operator contract for <code>clarity-api</code>. Package-specific endpoint,
+authentication, tool-toggle, and model settings remain documented in the
+repository README and the installed command's <code>--help</code> output. Runtime values
+must be injected by the launcher; they do not belong in source, packaged skill
+content, traces, or generated reports.</p>
+<h2 id="capability-configuration">Capability configuration<a class="headerlink" href="#capability-configuration" title="Permanent link">&para;</a></h2>
+<p>The current capability surface is defined by three versioned artifacts:</p>
+<ul>
+<li>the action-routed MCP tools described in the README and <code>docs/usage.md</code>;</li>
+<li>the compact canonical skill plus any specialist <code>WORKFLOW.md</code> procedures;</li>
+<li><code>connector_manifest.yml</code> and its ontology, mappings, shapes, fixtures,
+  migrations, tool-schema fingerprints, and certification metadata.</li>
+</ul>
+<p>Treat those artifacts as a unit during release and deployment. Do not enable a
+skill whose certification or tool-schema fingerprint does not match the
+installed package. Use the compact/intent-oriented tool surface for delegated
+agents; expose verbose per-operation tools only for compatibility or debugging.</p>
+<h2 id="runtime-values-and-secrets">Runtime values and secrets<a class="headerlink" href="#runtime-values-and-secrets" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Supply service endpoints, tenant identifiers, credentials, and model keys
+  through environment variables or a mounted secret provider.</li>
+<li>Use non-personal agent aliases and opaque tenant/correlation identifiers.</li>
+<li>Keep developer directories, workstation names, and deployment hostnames out
+  of checked-in configuration.</li>
+<li>Bind network transports to an explicitly chosen interface and require the
+  deployment's MCP authentication policy before accepting remote traffic.</li>
+<li>Enable optional agent, embedding, evolution, or observability features only
+  when their dependencies and backends are configured and healthy.</li>
+</ul>
+<p>The checked-in examples use <code>localhost</code> for loopback-only development and
+<code>example.invalid</code> for replaceable network endpoints. Neither value is a
+production default.</p>
+<h2 id="tls-trust">TLS trust<a class="headerlink" href="#tls-trust" title="Permanent link">&para;</a></h2>
+<p>Certificate verification is required. For a private certificate authority,
+mount a PEM bundle containing the required intermediate and root certificates,
+then configure the client environment with <code>SSL_CERT_FILE</code> and, for
+Requests-compatible clients, <code>REQUESTS_CA_BUNDLE</code>. When <code>uvx</code> must use the
+native platform trust store while resolving packages, set <code>UV_NATIVE_TLS=true</code>.</p>
+<p>Do not disable verification to work around an incomplete server chain. Keep CA
+bundle locations environment-configured and stable for the runtime; never embed
+a workstation path or certificate material in MCP configuration.</p>
+<h2 id="privacy-and-data-governance">Privacy and data governance<a class="headerlink" href="#privacy-and-data-governance" title="Permanent link">&para;</a></h2>
+<p>The default observability posture is metadata-only. Do not persist prompts,
+message bodies, tool inputs/results, document content, raw traces, credentials,
+local paths, hostnames, or personal identity unless an approved data contract
+explicitly requires it. Keep Langfuse or OTLP content capture disabled unless a
+reviewed retention and access policy authorizes it.</p>
+<p>When connector ingestion is enabled, each change must carry tenant, ACL,
+classification, retention, provenance, and checkpoint/delta metadata. Reject or
+quarantine records that cannot satisfy that contract; never silently widen a
+tenant scope. Logs and reports should contain counts, status, and opaque
+references only.</p>
+<h2 id="deployment-verification">Deployment verification<a class="headerlink" href="#deployment-verification" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Validate the capability bundle and skill metadata against the installed tool
+   schemas.</li>
+<li>Confirm required secrets are present without printing their values.</li>
+<li>Verify the complete TLS chain with certificate verification enabled.</li>
+<li>Exercise health/readiness and one least-privilege read operation.</li>
+<li>Confirm traces arrive under the expected opaque tenant/run identifiers and
+   contain no captured content.</li>
+<li>Record only sanitized pass/fail evidence and version identifiers.</li>
+</ol>
 
 
 
@@ -998,7 +909,7 @@ AG-UI web interface.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../deployment/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deployment">
+          <a href="../installation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1008,20 +919,20 @@ AG-UI web interface.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Deployment
+                Installation
               </div>
             </div>
           </a>
         
         
           
-          <a href="../concepts/" class="md-footer__link md-footer__link--next" aria-label="Next: Concepts">
+          <a href="../deployment/" class="md-footer__link md-footer__link--next" aria-label="Next: Deployment">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Concepts
+                Deployment
               </div>
             </div>
             <div class="md-footer__button md-icon">
