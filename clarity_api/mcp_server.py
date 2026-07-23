@@ -29,7 +29,7 @@ from clarity_api.api_client import Api
 from clarity_api.auth import get_client
 from clarity_api.mcp import register_insights_tools  # noqa: F401
 
-__version__ = "2.0.1"
+__version__ = "3.0.0"
 print(f"Clarity MCP v{__version__}", file=sys.stderr)
 
 logger = get_logger(name="mcp_server")
