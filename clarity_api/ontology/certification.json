@@ -1,15 +1,15 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "a2a.json": "ad71965b1f7a26557f04eb902423d13a33b399c3dc78600a4f52cd1876d2d6d1",
-    "clarity_api/connectors/mcp_source_presets.json": "1944c9301519f79229ce65190bfae925c13f27557bc11a8f90009dad5dcb7eb1",
+    "a2a.json": "58703956100f1d4da8267de0b739bf1285f4532b663d1dbdc5e919b173cd7314",
+    "clarity_api/connectors/mcp_source_presets.json": "c7ca383a87ce90ba8e679f411af5935bddc6eea8d56c394a999a596ba63ac6d3",
     "clarity_api/connectors/tool_schema_fingerprints.json": "f409d9737e44184600fb2fc3c177d374c21eaba8a5cdaadfdd5fa6fa85c42cfc",
     "clarity_api/ontology/clarity.ttl": "b1c1d0acd7423f3d7399a8f6dfdd24e7bd5c0512468215bf14530664e7491358",
     "clarity_api/ontology/fixtures/records.json": "861e97db78862a7cf203da92e1e8e28a42ef8d831a9a79b0e1932f6fe26fe729",
-    "clarity_api/ontology/mappings/source.yaml": "164d022a1b226b711ddd1dabb93d7d3b270c2a9e4785ecd4c3a9ee2c65f25ca0",
+    "clarity_api/ontology/mappings/source.yaml": "632b23ec4cb363ca68da147897759b90da787cdd7ee69e6fd6c91eed4371654b",
     "clarity_api/ontology/migrations/manifest.json": "8e3ee220110378ab676abf0815fc33c21d415e23ffedd187713abd647ddac10b",
     "clarity_api/ontology/shapes/connector.shacl.ttl": "0ebc54aba872a0a757ea8ed70b5dda389206866fdb2b8e6875bbfe85b5c109c0",
-    "connector_manifest.yml": "2a75c51de4807c8d569512782f8f22dff0238a30d28495810c9b5b9bed24b79a"
+    "connector_manifest.yml": "62604663784a2bc4a1197e2aee1ac34ddb4582a4cdc91611137e2535c4a470e2"
   },
   "checks": {
     "declared_tool_schema": "passed",
@@ -19,19 +19,19 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=1.27.1,<2",
+    "agent_utilities": ">=2.1.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.23.1,<3"
+    "epistemic_graph": ">=2.23.0,<3"
   },
   "connector": "clarity-api",
   "kind": "ConnectorSourceAttestation",
   "live_certified": false,
   "mode": "offline-source",
   "schema_version": "2",
-  "signature": "kEpDdYWyuZCRH5FLVmmfbBJ6JHVzZsPRLhd80AZTgzUFi2311yMbWyc8RdtZEIFUMjzjokalBTLNQbnPLIwUAg",
+  "signature": "f_zDi8U9SL1mosSJ_RsWKSaxRgT0f0vy1RKd1LPUajuwdTMrPAVx1Wu9ET4ImSgYSgMjoZzm5VORpdyBcz1ICA",
   "signature_algorithm": "ed25519",
   "signer": "ontology-manifest-generator",
-  "signing_public_key": "q0Cp7bmQMqJhbofGKKw8xXC6KbFzukBDDke0UYVi8y4",
+  "signing_public_key": "QkigdPNpcUU7x7NcSkwCsUXIQpaFncMQbYSoiSgI2SY",
   "status": "source-validated",
-  "validated_at": "2026-07-18T00:00:00Z"
+  "validated_at": "2026-07-31T04:00:00Z"
 }
