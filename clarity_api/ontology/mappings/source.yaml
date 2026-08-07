@@ -3,7 +3,7 @@ connector: clarity-api
 ontology_source: clarity
 sync:
 - preset: clarity-insights
-  server: clarity-api
+  server: clarity-mcp
   tool: clarity_insights
   action: get_data_export
   records_path: data.data
