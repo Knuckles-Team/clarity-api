@@ -57,7 +57,7 @@ def register_insights_tools(mcp: FastMCP):
 
         try:
             kwargs = json.loads(params_json)
-        except Exception as e:
+        except Exception:
             return {"error": "Operation failed"}
 
         service = InsightsService(client=client, serializer=_serialize)
@@ -95,7 +95,7 @@ def register_insights_tools(mcp: FastMCP):
 
         try:
             kwargs = json.loads(params_json)
-        except Exception as e:
+        except Exception:
             return {"error": "Operation failed"}
 
         from clarity_api.kg_ingest import ingest_response
