@@ -40,6 +40,9 @@ clarity-api = "clarity_api.connectors"
 [project.entry-points."agent_utilities.prompt_providers"]
 clarity-api = "clarity_api.prompts"
 
+[tool.uv.workspace]
+members = ["."]
+
 [tool.setuptools]
 include-package-data = true
 
