@@ -10,9 +10,14 @@ mapping. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 from __future__ import annotations
 
 import json
+from typing import Any
 
+import msgpack
 import pytest
 from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
+from agent_utilities.security.brain_context import ActorContext, use_actor
+from agent_utilities.models.company_brain import ActorType
+from agent_utilities.knowledge_graph.core.session import GraphSession, use_session
 
 from clarity_api.kg_ingest import (
     ingest_documents,
@@ -22,7 +27,7 @@ from clarity_api.kg_ingest import (
     map_export,
 )
 
-_EXPORT = [
+_EXPORT: list[dict[str, Any]] = [
     {
         "metricName": "Traffic",
         "information": [
@@ -48,31 +53,92 @@ _EXPORT = [
 ]
 
 
-class _FakeTxn:
-    def __init__(self):
-        self.nodes = {}
-        self.edges = []
-        self.committed = False
+@pytest.fixture(autouse=True)
+def _governed_session():
+    actor = ActorContext(
+        actor_id="subject:opaque:synthetic",
+        actor_type=ActorType.AUTOMATED_SERVICE,
+        roles=(),
+        tenant_id="tenant:opaque:synthetic",
+        authenticated=True,
+    )
+    session = GraphSession(
+        actor=actor,
+        tenant=actor.tenant_id,
+        scopes=frozenset({"kg:write"}),
+        graph="graph:opaque:synthetic",
+        policy_version="policy:opaque:synthetic",
+        audience="epistemic-graph",
+    )
+    with use_actor(actor), use_session(session):
+        yield
 
-    def begin(self, graph=None):
-        self.graph = graph
-        return "txn-1"
 
-    def add_node(self, txn, node_id, props):
-        self.nodes[node_id] = props
+class _FakeNodes:
+    def __init__(self) -> None:
+        self.values: dict[str, dict[str, Any]] = {}
 
-    def add_edge(self, txn, src, dst, props):
-        self.edges.append((src, dst, props))
+    def properties(self, node_id: str) -> dict[str, Any] | None:
+        return self.values.get(node_id)
 
-    def commit(self, txn):
-        self.committed = True
-        return True
+    def list(self) -> list[tuple[str, dict[str, Any]]]:
+        return list(self.values.items())
 
+
+class _FakeChanges:
+    def __init__(self, nodes: _FakeNodes) -> None:
+        self.nodes = nodes
+        self.edges: list[tuple[str, str, dict[str, Any]]] = []
+        self.applied: list[dict[str, Any]] = []
+        self.records: dict[str, dict[str, Any]] = {}
+        self.versions: dict[str, dict[str, Any]] = {}
+
+    def get(self, envelope_id: str) -> dict[str, Any] | None:
+        return self.records.get(envelope_id)
+
+    def content_version(self, object_id: str) -> dict[str, Any] | None:
+        return self.versions.get(object_id)
+
+    def cursor(self, _source: str, _partition: str = "") -> None:
+        return None
+
+    def apply(self, envelope: dict[str, Any]) -> dict[str, Any]:
+        self.applied.append(envelope)
+        mutation = envelope["mutation"]
+        for operation in mutation["operations"]:
+            method = operation["method"]
+            params = method["params"]
+            properties = msgpack.unpackb(params["properties_msgpack"], raw=False)
+            if method["method"] == "AddNode":
+                self.nodes.values[params["node_id"]] = properties
+            elif method["method"] == "AddEdge":
+                self.edges.append(
+                    (params["source_id"], params["target_id"], properties)
+                )
+        version = envelope["content_version"]
+        self.versions[version["object_id"]] = version
+        self.records[envelope["envelope_id"]] = envelope
+        return {
+            "batch_id": mutation["batch_id"],
+            "replayed": False,
+            "projection_pending": False,
+        }
+
+
+class _FakeRdf:
+    def validate_shacl(self, _shapes: str, _data_graph: str) -> dict[str, Any]:
+        return {"conforms": True, "results": []}
 
 
 class _FakeClient:
-    def __init__(self):
-        self.txn = _FakeTxn()
+    def __init__(self) -> None:
+        self.nodes = _FakeNodes()
+        self.changes = _FakeChanges(self.nodes)
+        self.rdf = _FakeRdf()
+
+    @staticmethod
+    def supports(operation: str) -> bool:
+        return operation == "ApplyChangeEnvelope"
 
 
 class _FakeResponse:
@@ -92,15 +158,14 @@ def test_ingest_entities_writes_nodes_and_edges():
         ],
         [{"source": "b", "target": "a", "relationship": "belongsToProject"}],
         client=c,
-        graph="__commons__",
     )
     assert res == {"nodes": 2, "edges": 1}
-    assert c.txn.committed is True
-    assert set(c.txn.nodes) == {"a", "b"}
+    assert len(c.changes.applied) == 1
+    assert set(c.nodes.values) == {"a", "b"}
     # provenance is stamped
-    assert c.txn.nodes["a"]["source"] == "clarity-api"
-    assert c.txn.nodes["a"]["domain"] == "clarity"
-    assert c.txn.edges == [("b", "a", {"relationship": "belongsToProject"})]
+    assert c.nodes.values["a"]["source"] == "clarity-api"
+    assert c.nodes.values["a"]["domain"] == "clarity"
+    assert c.changes.edges == [("b", "a", {"relationship": "belongsToProject"})]
 
 
 def test_ingest_documents_writes_document_nodes():
@@ -108,13 +173,12 @@ def test_ingest_documents_writes_document_nodes():
     res = ingest_documents(
         [{"id": "clarity:doc:x", "text": "hello", "title": "T"}],
         client=c,
-        graph="__commons__",
     )
     assert res == {"nodes": 1, "edges": 0}
-    node = c.txn.nodes["clarity:doc:x"]
+    node = c.nodes.values["clarity:doc:x"]
     assert node["node_type"] == "Document"
     assert node["text"] == "hello"
-    assert node["created_at"]  # stamped
+    assert node["needs_enrichment"] is True  # stamped
 
 
 def test_map_export_builds_typed_nodes_and_links():
@@ -160,8 +224,8 @@ def test_ingest_export_writes_nodes_and_documents():
     assert res is not None
     assert res["nodes"] > 0
     assert res["documents"] == 1
-    assert "clarity:project:acme" in c.txn.nodes
-    assert "clarity:doc:acme:3:OS" in c.txn.nodes
+    assert "clarity:project:acme" in c.nodes.values
+    assert "clarity:doc:acme:3:OS" in c.nodes.values
 
 
 def test_ingest_response_parses_data_envelope():
@@ -173,7 +237,7 @@ def test_ingest_response_parses_data_envelope():
     assert res is not None
     assert res["nodes"] > 0
     # canonicalized dimension "os" -> "OS"
-    assert "clarity:dimension:OS" in c.txn.nodes
+    assert "clarity:dimension:OS" in c.nodes.values
 
 
 def test_ingest_response_parses_bare_list():
@@ -181,7 +245,7 @@ def test_ingest_response_parses_bare_list():
     resp = _FakeResponse(json.loads(json.dumps(_EXPORT)))
     res = ingest_response(resp, {"numOfDays": 1}, project="acme", client=c)
     assert res is not None
-    assert "clarity:project:acme" in c.txn.nodes
+    assert "clarity:project:acme" in c.nodes.values
 
 
 def test_ingest_response_materializes_empty_snapshot():
