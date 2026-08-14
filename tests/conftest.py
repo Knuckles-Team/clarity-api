@@ -2,6 +2,9 @@ import json
 from unittest.mock import patch
 
 import pytest
+from agent_utilities.knowledge_graph.core.session import GraphSession, use_session
+from agent_utilities.models.company_brain import ActorType
+from agent_utilities.security.brain_context import ActorContext, use_actor
 from dotenv import load_dotenv
 
 # Use a reason variable for skipped tests
@@ -12,6 +15,30 @@ reason = "Unit tests using mocks"
 def mock_env(monkeypatch):
     monkeypatch.setenv("CLARITY_URL", "https://test.clarity.ms")
     monkeypatch.setenv("CLARITY_TOKEN", "mock_token")
+
+
+@pytest.fixture(autouse=True)
+def _governed_session():
+    """Ambient GraphSession for native_ingest calls (mirrors agent-utilities'
+    own tests/knowledge_graph/test_native_ingest.py::_governed_session) — every
+    graph write now requires a verified ambient session (AU-P0-1)."""
+    actor = ActorContext(
+        actor_id="subject:opaque:synthetic",
+        actor_type=ActorType.AUTOMATED_SERVICE,
+        roles=(),
+        tenant_id="tenant:opaque:synthetic",
+        authenticated=True,
+    )
+    session = GraphSession(
+        actor=actor,
+        tenant=actor.tenant_id,
+        scopes=frozenset({"kg:write"}),
+        graph="graph:opaque:synthetic",
+        policy_version="policy:opaque:synthetic",
+        audience="epistemic-graph",
+    )
+    with use_actor(actor), use_session(session):
+        yield
 
 
 @pytest.fixture(scope="session", autouse=True)

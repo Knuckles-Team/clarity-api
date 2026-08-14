@@ -213,7 +213,9 @@ def map_export(
             )
 
     # Document summary for semantic search.
-    metric_names = [m.get("metricName") for m in metrics or [] if m.get("metricName")]
+    metric_names = [
+        str(m.get("metricName")) for m in metrics or [] if m.get("metricName")
+    ]
     summary = (
         f"Microsoft Clarity export for project '{project}' over {days} day(s), "
         f"broken down by {dimkey}. Metrics: {', '.join(metric_names) or 'none'}. "
@@ -293,14 +295,13 @@ def ingest_response(
     """
     params = params or {}
     payload = response.json()
+    metrics: list[dict[str, Any]] = []
     if isinstance(payload, list):
         metrics = payload
     elif isinstance(payload, dict):
-        metrics = payload.get("data")
-    else:
-        metrics = None
-    if not isinstance(metrics, list):
-        metrics = []
+        data = payload.get("data")
+        if isinstance(data, list):
+            metrics = data
     num_of_days = _as_int(params.get("number_of_days") or params.get("numOfDays"))
     return ingest_export(
         metrics,
