@@ -8,7 +8,7 @@
     "clarity_api/ontology/mappings/source.yaml": "632b23ec4cb363ca68da147897759b90da787cdd7ee69e6fd6c91eed4371654b",
     "clarity_api/ontology/migrations/manifest.json": "8e3ee220110378ab676abf0815fc33c21d415e23ffedd187713abd647ddac10b",
     "clarity_api/ontology/shapes/connector.shacl.ttl": "0ebc54aba872a0a757ea8ed70b5dda389206866fdb2b8e6875bbfe85b5c109c0",
-    "connector_manifest.yml": "ca7adc8963d43afeace5d2d7979a4c1b2d81e7a281bd0529c5e662719bed255e"
+    "connector_manifest.yml": "6fbf1f194f021f559db30d1beae00ceda708f02672745f4a1b6af377e513eb0f"
   },
   "checks": {
     "declared_tool_schema": "passed",
@@ -18,9 +18,9 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.4.0,<3",
+    "agent_utilities": ">=2.5.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.26.0,<3"
+    "epistemic_graph": ">=2.27.0,<3"
   },
   "connector": "clarity-api",
   "kind": "ConnectorSourceAttestation",
@@ -32,5 +32,5 @@
   "signer": "UNSIGNED-PREVIEW",
   "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-08-21T04:30:39Z"
+  "validated_at": "2026-08-26T13:42:55Z"
 }
