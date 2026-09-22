@@ -6,7 +6,7 @@ a JSON ``params_json`` payload.
 """
 
 import json
-from typing import Any
+from typing import Any, Literal
 
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
@@ -30,7 +30,7 @@ def _serialize(response: Any) -> Any:
 def register_insights_tools(mcp: FastMCP):
     @mcp.tool(tags={"data-export"})
     async def clarity_insights(
-        action: str = Field(
+        action: Literal["get_data_export"] = Field(
             default="get_data_export",
             description="Action to perform. Must be one of: 'get_data_export'",
         ),

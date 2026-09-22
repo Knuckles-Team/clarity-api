@@ -113,7 +113,7 @@ sync:
   updated_field: null
   pagination: null
   doc_type: clarity-insight
-  tool_schema_sha256: e3babeaf7463193911114f36ee5d748f18e290c5d80adef1d44ad399142e73b8
+  tool_schema_sha256: 989c80340d95aa11392b9a23a6470c629c3c496ac320372cc66dfdbbb91f828c
   raw:
     server: clarity-mcp
     tool: clarity_insights
