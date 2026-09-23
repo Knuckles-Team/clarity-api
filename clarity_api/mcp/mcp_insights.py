@@ -28,7 +28,18 @@ def _serialize(response: Any) -> Any:
 
 
 def register_insights_tools(mcp: FastMCP):
-    @mcp.tool(tags={"data-export"})
+    @mcp.tool(
+        tags={"data-export"},
+        annotations={
+            "readOnlyHint": True,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def clarity_insights(
         action: Literal["get_data_export"] = Field(
             default="get_data_export",
