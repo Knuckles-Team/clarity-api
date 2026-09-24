@@ -13,13 +13,11 @@ Environment variables:
 
 import threading
 
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.config import setting
-from agent_utilities.core.exceptions import AuthError, UnauthorizedError
-from agent_utilities.core.transport_security import (
-    ResolvedTLSProfile,
-    resolve_configured_tls_profile,
-)
+from agent_connector_sdk.config import setting
+from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from agent_connector_sdk.tls.profile import ResolvedTLSProfile
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from agent_connector_sdk.utilities import get_logger
 
 local = threading.local()
 from clarity_api.api_client import Api
@@ -43,7 +41,7 @@ def get_client(
         instance = setting("CLARITY_URL", "https://www.clarity.ms")
     if token is None:
         token = setting("CLARITY_TOKEN", None)
-    profile = tls_profile or resolve_configured_tls_profile("clarity")
+    profile = tls_profile or resolve_tls_profile("clarity")
 
     from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,

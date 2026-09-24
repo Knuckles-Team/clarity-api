@@ -19,7 +19,6 @@ CORE_MODULES: list[str] = [
 ]
 
 OPTIONAL_MODULES = {
-    "clarity_api.agent_server": "agent",
     "clarity_api.mcp_server": "mcp",
 }
 

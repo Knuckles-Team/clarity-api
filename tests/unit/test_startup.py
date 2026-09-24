@@ -18,18 +18,10 @@ def test_concept_cla_005_mcp_server_imports():
 
 
 @pytest.mark.concept("CY-OS.governance.package-server-bootstrap")
-def test_concept_cla_005_agent_server_imports():
-    """CLA-005: the agent server module exposes its callable entry point."""
-    srv = importlib.import_module("clarity_api.agent_server")
-    assert callable(srv.agent_server)
-    assert isinstance(srv.__version__, str)
-
-
-@pytest.mark.concept("CY-OS.governance.package-server-bootstrap")
 def test_concept_cla_005_versions_match_package():
-    """CLA-005: package, MCP, and agent version strings stay in lock-step."""
+    """CLA-005: package and MCP version strings stay in lock-step (agent_server.py
+    retired, EH-480 policy update)."""
     import clarity_api
 
     mcp = importlib.import_module("clarity_api.mcp_server")
-    agent = importlib.import_module("clarity_api.agent_server")
-    assert clarity_api.__version__ == mcp.__version__ == agent.__version__
+    assert clarity_api.__version__ == mcp.__version__

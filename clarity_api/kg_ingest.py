@@ -257,7 +257,7 @@ def _project_label(project: str | None = None) -> str:
     try:
         from urllib.parse import urlparse
 
-        from agent_utilities.core.config import setting
+        from agent_connector_sdk.config import setting
 
         host = urlparse(setting("CLARITY_URL", "https://www.clarity.ms")).netloc
         return host or "default"
