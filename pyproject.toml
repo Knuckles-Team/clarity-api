@@ -80,3 +80,6 @@ where = [ ".",]
 
 [tool.vulture]
 ignore_names = ["request", "config", "cls", "__context", "model_post_init", "configured_env"]
+
+[tool.pipelines_hooks.ste]
+exempt = ["specs/*", "specs/**/*"]
