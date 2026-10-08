@@ -182,7 +182,7 @@ _20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the
 <!-- ENV-VARS-TABLE:END -->
 
 
-All runtime configuration is supplied via environment variables (or a `.env`
+All runtime configuration is provided via environment variables (or a `.env`
 file — see [`.env.example`](.env.example)). Never commit real tokens.
 
 ### Clarity credentials
@@ -223,7 +223,7 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `clarity-api[mcp]` to add
 > FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
-> still carries `epistemic-graph[full]`. The `[agent]` extra additionally
+> still carries `epistemic-graph[full]`. The `[agent]` extra also
 > enables model orchestration.
 
 ### stdio (local agent integration)
@@ -262,7 +262,7 @@ docker compose -f docker/mcp.compose.yml up -d
 > `docker/Dockerfile --target mcp`, installing `clarity-api[mcp]`). The default
 > the immutable agent image is the **full agent image** (`--target agent`, `clarity-api[agent]`)
 > which also bundles the Pydantic AI agent and the epistemic-graph engine — use it
-> when you run `clarity-agent` (the agent), not just the MCP server. See
+> when the operator run `clarity-agent` (the agent), not just the MCP server. See
 > [Container images](#container-images-mcp-vs-agent).
 
 <!-- BEGIN GENERATED: additional-deployment-options -->
@@ -360,13 +360,13 @@ files or tokens.
 
 ## Installation
 
-Pick the extra that matches what you want to run:
+Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| _(none)_ | the bare `Api` Python client (`requests`) | You only use the `clarity_api.Api` client |
-| `clarity-api[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `clarity-api[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated agent** |
+| _(none)_ | the bare `Api` Python client (`requests`) | The operator only use the `clarity_api.Api` client |
+| `clarity-api[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `clarity-api[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
 | `clarity-api[all]` | Everything (`mcp` + `agent`) | Development / both surfaces |
 
 ```bash
@@ -401,7 +401,7 @@ agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
 
 Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
 Agent Utilities core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
-the server connector-focused; `[agent]` additionally enables model orchestration. Local
+the server connector-focused; `[agent]` also enables model orchestration. Local
 deployments can use the bundled engine. For production or shared state, run
 **epistemic-graph as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
@@ -411,7 +411,7 @@ diagrams are documented in the
 ### Obtaining Access Tokens
 **Note**: Only project admins can manage access tokens.
 
-1. Go to your Clarity project. Select `Settings` → `Data Export` → `Generate new API token`.
+1. Go to the operator's Clarity project. Select `Settings` → `Data Export` → `Generate new API token`.
 2. Provide a descriptive name for the token for easy identification.
 
 ## Documentation
