@@ -11,10 +11,8 @@ domain client mixins build on. Validation hits ``GET /projects`` during
 import logging
 
 import requests
-from agent_utilities.core.transport_security import (
-    ResolvedTLSProfile,
-    resolve_configured_tls_profile,
-)
+from agent_connector_sdk.tls.profile import ResolvedTLSProfile
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 
 from clarity_api.exceptions import (
     AuthError,
@@ -63,7 +61,7 @@ class ClarityApiBase:
         if url is None:
             raise MissingParameterError
 
-        self.tls_profile = tls_profile or resolve_configured_tls_profile("clarity")
+        self.tls_profile = tls_profile or resolve_tls_profile("clarity")
         self._session = self.tls_profile.configure_requests_session(requests.Session())
         self.url = url.rstrip("/")
         self.headers: dict | None = None
