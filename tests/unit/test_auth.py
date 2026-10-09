@@ -7,16 +7,16 @@ import importlib.util
 
 import pytest
 
-# get_client uses agent_utilities.mcp.delegated_auth, available in agent-utilities>=0.47.
+# get_client uses agent_connector_sdk.auth.delegation for OIDC token exchange.
 try:
     _HAS_DELEGATED_AUTH = (
-        importlib.util.find_spec("agent_utilities.mcp.delegated_auth") is not None
+        importlib.util.find_spec("agent_connector_sdk.auth.delegation") is not None
     )
 except ModuleNotFoundError:
     _HAS_DELEGATED_AUTH = False
 pytestmark = pytest.mark.skipif(
     not _HAS_DELEGATED_AUTH,
-    reason="agent-utilities>=0.47 (agent_utilities.mcp.delegated_auth) not installed",
+    reason="agent-connector-sdk (agent_connector_sdk.auth.delegation) not installed",
 )
 
 

@@ -63,7 +63,7 @@ def register_insights_tools(mcp: FastMCP):
         service = InsightsService(client=client, serializer=_serialize)
 
         if action == "get_data_export":
-            return service.get_data_export(**kwargs)
+            return await service.get_data_export(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
     @mcp.tool(tags={"data-export"})
@@ -103,5 +103,5 @@ def register_insights_tools(mcp: FastMCP):
         response = client.get_data_export(
             **{k: v for k, v in kwargs.items() if v is not None}
         )
-        result = ingest_response(response, kwargs)
+        result = await ingest_response(response, kwargs)
         return {"ingested": result}

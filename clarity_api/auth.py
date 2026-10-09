@@ -3,7 +3,7 @@
 Authentication priority:
 1. **OIDC Delegation** — If delegation is active, exchanges the IdP-issued
    user token for a downstream Clarity access token via RFC 8693 Token Exchange
-   using the shared ``delegated_auth`` helper.
+   using the SDK's ``agent_connector_sdk.auth.delegation`` helpers.
 2. **Fixed Credentials** — Falls back to the ``CLARITY_TOKEN`` env var.
 
 Environment variables:
@@ -11,20 +11,25 @@ Environment variables:
 - ``CLARITY_TOKEN`` — bearer API token.
 """
 
+import logging
 import threading
 
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.config import setting
-from agent_utilities.core.exceptions import AuthError, UnauthorizedError
-from agent_utilities.core.transport_security import (
-    ResolvedTLSProfile,
-    resolve_configured_tls_profile,
+import httpx
+from agent_connector_sdk.auth.delegation import (
+    DelegationSettings,
+    current_user_identity,
+    current_user_token,
+    exchange_token,
 )
+from agent_connector_sdk.config import setting
+from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from agent_connector_sdk.tls.profile import ResolvedTLSProfile
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 
 local = threading.local()
 from clarity_api.api_client import Api
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def get_client(
@@ -43,33 +48,31 @@ def get_client(
         instance = setting("CLARITY_URL", "https://www.clarity.ms")
     if token is None:
         token = setting("CLARITY_TOKEN", None)
-    profile = tls_profile or resolve_configured_tls_profile("clarity")
+    profile = tls_profile or resolve_tls_profile("clarity")
 
-    from agent_utilities.mcp.delegated_auth import (
-        get_delegated_token,
-        get_user_identity,
-        is_delegation_enabled,
-    )
-
-    delegation_enabled = is_delegation_enabled(config)
+    delegation = DelegationSettings.from_settings()
 
     # --- Path 1: OIDC Delegation (RFC 8693 Token Exchange) ---
-    if delegation_enabled:
+    if delegation.enabled:
         try:
-            delegated_token = get_delegated_token(
-                config=config,
-                audience=(config or {}).get("audience", instance),
-                scopes=(config or {}).get("delegated_scopes", "api"),
-            )
-            identity = get_user_identity()
+            subject_token = current_user_token()
+            if not subject_token:
+                raise AuthError("no verified caller token to delegate")
+            with httpx.Client(timeout=30.0) as http_client:
+                access_token = exchange_token(
+                    delegation,
+                    subject_token=subject_token,
+                    http_client=http_client,
+                )
+            identity_ref = current_user_identity()
             logger.info(
                 "Using OIDC delegated token for Clarity API",
                 extra={
-                    "user_email": identity.get("email"),
+                    "identity_ref": identity_ref,
                     "instance": instance,
                 },
             )
-            return Api(url=instance, token=delegated_token, tls_profile=profile)
+            return Api(url=instance, token=access_token.value, tls_profile=profile)
         except Exception as e:
             logger.error(
                 "OIDC delegation failed for Clarity",

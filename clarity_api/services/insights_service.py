@@ -40,26 +40,26 @@ class InsightsService:
         self._client = client
         self._serialize = serializer
 
-    def get_data_export(self, **kwargs: Any) -> Any:
+    async def get_data_export(self, **kwargs: Any) -> Any:
         """Execute a Clarity data export and return a serialized payload.
 
         CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Strips ``None`` values
         from ``kwargs`` and delegates to the injected client, then serializes. As a
         authoritative side effect it natively ingests the export into the epistemic-graph
         knowledge graph (typed :ClaritySession/:BehaviorInsight nodes + a :Document
-        summary); native ingestion failures propagate.
+        summary); ingestion failures propagate.
         """
         clean = {k: v for k, v in kwargs.items() if v is not None}
         response = self._client.get_data_export(**clean)
-        self._ingest(response, clean)
+        await self._ingest(response, clean)
         return self._serialize(response)
 
     @staticmethod
-    def _ingest(response: Any, params: dict[str, Any]) -> None:
-        """Authoritatively ingest an export response into the native KG."""
+    async def _ingest(response: Any, params: dict[str, Any]) -> None:
+        """Authoritatively ingest an export response into the knowledge graph."""
         from clarity_api.kg_ingest import ingest_response
 
-        ingest_response(response, params)
+        await ingest_response(response, params)
 
 
 __all__ = ["InsightsService"]

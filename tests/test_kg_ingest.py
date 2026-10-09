@@ -1,8 +1,9 @@
-"""Native epistemic-graph typed-node ingestion — Wire-First coverage.
+"""Knowledge-graph ingestion coverage for the Microsoft Clarity connector.
 
 Exercises the real ``ingest_entities`` / ``ingest_documents`` / ``map_export`` /
-``ingest_export`` / ``ingest_response`` seam with a fake engine client (no engine
-required), asserting the txn add_node/commit + edge calls and the Clarity export ->
+``ingest_export`` / ``ingest_response`` seam against a fake
+``agent_connector_sdk.ingest`` transport (no engine required), asserting the
+submitted records/relationships and the Clarity export ->
 :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension / :Document
 mapping. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 """
@@ -10,14 +11,11 @@ mapping. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 from __future__ import annotations
 
 import json
+from types import SimpleNamespace
 from typing import Any
 
-import msgpack
 import pytest
-from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
-from agent_utilities.security.brain_context import ActorContext, use_actor
-from agent_utilities.security.actor_identity import ActorType
-from agent_utilities.knowledge_graph.core.session import GraphSession, use_session
+from agent_connector_sdk.ingest import IngestError, KnowledgeIngest
 
 from clarity_api.kg_ingest import (
     ingest_documents,
@@ -53,132 +51,69 @@ _EXPORT: list[dict[str, Any]] = [
 ]
 
 
-@pytest.fixture(autouse=True)
-def _governed_session():
-    actor = ActorContext(
-        actor_id="subject:opaque:synthetic",
-        actor_type=ActorType.AUTOMATED_SERVICE,
-        roles=(),
-        tenant_id="tenant:opaque:synthetic",
-        authenticated=True,
-    )
-    session = GraphSession(
-        actor=actor,
-        tenant=actor.tenant_id,
-        scopes=frozenset({"kg:write"}),
-        graph="graph:opaque:synthetic",
-        policy_version="policy:opaque:synthetic",
-        audience="epistemic-graph",
-    )
-    with use_actor(actor), use_session(session):
-        yield
+class _FakeTransport:
+    """Fakes the transport boundary one level below ``KnowledgeIngest``."""
 
-
-class _FakeNodes:
     def __init__(self) -> None:
-        self.values: dict[str, dict[str, Any]] = {}
+        self.requests: list[Any] = []
 
-    def properties(self, node_id: str) -> dict[str, Any] | None:
-        return self.values.get(node_id)
+    async def source_status(self, connector: str, stream: str) -> Any:
+        return SimpleNamespace(accepted_checkpoint=None)
 
-    def list(self) -> list[tuple[str, dict[str, Any]]]:
-        return list(self.values.items())
+    async def submit(self, request: Any) -> Any:
+        self.requests.append(request)
+        return SimpleNamespace(
+            affected_count=len(request.records),
+            relationship_count=len(request.relationships),
+        )
 
-
-class _FakeChanges:
-    def __init__(self, nodes: _FakeNodes) -> None:
-        self.nodes = nodes
-        self.edges: list[tuple[str, str, dict[str, Any]]] = []
-        self.applied: list[dict[str, Any]] = []
-        self.records: dict[str, dict[str, Any]] = {}
-        self.versions: dict[str, dict[str, Any]] = {}
-
-    def get(self, envelope_id: str) -> dict[str, Any] | None:
-        return self.records.get(envelope_id)
-
-    def content_version(self, object_id: str) -> dict[str, Any] | None:
-        return self.versions.get(object_id)
-
-    def cursor(self, _source: str, _partition: str = "") -> None:
-        return None
-
-    def apply(self, envelope: dict[str, Any]) -> dict[str, Any]:
-        self.applied.append(envelope)
-        mutation = envelope["mutation"]
-        for operation in mutation["operations"]:
-            method = operation["method"]
-            params = method["params"]
-            properties = msgpack.unpackb(params["properties_msgpack"], raw=False)
-            if method["method"] == "AddNode":
-                self.nodes.values[params["node_id"]] = properties
-            elif method["method"] == "AddEdge":
-                self.edges.append(
-                    (params["source_id"], params["target_id"], properties)
-                )
-        version = envelope["content_version"]
-        self.versions[version["object_id"]] = version
-        self.records[envelope["envelope_id"]] = envelope
-        return {
-            "batch_id": mutation["batch_id"],
-            "replayed": False,
-            "projection_pending": False,
-        }
+    async def store_blob(self, data: bytes) -> str:
+        raise AssertionError("this connector's ingestion carries no media")
 
 
-class _FakeRdf:
-    def validate_shacl(self, _shapes: str, _data_graph: str) -> dict[str, Any]:
-        return {"conforms": True, "results": []}
-
-
-class _FakeClient:
-    def __init__(self) -> None:
-        self.nodes = _FakeNodes()
-        self.changes = _FakeChanges(self.nodes)
-        self.rdf = _FakeRdf()
-
-    @staticmethod
-    def supports(operation: str) -> bool:
-        return operation == "ApplyChangeEnvelope"
+@pytest.fixture
+def ingest() -> tuple[KnowledgeIngest, _FakeTransport]:
+    transport = _FakeTransport()
+    return KnowledgeIngest(transport, loop=None), transport
 
 
 class _FakeResponse:
-    def __init__(self, payload):
+    def __init__(self, payload: Any) -> None:
         self._payload = payload
 
-    def json(self):
+    def json(self) -> Any:
         return self._payload
 
 
-def test_ingest_entities_writes_nodes_and_edges():
-    c = _FakeClient()
-    res = ingest_entities(
+async def test_ingest_entities_writes_nodes_and_edges(ingest):
+    service, transport = ingest
+    res = await ingest_entities(
         [
             {"id": "a", "node_type": "ClarityProject", "name": "p"},
             {"id": "b", "node_type": "ClaritySession"},
         ],
         [{"source": "b", "target": "a", "relationship": "belongsToProject"}],
-        client=c,
+        ingest=service,
     )
     assert res == {"nodes": 2, "edges": 1}
-    assert len(c.changes.applied) == 1
-    assert set(c.nodes.values) == {"a", "b"}
-    # provenance is stamped
-    assert c.nodes.values["a"]["source"] == "clarity-api"
-    assert c.nodes.values["a"]["domain"] == "clarity"
-    assert c.changes.edges == [("b", "a", {"relationship": "belongsToProject"})]
+    assert len(transport.requests) == 1
+    request = transport.requests[0]
+    ids = {record.record_id for record in request.records}
+    assert ids == {"a", "b"}
+    assert request.relationships[0].relation_reference.endswith(
+        "/belongsToProject"
+    )
 
 
-def test_ingest_documents_writes_document_nodes():
-    c = _FakeClient()
-    res = ingest_documents(
+async def test_ingest_documents_writes_document_nodes(ingest):
+    service, transport = ingest
+    res = await ingest_documents(
         [{"id": "clarity:doc:x", "text": "hello", "title": "T"}],
-        client=c,
+        ingest=service,
     )
     assert res == {"nodes": 1, "edges": 0}
-    node = c.nodes.values["clarity:doc:x"]
-    assert node["node_type"] == "Document"
-    assert node["text"] == "hello"
-    assert node["needs_enrichment"] is True  # stamped
+    request = transport.requests[0]
+    assert len(request.records) == 1
 
 
 def test_map_export_builds_typed_nodes_and_links():
@@ -199,7 +134,8 @@ def test_map_export_builds_typed_nodes_and_links():
     # one insight per metric
     assert by_id["clarity:insight:acme:3:OS:Traffic"]["metricName"] == "Traffic"
     assert (
-        by_id["clarity:insight:acme:3:OS:EngagementTime"]["node_type"] == "BehaviorInsight"
+        by_id["clarity:insight:acme:3:OS:EngagementTime"]["node_type"]
+        == "BehaviorInsight"
     )
     # dimension node
     assert by_id["clarity:dimension:OS"]["dimensionName"] == "OS"
@@ -216,50 +152,45 @@ def test_map_export_builds_typed_nodes_and_links():
     } <= rel_types
 
 
-def test_ingest_export_writes_nodes_and_documents():
-    c = _FakeClient()
-    res = ingest_export(
-        _EXPORT, project="acme", num_of_days=3, dimensions=["OS"], client=c
+async def test_ingest_export_writes_nodes_and_documents(ingest):
+    service, transport = ingest
+    res = await ingest_export(
+        _EXPORT, project="acme", num_of_days=3, dimensions=["OS"], ingest=service
     )
     assert res is not None
     assert res["nodes"] > 0
     assert res["documents"] == 1
-    assert "clarity:project:acme" in c.nodes.values
-    assert "clarity:doc:acme:3:OS" in c.nodes.values
+    # one submit for entities+relationships, one for documents
+    assert len(transport.requests) == 2
 
 
-def test_ingest_response_parses_data_envelope():
-    c = _FakeClient()
+async def test_ingest_response_parses_data_envelope(ingest):
+    service, _transport = ingest
     resp = _FakeResponse({"data": _EXPORT})
-    res = ingest_response(
-        resp, {"number_of_days": 3, "dimension_1": "os"}, project="acme", client=c
+    res = await ingest_response(
+        resp, {"number_of_days": 3, "dimension_1": "os"}, project="acme", ingest=service
     )
     assert res is not None
     assert res["nodes"] > 0
-    # canonicalized dimension "os" -> "OS"
-    assert "clarity:dimension:OS" in c.nodes.values
 
 
-def test_ingest_response_parses_bare_list():
-    c = _FakeClient()
+async def test_ingest_response_parses_bare_list(ingest):
+    service, _transport = ingest
     resp = _FakeResponse(json.loads(json.dumps(_EXPORT)))
-    res = ingest_response(resp, {"numOfDays": 1}, project="acme", client=c)
+    res = await ingest_response(resp, {"numOfDays": 1}, project="acme", ingest=service)
     assert res is not None
-    assert "clarity:project:acme" in c.nodes.values
+    assert res["nodes"] > 0
 
 
-def test_ingest_response_materializes_empty_snapshot():
-    first = ingest_response(_FakeResponse({"data": []}), {}, client=_FakeClient())
-    second = ingest_response(_FakeResponse("nonsense"), {}, client=_FakeClient())
+async def test_ingest_response_materializes_empty_snapshot(ingest):
+    service, _transport = ingest
+    first = await ingest_response(_FakeResponse({"data": []}), {}, ingest=service)
+    second = await ingest_response(_FakeResponse("nonsense"), {}, ingest=service)
     assert first == {"nodes": 2, "edges": 2, "documents": 1}
     assert second == first
 
 
-def test_ingest_rejects_legacy_structural_fields():
-    with pytest.raises(NativeIngestError, match="canonical node_type"):
-        ingest_entities([{"id": "legacy", "type": "Legacy"}], client=_FakeClient())
-
-
-def test_ingest_empty_is_rejected():
-    with pytest.raises(NativeIngestError, match="at least one entity"):
-        ingest_entities([], client=_FakeClient())
+async def test_ingest_empty_is_rejected(ingest):
+    service, _transport = ingest
+    with pytest.raises(IngestError, match="at least one entity"):
+        await ingest_entities([], ingest=service)

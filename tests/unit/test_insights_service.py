@@ -10,14 +10,14 @@ from clarity_api.mcp.mcp_insights import _serialize
 from clarity_api.services import InsightsService
 
 
+async def _noop_ingest(_response, _params) -> None:
+    return None
+
+
 @pytest.fixture(autouse=True)
 def isolate_native_ingest(monkeypatch):
     """Keep service-seam assertions independent of governed graph authority."""
-    monkeypatch.setattr(
-        InsightsService,
-        "_ingest",
-        staticmethod(lambda _response, _params: None),
-    )
+    monkeypatch.setattr(InsightsService, "_ingest", staticmethod(_noop_ingest))
 
 
 @pytest.fixture
@@ -28,15 +28,17 @@ def service() -> InsightsService:
 
 
 @pytest.mark.concept("CY-OS.governance.data-export-live-insights")
-def test_concept_cla_001_service_returns_serialized_payload(service):
+@pytest.mark.asyncio
+async def test_concept_cla_001_service_returns_serialized_payload(service):
     """CLA-001: the service returns a status/data envelope from the client."""
-    payload = service.get_data_export(number_of_days=2, dimension_1="OS")
+    payload = await service.get_data_export(number_of_days=2, dimension_1="OS")
     assert payload["status_code"] == 200
     assert "data" in payload["data"]
 
 
 @pytest.mark.concept("CY-OS.governance.data-export-live-insights")
-def test_concept_cla_001_service_strips_none_kwargs():
+@pytest.mark.asyncio
+async def test_concept_cla_001_service_strips_none_kwargs():
     """CLA-001: ``None`` kwargs are dropped before reaching the client."""
     captured = {}
 
@@ -53,5 +55,5 @@ def test_concept_cla_001_service_strips_none_kwargs():
             return _Resp()
 
     service = InsightsService(client=_FakeClient(), serializer=_serialize)
-    service.get_data_export(number_of_days=1, dimension_1=None, dimension_2=None)
+    await service.get_data_export(number_of_days=1, dimension_1=None, dimension_2=None)
     assert captured == {"number_of_days": 1}

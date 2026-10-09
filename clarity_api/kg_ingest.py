@@ -3,25 +3,27 @@
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. The clarity-api connector natively
 pushes its behavioral-analytics data into the ONE epistemic-graph knowledge graph as
 **typed OWL nodes** (``:ClarityProject``, ``:ClaritySession``, ``:BehaviorInsight``,
-``:BehaviorDimension``) + ``:Document`` summaries and links through the required
-``agent_utilities.knowledge_graph.memory.native_ingest`` authority. Nodes carry shared
-provenance (``domain``/``source``) and match the classes federated by
-``clarity_api.ontology``.
+``:BehaviorDimension``) + ``:Document`` summaries and links through the
+``agent_connector_sdk.ingest`` knowledge-ingest facade. Provenance travels in the
+submitted ``IngestBinding`` and matches the classes federated by ``clarity_api.ontology``.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_documents as _native_ingest_documents,
-)
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    Document,
+    Entity,
+    IngestBinding,
+    IngestError,
+    KnowledgeIngest,
+    Relationship,
+    current_ingest,
 )
 
-_SOURCE = "clarity-api"
-_DOMAIN = "clarity"
+_BINDING = IngestBinding(connector="clarity-api", stream="clarity")
 
 # Canonical dimension names Clarity segments metrics by (mirrors InputModel).
 _DIMENSIONS = (
@@ -37,42 +39,74 @@ _DIMENSIONS = (
 )
 
 
-def ingest_entities(
-    entities: list[dict[str, Any]],
-    relationships: list[dict[str, Any]] | None = None,
-    *,
-    source: str = _SOURCE,
-    domain: str = _DOMAIN,
-    client: Any | None = None,
-    graph: str | None = None,
-) -> dict[str, int]:
-    """Write canonical typed nodes and relationships through native ingestion."""
-    return _native_ingest_entities(
-        entities,
-        relationships,
-        source=source,
-        domain=domain,
-        client=client,
-        graph=graph,
+def _to_entity(record: dict[str, Any]) -> Entity:
+    return Entity(
+        id=record["id"],
+        node_type=record["node_type"],
+        properties={k: v for k, v in record.items() if k not in ("id", "node_type")},
     )
 
 
-def ingest_documents(
+def _to_relationship(record: dict[str, Any]) -> Relationship:
+    props = {
+        k: v for k, v in record.items() if k not in ("source", "target", "relationship")
+    }
+    return Relationship(
+        source=record["source"],
+        target=record["target"],
+        relationship=record["relationship"],
+        properties=props or None,
+    )
+
+
+def _to_document(record: dict[str, Any]) -> Document:
+    return Document(
+        id=record["id"],
+        text=record["text"],
+        title=record.get("title"),
+        source_uri=record.get("source_uri"),
+        properties={
+            k: v
+            for k, v in record.items()
+            if k not in ("id", "text", "title", "source_uri")
+        },
+    )
+
+
+async def ingest_entities(
+    entities: list[dict[str, Any]],
+    relationships: list[dict[str, Any]] | None = None,
+    *,
+    ingest: KnowledgeIngest | None = None,
+) -> dict[str, int]:
+    """Write canonical typed nodes and relationships through the SDK's ingest facade."""
+    if not entities:
+        raise IngestError("ingest_entities needs at least one entity")
+    change_set = ChangeSet(
+        entities=tuple(_to_entity(e) for e in entities),
+        relationships=tuple(_to_relationship(r) for r in relationships or ()),
+    )
+    service = ingest or current_ingest()
+    receipt = await service.submit(_BINDING, change_set)
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
+
+
+async def ingest_documents(
     documents: list[dict[str, Any]],
     *,
-    source: str = _SOURCE,
-    domain: str = _DOMAIN,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Write text records as ``:Document`` nodes (semantic-search fodder).
 
     Each doc: ``{"id":..., "text":..., "title"?:..., "source_uri"?:..., ...props}``.
-    Validation and engine failures are surfaced as ``NativeIngestError``.
+    Validation and SDK failures are surfaced as ``IngestError``.
     """
-    return _native_ingest_documents(
-        documents, source=source, domain=domain, client=client, graph=graph
-    )
+    if not documents:
+        raise IngestError("ingest_documents needs at least one document")
+    change_set = ChangeSet(documents=tuple(_to_document(d) for d in documents))
+    service = ingest or current_ingest()
+    receipt = await service.submit(_BINDING, change_set)
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
 # --- Clarity record -> typed-node mapping ----------------------------------
@@ -257,7 +291,7 @@ def _project_label(project: str | None = None) -> str:
     try:
         from urllib.parse import urlparse
 
-        from agent_utilities.core.config import setting
+        from agent_connector_sdk.config import setting
 
         host = urlparse(setting("CLARITY_URL", "https://www.clarity.ms")).netloc
         return host or "default"
@@ -279,19 +313,18 @@ def _dims_from_params(params: dict[str, Any]) -> list[str]:
     return dims
 
 
-def ingest_response(
+async def ingest_response(
     response: Any,
     params: dict[str, Any] | None = None,
     *,
     project: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
-    """Ingest a Clarity ``requests.Response`` through the native authority.
+    """Ingest a Clarity ``requests.Response`` through the SDK's ingest facade.
 
     Extracts the metrics list from the export payload (a bare list, or a dict with a
     ``data`` list) and pushes typed nodes plus a summary document. Parse, validation,
-    and native-ingestion failures propagate.
+    and SDK ingest failures propagate.
     """
     params = params or {}
     payload = response.json()
@@ -303,34 +336,32 @@ def ingest_response(
         if isinstance(data, list):
             metrics = data
     num_of_days = _as_int(params.get("number_of_days") or params.get("numOfDays"))
-    return ingest_export(
+    return await ingest_export(
         metrics,
         project=_project_label(project),
         num_of_days=num_of_days,
         dimensions=_dims_from_params(params),
-        client=client,
-        graph=graph,
+        ingest=ingest,
     )
 
 
-def ingest_export(
+async def ingest_export(
     metrics: list[dict[str, Any]],
     *,
     project: str = "default",
     num_of_days: int | None = None,
     dimensions: list[str] | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map a Clarity export payload and ingest its nodes, links, and summary document.
 
-    Returns merged node, edge, and document counts. Native failures propagate.
+    Returns merged node, edge, and document counts. SDK ingest failures propagate.
     """
     entities, relationships, documents = map_export(
         metrics, project=project, num_of_days=num_of_days, dimensions=dimensions
     )
-    ent_res = ingest_entities(entities, relationships, client=client, graph=graph)
-    doc_res = ingest_documents(documents, client=client, graph=graph)
+    ent_res = await ingest_entities(entities, relationships, ingest=ingest)
+    doc_res = await ingest_documents(documents, ingest=ingest)
     return {
         "nodes": ent_res.get("nodes", 0),
         "edges": ent_res.get("edges", 0),
