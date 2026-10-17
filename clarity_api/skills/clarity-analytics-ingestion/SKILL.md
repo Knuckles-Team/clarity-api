@@ -44,7 +44,7 @@ credentials as `clarity-behavioral-insights`:
 | `CLARITY_TOKEN` | ✅ | Bearer API token |
 | `CLARITY_SSL_VERIFY` | optional | TLS verification toggle |
 
-Ingestion targets a reachable epistemic-graph engine (the fleet `graph-os`); with
+Ingestion targets a reachable epistemic-graph engine (the fleet `arbora`); with
 none present the push is a clean no-op. Note the standard `clarity_insights`
 `get_data_export` call **also** ingests best-effort as a side effect — this tool is
 the explicit, Wire-First entry point.

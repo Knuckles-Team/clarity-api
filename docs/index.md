@@ -1,6 +1,6 @@
 # clarity-api
 
-Microsoft Clarity **API + MCP Server + A2A Agent** for the Graph OS ecosystem —
+Microsoft Clarity **API + MCP Server + A2A Agent** for the Arbora ecosystem —
 a typed, action-routed connector for the Clarity Data Export API.
 
 !!! info "Official documentation"
