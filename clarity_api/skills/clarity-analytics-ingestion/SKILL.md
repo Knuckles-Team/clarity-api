@@ -88,5 +88,5 @@ Ingest overall totals for the last day:
 
 ## Related
 - `clarity-behavioral-insights` — read/interpret the same export without KG writes.
-- The `agent-utilities-source-integration` skill covers the broader "connect a
+- The `agent-connector-sdk-source-integration` skill covers the broader "connect a
   source to the KG" flow this tool participates in.

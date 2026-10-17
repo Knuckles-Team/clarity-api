@@ -1,5 +1,5 @@
 site_name: "clarity-api"
-site_description: "Microsoft Clarity API + MCP Server + A2A Agent — a typed, action-routed Clarity Data Export connector for the agent-utilities ecosystem."
+site_description: "Microsoft Clarity API + MCP Server + A2A Agent — a typed, action-routed Clarity Data Export connector for the Graph OS ecosystem."
 site_url: "https://knuckles-team.github.io/clarity-api/"
 repo_name: "Knuckles-Team/clarity-api"
 repo_url: "https://github.com/Knuckles-Team/clarity-api"

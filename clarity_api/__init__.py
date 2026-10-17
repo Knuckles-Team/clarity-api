@@ -19,7 +19,6 @@ CORE_MODULES: list[str] = [
 ]
 
 OPTIONAL_MODULES = {
-    "clarity_api.agent_server": "agent",
     "clarity_api.mcp_server": "mcp",
 }
 
@@ -41,7 +40,7 @@ for module_name in CORE_MODULES:
         _module = importlib.import_module(module_name)
         _expose_members(_module)
 
-# Dynamic/lazy loading of optional modules (agent_server, mcp_server)
+# Dynamic/lazy loading of optional modules (mcp_server)
 _loaded_optional_modules: dict[str, Any] = {}
 
 
@@ -56,8 +55,6 @@ def _import_module_safely(module_name: str):
 def __getattr__(name: str) -> Any:
     if name == "_MCP_AVAILABLE":
         return _import_module_safely("clarity_api.mcp_server") is not None
-    if name == "_AGENT_AVAILABLE":
-        return _import_module_safely("clarity_api.agent_server") is not None
 
     for module_name in OPTIONAL_MODULES:
         if module_name not in _loaded_optional_modules:

@@ -22,11 +22,6 @@ def test_concept_cla_005_core_members_exposed():
     assert hasattr(clarity_api, "Api")
 
 
-@pytest.mark.concept("CY-OS.governance.package-server-bootstrap")
-def test_concept_cla_005_optional_availability_flags():
-    """CLA-005: optional-module flags resolve via ``__getattr__`` without raising."""
-    assert isinstance(clarity_api._MCP_AVAILABLE, bool)
-    assert isinstance(clarity_api._AGENT_AVAILABLE, bool)
 
 
 @pytest.mark.concept("CY-OS.governance.package-server-bootstrap")

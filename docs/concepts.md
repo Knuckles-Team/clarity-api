@@ -2,7 +2,7 @@
 
 > **Prefix**: `CONCEPT:CLA-*`
 > **Version**: 1.0.0
-> **Bridge**: [ECO-4.0](https://github.com/Knuckles-Team/agent-utilities/blob/main/docs/concepts.md) (Unified Toolkit Ingestion)
+> **Bridge**: [ECO-4.0](https://github.com/Knuckles-Team/agent-connector-sdk/blob/main/docs/concepts.md) (Unified Toolkit Ingestion)
 
 ---
 
@@ -21,25 +21,25 @@ docstring marker on the implementing function), **docs** (this registry), and
 | `CONCEPT:CY-OS.governance.package-server-bootstrap` | Package & Server Bootstrap | `clarity_api.__init__` lazy loading, `mcp_server.mcp_server`, `agent_server.agent_server` entry points | `test_concept_cla_005_*` |
 | `CONCEPT:CY-OS.governance.cla` | Concept Traceability Governance | `tests/unit/test_concept_parity.py` parity gates: every `CLA-*` tag is documented and every inherited pillar concept is registered upstream | `test_concept_cla_006_*` |
 
-## Cross-Project References (from agent-utilities)
+## Cross-Project References (from agent-connector-sdk)
 
-> These are inherited platform capabilities from `agent-utilities`. They are
+> These are inherited platform capabilities from `agent-connector-sdk`. They are
 > **not** clarity-api project concepts and are listed here for traceability only
 > (rendered as plain IDs so they are not counted as orphaned project concepts).
 
 | Concept ID | Name | Origin |
 |------------|------|--------|
-| ECO-4.0 | Unified Toolkit Ingestion | agent-utilities |
-| ORCH-1.2 | Confidence-Gated Router | agent-utilities |
-| OS-5.1 | Prompt Injection Defense | agent-utilities |
-| OS-5.2 | Cognitive Scheduler | agent-utilities |
-| AU-OS.governance.reactive-multi-axis-budget | Guardrail Engine | agent-utilities |
-| AU-OS.governance.wasm-micro-agent-sandbox | Audit Logging | agent-utilities |
-| KG-2.0 | Knowledge Graph Core | agent-utilities |
+| ECO-4.0 | Unified Toolkit Ingestion | agent-connector-sdk |
+| ORCH-1.2 | Confidence-Gated Router | agent-connector-sdk |
+| OS-5.1 | Prompt Injection Defense | agent-connector-sdk |
+| OS-5.2 | Cognitive Scheduler | agent-connector-sdk |
+| AU-OS.governance.reactive-multi-axis-budget | Guardrail Engine | agent-connector-sdk |
+| AU-OS.governance.wasm-micro-agent-sandbox | Audit Logging | agent-connector-sdk |
+| KG-2.0 | Knowledge Graph Core | agent-connector-sdk |
 
-## Synergy with agent-utilities
+## Synergy with agent-connector-sdk
 
-This project integrates with `agent-utilities` via the ECO-4.0 (Unified Toolkit
+This project integrates with `agent-connector-sdk` via the ECO-4.0 (Unified Toolkit
 Ingestion) bridge. The `clarity_api` MCP server registers its tools with the
-agent-utilities FastMCP middleware, enabling automatic discovery, telemetry, and
+agent-connector-sdk FastMCP middleware, enabling automatic discovery, telemetry, and
 Knowledge Graph ingestion of all `CLA-*` concepts.

@@ -116,6 +116,6 @@
     rdfs:label "Clarity Behavioral-Analytics Ontology" ;
     rdfs:comment """Microsoft Clarity behavioral-analytics model — projects, aggregate
     session-analytics snapshots, named metric insights, and their dimension breakdowns —
-    federated into the agent-utilities knowledge-graph hub. Reuses the shared :Document
+    federated into the agent-connector-sdk knowledge-graph hub. Reuses the shared :Document
     and :Person classes.""" ;
     owl:imports <http://knuckles.team/kg/enterprise> .
