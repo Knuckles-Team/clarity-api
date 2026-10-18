@@ -17,7 +17,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/clarity-api)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/clarity-api)
 
-*Version: 3.1.0*
+*Version: 3.2.0*
 
 **Microsoft Clarity API + MCP Server + A2A Agent**
 
@@ -344,7 +344,9 @@ token = "<TOKEN>"
 url = "https://www.clarity.ms"
 client = clarity_api.Api(url=url, token=token)
 
-response = client.get_data_export(number_of_days=2, dimension_1="OS", dimension_2="Channel")
+response = client.get_data_export(
+    number_of_days=2, dimension_1="OS", dimension_2="Channel"
+)
 print("Status Code:", response.status_code)
 print("JSON Output:", response.json())
 ```
