@@ -54,7 +54,7 @@ Prefer the **condensed** tool; it takes `action` + a `params_json` **JSON string
 
 | Condensed tool | Actions |
 |----------------|---------|
-| `clarity_insights` | `get_data_export` |
+| `clarity_get_data_export` | operation |
 
 ### Key parameters (`params_json`)
 - `number_of_days` — `1`, `2`, or `3` (the trailing window; required for a useful call).

@@ -1,14 +1,14 @@
 {
   "api_version": "arbora.io/v1",
   "artifacts": {
-    "clarity_api/connectors/mcp_source_presets.json": "c7ca383a87ce90ba8e679f411af5935bddc6eea8d56c394a999a596ba63ac6d3",
-    "clarity_api/connectors/tool_schema_fingerprints.json": "f409d9737e44184600fb2fc3c177d374c21eaba8a5cdaadfdd5fa6fa85c42cfc",
+    "clarity_api/connectors/mcp_source_presets.json": "91e8680edf17e12a9cf7d684024178f132077516230208ba22a3e64acc8360cc",
+    "clarity_api/connectors/tool_schema_fingerprints.json": "a4050685d7da153251bdbe6d7e1fa8ec166724d7276ce1161baba9a3102fa360",
     "clarity_api/ontology/clarity.ttl": "b1c1d0acd7423f3d7399a8f6dfdd24e7bd5c0512468215bf14530664e7491358",
     "clarity_api/ontology/fixtures/records.json": "861e97db78862a7cf203da92e1e8e28a42ef8d831a9a79b0e1932f6fe26fe729",
-    "clarity_api/ontology/mappings/source.yaml": "632b23ec4cb363ca68da147897759b90da787cdd7ee69e6fd6c91eed4371654b",
+    "clarity_api/ontology/mappings/source.yaml": "b4f4c4fe81e104a33a60f3e8501447974947146864e675a90771c30b99811db0",
     "clarity_api/ontology/migrations/manifest.json": "8e3ee220110378ab676abf0815fc33c21d415e23ffedd187713abd647ddac10b",
     "clarity_api/ontology/shapes/connector.shacl.ttl": "0ebc54aba872a0a757ea8ed70b5dda389206866fdb2b8e6875bbfe85b5c109c0",
-    "connector_manifest.yml": "6fbf1f194f021f559db30d1beae00ceda708f02672745f4a1b6af377e513eb0f"
+    "connector_manifest.yml": "1c94f9e352bdab13d50adc1d6dfa0b4c26ccda02f2187af801e7a488f7e7b619"
   },
   "checks": {
     "declared_tool_schema": "passed",

@@ -35,4 +35,4 @@ async def test_concept_cla_001_get_mcp_instance_builds():
 
     mcp, args, middlewares, registered_tags = get_mcp_instance()
     names = await _list_tool_names(mcp)
-    assert "clarity_insights" in names
+    assert "clarity_get_data_export" in names
