@@ -1,6 +1,6 @@
 """End-to-end integration tests for the Clarity data-export path.
 
-Exercises the full ``clarity_insights`` MCP tool -> ``get_client`` -> Clarity
+Exercises the full ``clarity_get_data_export`` MCP tool -> ``get_client`` -> Clarity
 client wiring (HTTP mocked via the shared conftest fixtures), covering
 ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights). Test names intentionally
 mirror the README feature headings so documented capabilities stay covered.

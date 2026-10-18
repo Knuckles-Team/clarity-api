@@ -33,7 +33,7 @@ credentials as `clarity-behavioral-insights`:
 | `CLARITY_TLS_PROFILE_REF` | optional | Reference-backed AgentConfig TLS profile selector. |
 
 Ingestion requires a reachable epistemic-graph engine (the fleet `arbora`). The
-standard `clarity_insights` `get_data_export` call **also** performs the authoritative
+standard `clarity_get_data_export` call **also** performs the authoritative
 native write; this tool is the explicit, Wire-First entry point.
 
 ## Tools & actions

@@ -26,7 +26,7 @@
     },
     "workflow": [
       "confirm the target window (number_of_days in {1,2,3}) and any dimension breakdowns",
-      "call clarity_insights get_data_export with a params_json string",
+      "call clarity_get_data_export",
       "cast string counts to numbers and interpret per metric/dimension",
       "when persistence is asked for, push the export with clarity_ingest_insights"
     ],
@@ -38,5 +38,5 @@
     ]
   },
   "skills": ["clarity-behavioral-insights", "clarity-analytics-ingestion"],
-  "tools": ["clarity_insights", "clarity_ingest_insights"]
+  "tools": ["clarity_get_data_export", "clarity_ingest_insights"]
 }
