@@ -17,7 +17,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/clarity-api)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/clarity-api)
 
-*Version: 3.2.0*
+*Version: 3.2.1*
 
 **Microsoft Clarity API + MCP Server + A2A Agent**
 
