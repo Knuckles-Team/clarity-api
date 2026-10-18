@@ -17,13 +17,13 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/clarity-api)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/clarity-api)
 
-*Version: 3.1.0*
+*Version: 3.2.0*
 
 **Microsoft Clarity API + MCP Server + A2A Agent**
 
 `clarity-api` is a typed, action-routed connector for the
 [Microsoft Clarity Data Export API](https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-data-export-api),
-built on [`agent-utilities`](https://github.com/Knuckles-Team/agent-utilities). It
+built on [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk). It
 ships a Python `Api` client, a [FastMCP](https://github.com/jlowin/fastmcp) MCP server
 (`clarity-mcp`), and an optional Pydantic-AI A2A agent server (`clarity-agent`).
 
@@ -85,7 +85,7 @@ graph TD
 - **A2A agent server** — `clarity-agent` auto-discovers the MCP tools and exposes an
   AG-UI web interface.
 - **Enterprise-ready** — inherits OIDC auth, OpenTelemetry, audit logging, prompt-injection
-  defense, and guardrails from `agent-utilities`.
+  defense, and guardrails from `agent-connector-sdk`.
 
 ## Available MCP Tools
 
@@ -157,7 +157,7 @@ Each tool domain is gated behind an env toggle so deployments can trim their sur
 | `TLS_PROFILES_REF` | `secret://transport/catalog` | Named runtime profile catalog |
 | `INSIGHTSTOOL` | `True` |  |
 
-#### Inherited agent-utilities variables (apply to every connector)
+#### Inherited agent-connector-sdk variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
@@ -178,7 +178,7 @@ Each tool domain is gated behind an env toggle so deployments can trim their sur
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -200,7 +200,7 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 | `TRANSPORT` | `stdio` | MCP transport: `stdio`, `streamable-http`, or `sse`. |
 | `HOST` | `0.0.0.0` | Bind host for HTTP transports. |
 | `PORT` | `8000` | Bind port for HTTP transports. |
-| `AUTH_TYPE` | `none` | MCP server auth scheme inherited from `agent-utilities` (e.g. `none`, `oidc`). |
+| `AUTH_TYPE` | `none` | MCP server auth scheme inherited from `agent-connector-sdk` (e.g. `none`, `oidc`). |
 | `FASTMCP_LOG_LEVEL` | `ERROR` | FastMCP log verbosity. Set to `ERROR` at startup to suppress log spam. |
 | `INSIGHTSTOOL` | `True` | Toggle registration of the `clarity_insights` tool (see [Dynamic Tool Selection](#dynamic-tool-selection)). |
 
@@ -222,7 +222,7 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 ## Configuration
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `clarity-api[mcp]` to add
-> FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
+> FastMCP / FastAPI through `agent-connector-sdk[mcp]`; the required Agent Utilities core
 > still carries `epistemic-graph[full]`. The `[agent]` extra also
 > enables model orchestration.
 
@@ -344,16 +344,18 @@ token = "<TOKEN>"
 url = "https://www.clarity.ms"
 client = clarity_api.Api(url=url, token=token)
 
-response = client.get_data_export(number_of_days=2, dimension_1="OS", dimension_2="Channel")
+response = client.get_data_export(
+    number_of_days=2, dimension_1="OS", dimension_2="Channel"
+)
 print("Status Code:", response.status_code)
 print("JSON Output:", response.json())
 ```
 
 ## Security & Governance
 
-`clarity-api` inherits enterprise infrastructure from `agent-utilities`: JWT/OIDC
+`clarity-api` inherits enterprise infrastructure from `agent-connector-sdk`: JWT/OIDC
 authentication, OpenTelemetry instrumentation, HashiCorp Vault secret resolution,
-append-only audit logging (agent-utilities `AU-OS.governance.wasm-micro-agent-sandbox`), prompt-injection defense
+append-only audit logging (agent-connector-sdk `AU-OS.governance.wasm-micro-agent-sandbox`), prompt-injection defense
 (`OS-5.1`), and the guardrail engine (`AU-OS.governance.reactive-multi-axis-budget`). The connector stays
 inactive until `CLARITY_URL` and `CLARITY_TOKEN` are configured. Never commit `.env`
 files or tokens.
@@ -365,8 +367,8 @@ Pick the extra that matches what the operator want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | _(none)_ | the bare `Api` Python client (`requests`) | The operator only use the `clarity_api.Api` client |
-| `clarity-api[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
-| `clarity-api[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
+| `clarity-api[mcp]` | Connector-focused MCP server (`agent-connector-sdk[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `clarity-api[agent]` | Agent runtime (`agent-connector-sdk[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
 | `clarity-api[all]` | Everything (`mcp` + `agent`) | Development / both surfaces |
 
 ```bash
@@ -433,15 +435,15 @@ python -m pytest -q
 ```
 
 
-<!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
+<!-- BEGIN agent-connector-sdk-deployment (generated; do not edit between markers) -->
 
-## Deploy with `agent-utilities-deployment`
+## Deploy with `agent-connector-sdk-deployment`
 
-Provision this package with the consolidated **`agent-utilities-deployment`**
+Provision this package with the consolidated **`agent-connector-sdk-deployment`**
 workflow. It selects an installed-package, editable-source, or immutable-container
 path; records only runtime secret and TLS-profile references in `AgentConfig`; and
 runs doctor, registration, policy, observability, and rollback gates. Ask your agent
-to **"deploy `clarity-api` with agent-utilities-deployment"**.
+to **"deploy `clarity-api` with agent-connector-sdk-deployment"**.
 
 | Install mode | Command |
 |------|---------|
@@ -453,7 +455,7 @@ The repository embeds no deployment profile, credential value, certificate path,
 environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
 configured secret provider.
 
-<!-- END agent-utilities-deployment -->
+<!-- END agent-connector-sdk-deployment -->
 
 <!-- GOVERNED-CAPABILITY:START -->
 ## Governed capability contract
@@ -468,5 +470,5 @@ historical per-task skill wrappers.
 Runtime endpoints, credentials, certificate trust, tenant identity, retention,
 and observability policy are deployment inputs and are never packaged values.
 See [Configuration, trust, and privacy](docs/configuration.md) before enabling a
-network transport, connector ingestion, GraphOS delegation, or trace export.
+network transport, connector ingestion, Arbora delegation, or trace export.
 <!-- GOVERNED-CAPABILITY:END -->

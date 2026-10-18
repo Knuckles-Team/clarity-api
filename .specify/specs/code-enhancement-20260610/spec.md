@@ -15,7 +15,7 @@
 
 ## Functional Requirements
 
-- **FR-001**: Minor update: agent-utilities 0.2.40 (installed) -> 0.47.0
+- **FR-001**: Minor update: agent-connector-sdk 0.2.40 (installed) -> 0.47.0
 - **FR-002**: Minor update: requests 2.32.5 (installed) -> 2.34.2
 - **FR-003**: Minor update: urllib3 2.6.3 (installed) -> 2.7.0
 - **FR-004**: Minor update: pytest-asyncio 1.3.0 (installed) -> 1.4.0
@@ -49,7 +49,7 @@
 - **FR-032**: Only 20% of env vars documented in README.md
 - **FR-033**: Undocumented env vars: AUTH_TYPE, TLS_PROFILE, ENABLE_OTEL, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, FASTMCP_LOG_LEVEL, HOST, NO_COLOR, PORT, TERM
 - **FR-034**: 4 Python env vars not in .env.example: CLARITY_TOKEN, FASTMCP_LOG_LEVEL, NO_COLOR, TERM
-- **FR-035**: Check skipped: required agent-utilities/networkx dependencies not found.
+- **FR-035**: Check skipped: required agent-connector-sdk/networkx dependencies not found.
 
 ## Success Criteria
 

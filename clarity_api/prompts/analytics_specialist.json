@@ -4,7 +4,7 @@
   "schema_version": "1.0",
   "prompt_version": "0.1.0",
   "source": "clarity-api",
-  "extends": "agent-utilities:base",
+  "extends": "agent-connector-sdk:base",
   "compose": "append",
   "description": "Microsoft Clarity behavioral-analytics specialist: export, interpret, and graph-ingest live insights over the clarity-api MCP server.",
   "metadata": {

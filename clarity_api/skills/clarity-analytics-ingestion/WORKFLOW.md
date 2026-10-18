@@ -32,7 +32,7 @@ credentials as `clarity-behavioral-insights`:
 | `CLARITY_TLS_PROFILE` | optional | Named AgentConfig TLS profile; peer and hostname verification are mandatory. |
 | `CLARITY_TLS_PROFILE_REF` | optional | Reference-backed AgentConfig TLS profile selector. |
 
-Ingestion requires a reachable epistemic-graph engine (the fleet `graph-os`). The
+Ingestion requires a reachable epistemic-graph engine (the fleet `arbora`). The
 standard `clarity_insights` `get_data_export` call **also** performs the authoritative
 native write; this tool is the explicit, Wire-First entry point.
 
@@ -75,5 +75,5 @@ Ingest overall totals for the last day:
 
 ## Related
 - `clarity-behavioral-insights` — read/interpret the same export without KG writes.
-- The `agent-utilities-source-integration` skill covers the broader "connect a
+- The `agent-connector-sdk-source-integration` skill covers the broader "connect a
   source to the KG" flow this tool participates in.

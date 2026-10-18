@@ -3,7 +3,7 @@
 Generated: 2026-06-10T14:09:12.767885+00:00
 Skipped informational: 4
 
-- [ ] [P] **T001** [Dependency Audit] Minor update: agent-utilities 0.2.40 (installed) -> 0.47.0
+- [ ] [P] **T001** [Dependency Audit] Minor update: agent-connector-sdk 0.2.40 (installed) -> 0.47.0
   - Priority: P3-Low | Effort: Small
 - [ ] [P] **T002** [Dependency Audit] Minor update: requests 2.32.5 (installed) -> 2.34.2
   - Priority: P3-Low | Effort: Small
@@ -71,5 +71,5 @@ Skipped informational: 4
   - Priority: P2-Medium | Effort: Medium
 - [ ] [P] **T034** [Environment Variables] 4 Python env vars not in .env.example: CLARITY_TOKEN, FASTMCP_LOG_LEVEL, NO_COLO
   - Priority: P2-Medium | Effort: Medium
-- [ ] [P] **T035** [XDG Compliance (KG)] Check skipped: required agent-utilities/networkx dependencies not found.
+- [ ] [P] **T035** [XDG Compliance (KG)] Check skipped: required agent-connector-sdk/networkx dependencies not found.
   - Priority: P2-Medium | Effort: Medium
