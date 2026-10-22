@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "spec_id": "CONN-CLARITY-API-CONNECTOR-IDENTITY",
+  "owner_repo": "clarity-api",
+  "delivery_state": "VERIFIED",
+  "requirement_ids": [
+    "CONN-CLARITY-API-CONNECTOR-IDENTITY-R001"
+  ],
+  "requirements": [
+    {
+      "id": "CONN-CLARITY-API-CONNECTOR-IDENTITY-R001",
+      "title": "Fleet name",
+      "delivery_state": "VERIFIED",
+      "landed_in": [
+        "613b8533b9a0"
+      ],
+      "verified_by": [
+        "tests/test_fleet_name.py:35"
+      ]
+    }
+  ]
+}

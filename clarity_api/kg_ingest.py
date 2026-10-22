@@ -23,7 +23,7 @@ from agent_connector_sdk.ingest import (
     current_ingest,
 )
 
-_BINDING = IngestBinding(connector="clarity-api", stream="clarity")
+_BINDING = IngestBinding(connector="clarity-mcp", stream="clarity")
 
 # Canonical dimension names Clarity segments metrics by (mirrors InputModel).
 _DIMENSIONS = (
