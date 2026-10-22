@@ -29,6 +29,7 @@ BASELINES = {
 # are not expected to be surfaced as standalone MCP tools.
 NON_SURFACE_METHODS = {
     "authenticate",
+    "close",  # client lifecycle (releases the HTTP session), not an API operation
     "api_request",  # generic passthrough escape hatch, not a domain tool
 }
 

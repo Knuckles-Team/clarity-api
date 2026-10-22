@@ -1,4 +1,4 @@
-connector: clarity-api
+connector: clarity-mcp
 ontology_source: clarity
 schema_version: '1'
 resources:
