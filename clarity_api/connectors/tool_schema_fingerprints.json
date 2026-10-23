@@ -1,8 +1,0 @@
-{
-  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
-  "connector": "clarity-mcp",
-  "schema_version": "1",
-  "tools": {
-    "clarity_get_data_export": "fc9886b1fd86fce8424255370e3fa2af8469ddc49aedb6cf2b20dae8d66093bc"
-  }
-}
