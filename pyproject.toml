@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clarity-api"
-version = "3.3.4"
+version = "3.3.5"
 description = "Microsoft Clarity API + MCP Server + A2A Server"
 readme = "README.md"
 classifiers = [ "Development Status :: 5 - Production/Stable", "License :: Public Domain", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
@@ -18,7 +18,6 @@ email = "maintainers@knuckles.team"
 text = "MIT"
 
 [project.optional-dependencies]
-all = [ "clarity-api[mcp]>=2.0.1",]
 test = [
     "pytest-xdist>=3.8.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0",]
 
