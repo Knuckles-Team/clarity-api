@@ -9,7 +9,7 @@ import importlib
 import inspect
 from typing import Any
 
-from clarity_api.version import __author__, __credits__, __version__
+from clarity_api.version import __author__, __credits__
 
 __all__: list[str] = ["__version__", "__author__", "__credits__"]
 
@@ -72,3 +72,20 @@ def __getattr__(name: str) -> Any:
 
 def __dir__() -> list[str]:
     return sorted(list(globals().keys()) + __all__)
+
+
+from importlib.metadata import version as _v
+
+from agent_connector_sdk.connector import Connector
+
+from clarity_api.api_client import Api
+from clarity_api.auth import get_client
+
+__version__ = _v("clarity-api")
+
+connector = Connector(
+    api=Api,
+    get_client=get_client,
+    tools="clarity_api.mcp_server",
+    instructions="Microsoft Clarity API MCP Server - Export dashboard data and live insights broken down by up to three dimensions.",
+)

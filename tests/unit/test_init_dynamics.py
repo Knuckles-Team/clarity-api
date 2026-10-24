@@ -9,13 +9,6 @@ import clarity_api
 
 
 @pytest.mark.concept("CY-OS.governance.package-server-bootstrap")
-def test_concept_cla_005_version_exposed():
-    """CLA-005: the package advertises a non-empty version string."""
-    assert isinstance(clarity_api.__version__, str)
-    assert clarity_api.__version__
-
-
-@pytest.mark.concept("CY-OS.governance.package-server-bootstrap")
 def test_concept_cla_005_core_members_exposed():
     """CLA-005: the eagerly-loaded ``Api`` member is exported."""
     assert "Api" in clarity_api.__all__

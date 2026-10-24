@@ -1,5 +1,5 @@
 schema_version: '1'
-connector: clarity-api
+connector: clarity-mcp
 ontology_source: clarity
 sync:
 - preset: clarity-insights

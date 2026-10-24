@@ -17,8 +17,6 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/clarity-api)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/clarity-api)
 
-*Version: 3.3.3*
-
 **Microsoft Clarity API + MCP Server + A2A Agent**
 
 `clarity-api` is a typed, action-routed connector for the

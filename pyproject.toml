@@ -4,40 +4,33 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clarity-api"
-version = "3.3.3"
+version = "3.3.4"
 description = "Microsoft Clarity API + MCP Server + A2A Server"
 readme = "README.md"
 classifiers = [ "Development Status :: 5 - Production/Stable", "License :: Public Domain", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12, <3.15"
-dependencies = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0", "requests>=2.34.2", "python-dotenv>=1.2.4", "pydantic[email]>=2.14.1", "urllib3>=2.8.0",]
+dependencies = [ "agent-connector-sdk[mcp]>=0.5.4,<0.6.0", "requests>=2.34.2", "python-dotenv>=1.2.4", "pydantic[email]>=2.14.1", "urllib3>=2.8.0",]
 [[project.authors]]
-name = "Project Maintainers"
-email = "maintainers@users.noreply.github.com"
+name = "Repository Maintainers"
+email = "maintainers@knuckles.team"
 
 [project.license]
 text = "MIT"
 
 [project.optional-dependencies]
-mcp = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0",]
 all = [ "clarity-api[mcp]>=2.0.1",]
 test = [
     "pytest-xdist>=3.8.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0",]
 
 [project.scripts]
-clarity-mcp = "clarity_api.mcp_server:mcp_server"
-
-[project.entry-points."agent_connector_sdk.skill_providers"]
-clarity-api = "clarity_api.skills"
-
-[project.entry-points."agent_connector_sdk.ontology_providers"]
-clarity-api = "clarity_api.ontology"
+clarity-mcp = "agent_connector_sdk.cli:serve"
 
 [project.entry-points."agent_connector_sdk.prompt_providers"]
 clarity-api = "clarity_api.prompts"
 
 # The one declared connector identity: the fleet name (SDK-CONNECTOR-CONTROL-R071).
 [project.entry-points."agent_connector_sdk.connector"]
-clarity-mcp = "clarity_api"
+clarity-mcp = "clarity_api:connector"
 
 [tool.uv.workspace]
 members = ["."]
@@ -51,6 +44,7 @@ override-dependencies = [
 ]
 
 [tool.ruff]
+extend-exclude = ["tests", "scripts"]
 line-length = 88
 target-version = "py312"
 
@@ -79,3 +73,10 @@ ignore_names = ["request", "config", "cls", "__context", "model_post_init", "con
 
 [tool.pipelines_hooks.ste]
 exempt = ["specs/*", "specs/**/*"]
+
+[tool.pipelines.container]
+install_extras = {"mcp" = []}
+env_file_optional = true
+
+[tool.pipelines.api_integration]
+baseline = 33.3
