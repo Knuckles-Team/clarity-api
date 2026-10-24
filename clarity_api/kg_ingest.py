@@ -13,17 +13,11 @@ from __future__ import annotations
 from typing import Any
 
 from agent_connector_sdk.ingest import (
-    ChangeSet,
-    Document,
-    Entity,
-    IngestBinding,
-    IngestError,
     KnowledgeIngest,
-    Relationship,
-    current_ingest,
+    SourceStream,
 )
 
-_BINDING = IngestBinding(connector="clarity-mcp", stream="clarity")
+STREAM = SourceStream.for_package(__package__.split(".")[0], "clarity")
 
 # Canonical dimension names Clarity segments metrics by (mirrors InputModel).
 _DIMENSIONS = (
@@ -37,76 +31,6 @@ _DIMENSIONS = (
     "Channel",
     "URL",
 )
-
-
-def _to_entity(record: dict[str, Any]) -> Entity:
-    return Entity(
-        id=record["id"],
-        node_type=record["node_type"],
-        properties={k: v for k, v in record.items() if k not in ("id", "node_type")},
-    )
-
-
-def _to_relationship(record: dict[str, Any]) -> Relationship:
-    props = {
-        k: v for k, v in record.items() if k not in ("source", "target", "relationship")
-    }
-    return Relationship(
-        source=record["source"],
-        target=record["target"],
-        relationship=record["relationship"],
-        properties=props or None,
-    )
-
-
-def _to_document(record: dict[str, Any]) -> Document:
-    return Document(
-        id=record["id"],
-        text=record["text"],
-        title=record.get("title"),
-        source_uri=record.get("source_uri"),
-        properties={
-            k: v
-            for k, v in record.items()
-            if k not in ("id", "text", "title", "source_uri")
-        },
-    )
-
-
-async def ingest_entities(
-    entities: list[dict[str, Any]],
-    relationships: list[dict[str, Any]] | None = None,
-    *,
-    ingest: KnowledgeIngest | None = None,
-) -> dict[str, int]:
-    """Write canonical typed nodes and relationships through the SDK's ingest facade."""
-    if not entities:
-        raise IngestError("ingest_entities needs at least one entity")
-    change_set = ChangeSet(
-        entities=tuple(_to_entity(e) for e in entities),
-        relationships=tuple(_to_relationship(r) for r in relationships or ()),
-    )
-    service = ingest or current_ingest()
-    receipt = await service.submit(_BINDING, change_set)
-    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
-
-
-async def ingest_documents(
-    documents: list[dict[str, Any]],
-    *,
-    ingest: KnowledgeIngest | None = None,
-) -> dict[str, int]:
-    """Write text records as ``:Document`` nodes (semantic-search fodder).
-
-    Each doc: ``{"id":..., "text":..., "title"?:..., "source_uri"?:..., ...props}``.
-    Validation and SDK failures are surfaced as ``IngestError``.
-    """
-    if not documents:
-        raise IngestError("ingest_documents needs at least one document")
-    change_set = ChangeSet(documents=tuple(_to_document(d) for d in documents))
-    service = ingest or current_ingest()
-    receipt = await service.submit(_BINDING, change_set)
-    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
 # --- Clarity record -> typed-node mapping ----------------------------------
@@ -360,8 +284,8 @@ async def ingest_export(
     entities, relationships, documents = map_export(
         metrics, project=project, num_of_days=num_of_days, dimensions=dimensions
     )
-    ent_res = await ingest_entities(entities, relationships, ingest=ingest)
-    doc_res = await ingest_documents(documents, ingest=ingest)
+    ent_res = await STREAM.entities(entities, relationships, ingest=ingest)
+    doc_res = await STREAM.documents(documents, ingest=ingest)
     return {
         "nodes": ent_res.get("nodes", 0),
         "edges": ent_res.get("edges", 0),

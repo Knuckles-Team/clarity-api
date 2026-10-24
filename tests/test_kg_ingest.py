@@ -18,8 +18,7 @@ import pytest
 from agent_connector_sdk.ingest import IngestError, KnowledgeIngest
 
 from clarity_api.kg_ingest import (
-    ingest_documents,
-    ingest_entities,
+    STREAM,
     ingest_export,
     ingest_response,
     map_export,
@@ -87,7 +86,7 @@ class _FakeResponse:
 
 async def test_ingest_entities_writes_nodes_and_edges(ingest):
     service, transport = ingest
-    res = await ingest_entities(
+    res = await STREAM.entities(
         [
             {"id": "a", "node_type": "ClarityProject", "name": "p"},
             {"id": "b", "node_type": "ClaritySession"},
@@ -107,7 +106,7 @@ async def test_ingest_entities_writes_nodes_and_edges(ingest):
 
 async def test_ingest_documents_writes_document_nodes(ingest):
     service, transport = ingest
-    res = await ingest_documents(
+    res = await STREAM.documents(
         [{"id": "clarity:doc:x", "text": "hello", "title": "T"}],
         ingest=service,
     )
@@ -193,4 +192,4 @@ async def test_ingest_response_materializes_empty_snapshot(ingest):
 async def test_ingest_empty_is_rejected(ingest):
     service, _transport = ingest
     with pytest.raises(IngestError, match="at least one entity"):
-        await ingest_entities([], ingest=service)
+        await STREAM.entities([], ingest=service)

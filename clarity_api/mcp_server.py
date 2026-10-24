@@ -15,78 +15,8 @@ with warnings.catch_warnings():
 warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
-import logging
-import os
-import sys
-from typing import Any
 
-from agent_connector_sdk.config import load_config
-from agent_connector_sdk.mcp.server import create_mcp_server
-from agent_connector_sdk.mcp.tool_surface import register_tool_surface
-from fastmcp.utilities.logging import get_logger
-
-from clarity_api.api_client import Api
-from clarity_api.auth import get_client
 from clarity_api.mcp import register_insights_tools  # noqa: F401
 
-__version__ = "3.3.3"
-print(f"Clarity MCP v{__version__}", file=sys.stderr)
-
-logger = get_logger(name="mcp_server")
-logger.setLevel(logging.DEBUG)
-
-
-def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
-    """Initialize and return the Clarity MCP instance, args, and middlewares.
-
-    CONCEPT:CY-OS.governance.package-server-bootstrap — Package & Server Bootstrap.
-    """
-    load_config()
-    os.environ["FASTMCP_LOG_LEVEL"] = "ERROR"
-    os.environ["TERM"] = "dumb"
-    os.environ["NO_COLOR"] = "1"
-
-    args, mcp, middlewares = create_mcp_server(
-        name="Clarity",
-        version=__version__,
-        instructions=(
-            "Microsoft Clarity API MCP Server - Export dashboard data and live "
-            "insights broken down by up to three dimensions."
-        ),
-    )
-
-    registered_tags = register_tool_surface(
-        mcp,
-        client_cls=Api,
-        get_client=get_client,
-        service="clarity-api",
-        tools_module=sys.modules[__name__],
-    )
-
-    for mw in middlewares:
-        mcp.add_middleware(mw)
-
-    return mcp, args, middlewares, registered_tags
-
-
-def mcp_server() -> None:
-    mcp, args, middlewares, registered_tags = get_mcp_instance()
-    print(f"{'clarity-api'} MCP v{__version__}", file=sys.stderr)
-    print("\nStarting MCP Server", file=sys.stderr)
-    print(f"  Transport: {args.transport.upper()}", file=sys.stderr)
-    print(f"  Auth: {args.auth_type}", file=sys.stderr)
-    print(f"  Dynamic Tags Loaded: {len(set(registered_tags))}", file=sys.stderr)
-
-    if args.transport == "stdio":
-        mcp.run(transport="stdio")
-    elif args.transport == "streamable-http":
-        mcp.run(transport="streamable-http", host=args.host, port=args.port)
-    elif args.transport == "sse":
-        mcp.run(transport="sse", host=args.host, port=args.port)
-    else:
-        logger.error("Invalid transport", extra={"transport": args.transport})
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    mcp_server()
+# SDK discovery registers the register_<tag>_tools functions bound in this module.
+__all__ = ["register_insights_tools"]
