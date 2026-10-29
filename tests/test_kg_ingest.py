@@ -57,7 +57,9 @@ class _FakeTransport:
         self.requests: list[Any] = []
 
     async def source_status(self, connector: str, stream: str) -> Any:
-        return SimpleNamespace(connector=connector, stream=stream, accepted_checkpoint=None)
+        return SimpleNamespace(
+            connector=connector, stream=stream, accepted_checkpoint=None
+        )
 
     async def submit(self, request: Any) -> Any:
         self.requests.append(request)
@@ -99,9 +101,7 @@ async def test_ingest_entities_writes_nodes_and_edges(ingest):
     request = transport.requests[0]
     ids = {record.record_id for record in request.records}
     assert ids == {"a", "b"}
-    assert request.relationships[0].relation_reference.endswith(
-        "/belongsToProject"
-    )
+    assert request.relationships[0].relation_reference.endswith("/belongsToProject")
 
 
 async def test_ingest_documents_writes_document_nodes(ingest):
