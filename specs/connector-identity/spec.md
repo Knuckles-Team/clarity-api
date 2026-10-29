@@ -1,6 +1,6 @@
 # CONN-CLARITY-API-CONNECTOR-IDENTITY — The connector is filed under its fleet name
 
-Owner: clarity-api. Cross-repo IDs: `SDK-CONNECTOR-CONTROL-R071`, `PIPE-GATES-R010`.
+Owner: clarity-api. Cross-repo IDs: `SCION-CONNECTOR-CONTROL-R071`, `PIPE-GATES-R010`.
 
 ## Purpose and user stories
 
