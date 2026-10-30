@@ -48,7 +48,7 @@
   "functional_requirements": [
     {
       "id": "FR-001",
-      "description": "Minor update: agent-connector-sdk 0.2.40 (installed) -> 0.47.0",
+      "description": "Minor update: scion-sdk 0.2.40 (installed) -> 0.47.0",
       "testable": true
     },
     {
@@ -218,7 +218,7 @@
     },
     {
       "id": "FR-035",
-      "description": "Check skipped: required agent-connector-sdk/networkx dependencies not found.",
+      "description": "Check skipped: required scion-sdk/networkx dependencies not found.",
       "testable": true
     }
   ],

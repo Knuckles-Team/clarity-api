@@ -76,7 +76,7 @@ def __dir__() -> list[str]:
 
 from importlib.metadata import version as _v
 
-from agent_connector_sdk.connector import Connector
+from scion_sdk.connector import Connector
 
 from clarity_api.api_client import Api
 from clarity_api.auth import get_client

@@ -11,8 +11,8 @@ domain client mixins build on. Validation hits ``GET /projects`` during
 import logging
 
 import requests
-from agent_connector_sdk.tls.profile import ResolvedTLSProfile
-from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from scion_sdk.tls.profile import ResolvedTLSProfile
+from scion_sdk.tls.resolve import resolve_tls_profile
 
 from clarity_api.exceptions import (
     AuthError,

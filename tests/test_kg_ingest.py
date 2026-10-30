@@ -2,7 +2,7 @@
 
 Exercises the real ``ingest_entities`` / ``ingest_documents`` / ``map_export`` /
 ``ingest_export`` / ``ingest_response`` seam against a fake
-``agent_connector_sdk.ingest`` transport (no engine required), asserting the
+``scion_sdk.ingest`` transport (no engine required), asserting the
 submitted records/relationships and the Clarity export ->
 :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension / :Document
 mapping. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
@@ -15,7 +15,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from agent_connector_sdk.ingest import IngestError, KnowledgeIngest
+from scion_sdk.ingest import IngestError, KnowledgeIngest
 
 from clarity_api.kg_ingest import (
     STREAM,

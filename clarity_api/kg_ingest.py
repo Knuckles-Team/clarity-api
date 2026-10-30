@@ -4,7 +4,7 @@ CONCEPT:AU-KG.ingest.enterprise-source-extractor. The clarity-api connector nati
 pushes its behavioral-analytics data into the ONE epistemic-graph knowledge graph as
 **typed OWL nodes** (``:ClarityProject``, ``:ClaritySession``, ``:BehaviorInsight``,
 ``:BehaviorDimension``) + ``:Document`` summaries and links through the
-``agent_connector_sdk.ingest`` knowledge-ingest facade. Provenance travels in the
+``scion_sdk.ingest`` knowledge-ingest facade. Provenance travels in the
 submitted ``IngestBinding`` and matches the classes federated by ``clarity_api.ontology``.
 """
 
@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from scion_sdk.ingest import (
     KnowledgeIngest,
     SourceStream,
 )
@@ -215,7 +215,7 @@ def _project_label(project: str | None = None) -> str:
     try:
         from urllib.parse import urlparse
 
-        from agent_connector_sdk.config import setting
+        from scion_sdk.config import setting
 
         host = urlparse(setting("CLARITY_URL", "https://www.clarity.ms")).netloc
         return host or "default"

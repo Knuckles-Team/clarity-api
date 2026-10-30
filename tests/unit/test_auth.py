@@ -7,16 +7,16 @@ import importlib.util
 
 import pytest
 
-# get_client uses agent_connector_sdk.auth.delegation for OIDC token exchange.
+# get_client uses scion_sdk.auth.delegation for OIDC token exchange.
 try:
     _HAS_DELEGATED_AUTH = (
-        importlib.util.find_spec("agent_connector_sdk.auth.delegation") is not None
+        importlib.util.find_spec("scion_sdk.auth.delegation") is not None
     )
 except ModuleNotFoundError:
     _HAS_DELEGATED_AUTH = False
 pytestmark = pytest.mark.skipif(
     not _HAS_DELEGATED_AUTH,
-    reason="agent-connector-sdk (agent_connector_sdk.auth.delegation) not installed",
+    reason="scion-sdk (scion_sdk.auth.delegation) not installed",
 )
 
 
