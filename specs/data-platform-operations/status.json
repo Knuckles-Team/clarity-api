@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "spec_id": "CONN-CLARITY-API-DATA-PLATFORM-OPERATIONS",
+  "owner_repo": "clarity-api",
+  "delivery_state": "SPECIFIED",
+  "requirement_ids": [
+    "CONN-CLARITY-API-DATA-PLATFORM-OPERATIONS-R001"
+  ],
+  "requirements": [
+    {
+      "id": "CONN-CLARITY-API-DATA-PLATFORM-OPERATIONS-R001",
+      "title": "Rage-click and dead-click metrics",
+      "delivery_state": "SPECIFIED",
+      "landed_in": [],
+      "verified_by": []
+    }
+  ]
+}

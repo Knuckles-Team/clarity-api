@@ -14,3 +14,4 @@ Read the existing specs first. Extend the spec that owns the behavior. Create a 
 
 - [`CONN-CLARITY-API-CONNECTOR-CONTENT`](connector-content/spec.md) — The connector serves its packaged content.
 - [`CONN-CLARITY-API-CONNECTOR-IDENTITY`](connector-identity/spec.md) — The connector is filed under its fleet name.
+- [`CONN-CLARITY-API-DATA-PLATFORM-OPERATIONS`](data-platform-operations/spec.md) — Operations the data-platform vocabulary needs.
