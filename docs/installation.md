@@ -37,9 +37,9 @@ docker run --rm -e CLARITY_URL -e CLARITY_TOKEN example/clarity-api@sha256:<dige
 
 | Extra | Installs | Use for |
 |-------|----------|---------|
-| _(none)_ | `agent-connector-sdk`, `requests`, `pydantic`, `python-dotenv` | the `Api` client |
-| `mcp` | `agent-connector-sdk[mcp]` | the `clarity-mcp` MCP server |
-| `agent` | `agent-connector-sdk[agent-runtime,logfire]` | the `clarity-agent` A2A agent |
+| _(none)_ | `scion-sdk`, `requests`, `pydantic`, `python-dotenv` | the `Api` client |
+| `mcp` | `scion-sdk[mcp]` | the `clarity-mcp` MCP server |
+| `agent` | `scion-sdk[agent-runtime,logfire]` | the `clarity-agent` A2A agent |
 | `all` | `clarity-api[mcp,agent]` | everything |
 | `test` | pytest tooling | running the test suite |
 

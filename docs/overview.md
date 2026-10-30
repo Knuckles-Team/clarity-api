@@ -1,7 +1,7 @@
 # clarity-api — Concept Overview
 
 > **Category**: Analytics | **Ecosystem Role**: MCP Server + A2A Agent
-> Built on [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk) — the unified AGI Harness.
+> Built on [`scion-sdk`](https://github.com/Knuckles-Team/scion-sdk) — the unified AGI Harness.
 
 ## Description
 
@@ -9,18 +9,18 @@ Microsoft Clarity API + MCP Server + A2A Server
 
 ## Enterprise Readiness
 
-All agents in the ecosystem inherit enterprise-grade infrastructure from `agent-connector-sdk`:
+All agents in the ecosystem inherit enterprise-grade infrastructure from `scion-sdk`:
 
 | Feature | Status | Source |
 |:--------|:-------|:-------|
-| **JWT/OIDC Authentication** | ✅ Built-in | `agent-connector-sdk[auth]` — Authlib JWKS + API key middleware |
-| **OpenTelemetry Instrumentation** | ✅ Built-in | `agent-connector-sdk[logfire]` — OTLP export, FastAPI auto-instrumentation |
-| **HashiCorp Vault Integration** | ✅ Built-in | `agent-connector-sdk[vault]` — `secret://`, `env://`, `vault://` URI schemes |
-| **Audit Logging** | ✅ Built-in | Append-only compliance trail with 30+ action types (agent-connector-sdk AU-OS.governance.wasm-micro-agent-sandbox) |
-| **Token Usage Analytics** | ✅ Built-in | 4-bucket tracking with budget alerting (agent-connector-sdk AU-OS.governance.wasm-micro-agent-sandbox) |
-| **Prompt Injection Defense** | ✅ Built-in | 25+ pattern scanner + jailbreak taxonomy (agent-connector-sdk OS-5.1) |
-| **Guardrail Engine** | ✅ Built-in | Input/output interception with block/redact/warn (agent-connector-sdk AU-OS.governance.reactive-multi-axis-budget) |
-| **Resource Scheduling** | ✅ Built-in | Priority queuing + preemption limits (agent-connector-sdk OS-5.2) |
+| **JWT/OIDC Authentication** | ✅ Built-in | `scion-sdk[auth]` — Authlib JWKS + API key middleware |
+| **OpenTelemetry Instrumentation** | ✅ Built-in | `scion-sdk[logfire]` — OTLP export, FastAPI auto-instrumentation |
+| **HashiCorp Vault Integration** | ✅ Built-in | `scion-sdk[vault]` — `secret://`, `env://`, `vault://` URI schemes |
+| **Audit Logging** | ✅ Built-in | Append-only compliance trail with 30+ action types (scion-sdk AU-OS.governance.wasm-micro-agent-sandbox) |
+| **Token Usage Analytics** | ✅ Built-in | 4-bucket tracking with budget alerting (scion-sdk AU-OS.governance.wasm-micro-agent-sandbox) |
+| **Prompt Injection Defense** | ✅ Built-in | 25+ pattern scanner + jailbreak taxonomy (scion-sdk OS-5.1) |
+| **Guardrail Engine** | ✅ Built-in | Input/output interception with block/redact/warn (scion-sdk AU-OS.governance.reactive-multi-axis-budget) |
+| **Resource Scheduling** | ✅ Built-in | Priority queuing + preemption limits (scion-sdk OS-5.2) |
 
 ## Concept Registry
 
@@ -29,10 +29,10 @@ This project implements or inherits the following ecosystem concepts:
 | Concept ID | Description | Source |
 |:-----------|:------------|:-------|
 | CY-OS.governance.data-export-live-insights | Data Export / Live Insights | `clarity-api` (this project) |
-| ECO-4.1 | MCP & Universal Skills | `agent-connector-sdk` (inherited) |
-| AU-ECO.toolkit.journey-map-narrative | A2A Network & Consensus | `agent-connector-sdk` (inherited) |
+| ECO-4.1 | MCP & Universal Skills | `scion-sdk` (inherited) |
+| AU-ECO.toolkit.journey-map-narrative | A2A Network & Consensus | `scion-sdk` (inherited) |
 
-> 📖 **Full Registry**: See [`agent-connector-sdk/docs/overview.md`](https://github.com/Knuckles-Team/agent-connector-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
+> 📖 **Full Registry**: See [`scion-sdk/docs/overview.md`](https://github.com/Knuckles-Team/scion-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
 
 ## Architecture
 

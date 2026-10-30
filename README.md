@@ -21,7 +21,7 @@
 
 `clarity-api` is a typed, action-routed connector for the
 [Microsoft Clarity Data Export API](https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-data-export-api),
-built on [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk). It
+built on [`scion-sdk`](https://github.com/Knuckles-Team/scion-sdk). It
 ships a Python `Api` client, a [FastMCP](https://github.com/jlowin/fastmcp) MCP server
 (`clarity-mcp`), and an optional Pydantic-AI A2A agent server (`clarity-agent`).
 
@@ -83,7 +83,7 @@ graph TD
 - **A2A agent server** — `clarity-agent` auto-discovers the MCP tools and exposes an
   AG-UI web interface.
 - **Enterprise-ready** — inherits OIDC auth, OpenTelemetry, audit logging, prompt-injection
-  defense, and guardrails from `agent-connector-sdk`.
+  defense, and guardrails from `scion-sdk`.
 
 ## Available MCP Tools
 
@@ -155,7 +155,7 @@ Each tool domain is gated behind an env toggle so deployments can trim their sur
 | `TLS_PROFILES_REF` | `secret://transport/catalog` | Named runtime profile catalog |
 | `INSIGHTSTOOL` | `True` |  |
 
-#### Inherited agent-connector-sdk variables (apply to every connector)
+#### Inherited scion-sdk variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
@@ -176,7 +176,7 @@ Each tool domain is gated behind an env toggle so deployments can trim their sur
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
+_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared scion-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -198,7 +198,7 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 | `TRANSPORT` | `stdio` | MCP transport: `stdio`, `streamable-http`, or `sse`. |
 | `HOST` | `0.0.0.0` | Bind host for HTTP transports. |
 | `PORT` | `8000` | Bind port for HTTP transports. |
-| `AUTH_TYPE` | `none` | MCP server auth scheme inherited from `agent-connector-sdk` (e.g. `none`, `oidc`). |
+| `AUTH_TYPE` | `none` | MCP server auth scheme inherited from `scion-sdk` (e.g. `none`, `oidc`). |
 | `FASTMCP_LOG_LEVEL` | `ERROR` | FastMCP log verbosity. Set to `ERROR` at startup to suppress log spam. |
 | `INSIGHTSTOOL` | `True` | Toggle registration of the `clarity_insights` tool (see [Dynamic Tool Selection](#dynamic-tool-selection)). |
 
@@ -220,7 +220,7 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 ## Configuration
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `clarity-api[mcp]` to add
-> FastMCP / FastAPI through `agent-connector-sdk[mcp]`; the required Agent Utilities core
+> FastMCP / FastAPI through `scion-sdk[mcp]`; the required Agent Utilities core
 > still carries `epistemic-graph[full]`. The `[agent]` extra also
 > enables model orchestration.
 
@@ -351,9 +351,9 @@ print("JSON Output:", response.json())
 
 ## Security & Governance
 
-`clarity-api` inherits enterprise infrastructure from `agent-connector-sdk`: JWT/OIDC
+`clarity-api` inherits enterprise infrastructure from `scion-sdk`: JWT/OIDC
 authentication, OpenTelemetry instrumentation, HashiCorp Vault secret resolution,
-append-only audit logging (agent-connector-sdk `AU-OS.governance.wasm-micro-agent-sandbox`), prompt-injection defense
+append-only audit logging (scion-sdk `AU-OS.governance.wasm-micro-agent-sandbox`), prompt-injection defense
 (`OS-5.1`), and the guardrail engine (`AU-OS.governance.reactive-multi-axis-budget`). The connector stays
 inactive until `CLARITY_URL` and `CLARITY_TOKEN` are configured. Never commit `.env`
 files or tokens.
@@ -365,8 +365,8 @@ Pick the extra that matches what the operator want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | _(none)_ | the bare `Api` Python client (`requests`) | The operator only use the `clarity_api.Api` client |
-| `clarity-api[mcp]` | Connector-focused MCP server (`agent-connector-sdk[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
-| `clarity-api[agent]` | Agent runtime (`agent-connector-sdk[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
+| `clarity-api[mcp]` | Connector-focused MCP server (`scion-sdk[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `clarity-api[agent]` | Agent runtime (`scion-sdk[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
 | `clarity-api[all]` | Everything (`mcp` + `agent`) | Development / both surfaces |
 
 ```bash
@@ -433,15 +433,15 @@ python -m pytest -q
 ```
 
 
-<!-- BEGIN agent-connector-sdk-deployment (generated; do not edit between markers) -->
+<!-- BEGIN scion-sdk-deployment (generated; do not edit between markers) -->
 
-## Deploy with `agent-connector-sdk-deployment`
+## Deploy with `scion-sdk-deployment`
 
-Provision this package with the consolidated **`agent-connector-sdk-deployment`**
+Provision this package with the consolidated **`scion-sdk-deployment`**
 workflow. It selects an installed-package, editable-source, or immutable-container
 path; records only runtime secret and TLS-profile references in `AgentConfig`; and
 runs doctor, registration, policy, observability, and rollback gates. Ask your agent
-to **"deploy `clarity-api` with agent-connector-sdk-deployment"**.
+to **"deploy `clarity-api` with scion-sdk-deployment"**.
 
 | Install mode | Command |
 |------|---------|
@@ -453,7 +453,7 @@ The repository embeds no deployment profile, credential value, certificate path,
 environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
 configured secret provider.
 
-<!-- END agent-connector-sdk-deployment -->
+<!-- END scion-sdk-deployment -->
 
 <!-- GOVERNED-CAPABILITY:START -->
 ## Governed capability contract

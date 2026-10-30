@@ -13,7 +13,7 @@ description: >-
 license: MIT
 tags: [clarity, analytics, behavioral, web-analytics, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Clarity Behavioral Insights

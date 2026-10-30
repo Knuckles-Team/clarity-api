@@ -12,7 +12,7 @@ description: >-
 license: MIT
 tags: [clarity, analytics, knowledge-graph, ingestion, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Clarity Analytics Ingestion
@@ -88,5 +88,5 @@ Ingest overall totals for the last day:
 
 ## Related
 - `clarity-behavioral-insights` — read/interpret the same export without KG writes.
-- The `agent-connector-sdk-source-integration` skill covers the broader "connect a
+- The `scion-sdk-source-integration` skill covers the broader "connect a
   source to the KG" flow this tool participates in.
