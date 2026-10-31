@@ -1,6 +1,6 @@
 # CONN-CLARITY-API-DATA-PLATFORM-OPERATIONS — Operations the data-platform vocabulary needs
 
-Owner: clarity-api. Cross-repo IDs: `EG-DATAPLAT-VOCAB-R009`.
+Owner: clarity-api. Cross-repo IDs: `MEDULLA-DATAPLAT-VOCAB-R009`.
 
 ## Purpose and user stories
 
