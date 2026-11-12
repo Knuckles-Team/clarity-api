@@ -36,17 +36,17 @@ Ingestion requires a reachable epistemic-graph engine (the fleet `arbora`). The
 standard `clarity_get_data_export` call **also** performs the authoritative
 native write; this tool is the explicit, Wire-First entry point.
 
-## Tools & actions
+## Tools
 | Tool | Purpose |
 |------|---------|
 | `clarity_ingest_insights` | Pull the live-insights export and push typed nodes + a summary document into the KG. |
 
-### Key parameters (`params_json`)
-Same shape as the export call: `number_of_days` (`1`|`2`|`3`) and optional
+### Key parameters
+Same arguments as the export call: `number_of_days` (`1`|`2`|`3`) and optional
 `dimension_1`/`dimension_2`/`dimension_3` (`Browser`, `Device`, `Country`, `OS`,
 `Source`, `Medium`, `Campaign`, `Channel`, `URL`).
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Ingest the last 3 days, broken down by OS:
 ```json
 {"number_of_days": 3, "dimension_1": "OS"}

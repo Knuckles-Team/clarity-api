@@ -24,7 +24,7 @@ async def test_concept_cla_001_insights_tool_registers():
     register_insights_tools(mcp)
 
     names = await _list_tool_names(mcp)
-    assert "clarity_insights" in names
+    assert "clarity_ingest_insights" in names
 
 
 @pytest.mark.asyncio

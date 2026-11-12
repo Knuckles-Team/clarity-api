@@ -1,11 +1,10 @@
 """MCP tools for Microsoft Clarity data export / insights operations.
 
-Implements ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights) using the
-action-routed dynamic tool pattern: a single tool dispatches on ``action`` with
-a JSON ``params_json`` payload.
+Implements ``CONCEPT:CY-OS.governance.data-export-live-insights`` (Data Export / Live Insights).
+The read tool ``clarity_get_data_export`` is derived by the SDK from the client method;
+this module registers the explicit graph-ingest tool.
 """
 
-import json
 from typing import Any
 
 from fastmcp import Context, FastMCP
@@ -13,7 +12,6 @@ from fastmcp.dependencies import Depends
 from pydantic import Field
 
 from clarity_api.auth import get_client
-from clarity_api.services import InsightsService
 
 
 def _serialize(response: Any) -> Any:
@@ -29,52 +27,19 @@ def _serialize(response: Any) -> Any:
 
 def register_insights_tools(mcp: FastMCP):
     @mcp.tool(tags={"data-export"})
-    async def clarity_insights(
-        action: str = Field(
-            default="get_data_export",
-            description="Action to perform. Must be one of: 'get_data_export'",
-        ),
-        params_json: str = Field(
-            default="{}",
-            description=(
-                "JSON string of parameters. Supports 'number_of_days' (1, 2, or 3), "
-                "'dimension_1', 'dimension_2', 'dimension_3'. Dimension options: "
-                "Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL."
-            ),
-        ),
-        client=Depends(get_client),
-        ctx: Context | None = Field(
-            default=None, description="MCP context for progress reporting"
-        ),
-    ) -> Any:
-        """Retrieve Microsoft Clarity dashboard data insights for a project.
-
-        CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Pulls live insights over
-        a date range, optionally broken down by up to three dimensions.
-        """
-        if ctx:
-            await ctx.info("Executing Clarity data export...")
-
-        try:
-            kwargs = json.loads(params_json)
-        except Exception:
-            return {"error": "Operation failed"}
-
-        service = InsightsService(client=client, serializer=_serialize)
-
-        if action == "get_data_export":
-            return await service.get_data_export(**kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-    @mcp.tool(tags={"data-export"})
     async def clarity_ingest_insights(
-        params_json: str = Field(
-            default="{}",
-            description=(
-                "JSON string of export params. Supports 'number_of_days' (1, 2, or 3), "
-                "'dimension_1', 'dimension_2', 'dimension_3'. Dimension options: "
-                "Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL."
-            ),
+        number_of_days: int | None = Field(
+            default=None, description="Trailing window in days: 1, 2 or 3."
+        ),
+        dimension_1: str | None = Field(
+            default=None,
+            description="First breakdown: Browser, Device, Country, OS, Source, Medium, Campaign, Channel or URL.",
+        ),
+        dimension_2: str | None = Field(
+            default=None, description="Second breakdown, same values."
+        ),
+        dimension_3: str | None = Field(
+            default=None, description="Third breakdown, same values."
         ),
         client=Depends(get_client),
         ctx: Context | None = Field(
@@ -93,15 +58,19 @@ def register_insights_tools(mcp: FastMCP):
         if ctx:
             await ctx.info("Ingesting Clarity export into the knowledge graph...")
 
-        try:
-            kwargs = json.loads(params_json)
-        except Exception:
-            return {"error": "Operation failed"}
+        kwargs = {
+            k: v
+            for k, v in {
+                "number_of_days": number_of_days,
+                "dimension_1": dimension_1,
+                "dimension_2": dimension_2,
+                "dimension_3": dimension_3,
+            }.items()
+            if v is not None
+        }
 
         from clarity_api.kg_ingest import ingest_response
 
-        response = client.get_data_export(
-            **{k: v for k, v in kwargs.items() if v is not None}
-        )
+        response = client.get_data_export(**kwargs)
         result = await ingest_response(response, kwargs)
         return {"ingested": result}

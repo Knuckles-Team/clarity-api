@@ -57,7 +57,7 @@ via `Depends(get_client)`, which resolves credentials (OIDC delegation or a fixe
 graph TD
     User(["User / A2A Client"]) --> Agent["clarity-agent<br/>Pydantic-AI A2A Server"]
     Agent --> MCP["clarity-mcp<br/>FastMCP Server"]
-    MCP --> Tool["clarity_insights tool<br/>(CONCEPT:CY-OS.governance.data-export-live-insights)"]
+    MCP --> Tool["clarity_get_data_export / clarity_ingest_insights<br/>(CONCEPT:CY-OS.governance.data-export-live-insights)"]
     Tool -->|Depends get_client| Auth["get_client<br/>auth.py"]
     Tool --> Service["InsightsService<br/>clarity_api/services/"]
     Auth --> Client["Api facade<br/>clarity_api/api/"]
@@ -78,8 +78,8 @@ graph TD
 
 - **Typed Python client** — `clarity_api.api_client.Api`, composed from modular per-domain
   mixins in `clarity_api/api/`, validating credentials against `GET /projects`.
-- **Action-routed MCP tool** — `clarity_insights` (`CONCEPT:CY-OS.governance.data-export-live-insights`) consolidates the
-  Data Export surface to minimize LLM token overhead.
+- **Typed MCP tools** — `clarity_get_data_export` (`CONCEPT:CY-OS.governance.data-export-live-insights`) reads the Data Export
+  surface and `clarity_ingest_insights` writes it to the knowledge graph.
 - **A2A agent server** — `clarity-agent` auto-discovers the MCP tools and exposes an
   AG-UI web interface.
 - **Enterprise-ready** — inherits OIDC auth, OpenTelemetry, audit logging, prompt-injection
@@ -91,11 +91,12 @@ _Auto-generated — do not edit (synced by the `mcp-readme-table` pre-commit hoo
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+#### Typed tools
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `clarity_insights` | `INSIGHTSTOOL` | Retrieve Microsoft Clarity dashboard data insights for a project. |
+| `clarity_get_data_export` | `INSIGHTSTOOL` | Retrieve Microsoft Clarity dashboard data insights for a project. |
+| `clarity_ingest_insights` | `INSIGHTSTOOL` | Ingest a Clarity export into the knowledge graph. |
 
 #### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
 
@@ -124,7 +125,7 @@ Each tool domain is gated behind an env toggle so deployments can trim their sur
 
 | Toggle | Default | Domain |
 |--------|---------|--------|
-| `INSIGHTSTOOL` | `True` | `clarity_insights` |
+| `INSIGHTSTOOL` | `True` | `clarity_ingest_insights` |
 
 ## Environment Variables
 
@@ -200,7 +201,7 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 | `PORT` | `8000` | Bind port for HTTP transports. |
 | `AUTH_TYPE` | `none` | MCP server auth scheme inherited from `scion-sdk` (e.g. `none`, `oidc`). |
 | `FASTMCP_LOG_LEVEL` | `ERROR` | FastMCP log verbosity. Set to `ERROR` at startup to suppress log spam. |
-| `INSIGHTSTOOL` | `True` | Toggle registration of the `clarity_insights` tool (see [Dynamic Tool Selection](#dynamic-tool-selection)). |
+| `INSIGHTSTOOL` | `True` | Toggle registration of the `clarity_ingest_insights` tool (see [Dynamic Tool Selection](#dynamic-tool-selection)). |
 
 ### Telemetry & access governance
 
