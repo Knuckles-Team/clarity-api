@@ -46,7 +46,7 @@ def register_insights_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Natively ingest a Clarity data export into the epistemic-graph knowledge graph.
+        """Natively ingest a Clarity data export into the medulla knowledge graph.
 
         CONCEPT:CY-OS.governance.data-export-live-insights. Pulls the live-insights export
         via the client and pushes it as typed nodes — a ``:ClarityProject``, a

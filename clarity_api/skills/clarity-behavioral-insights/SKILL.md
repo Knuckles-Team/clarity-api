@@ -31,7 +31,7 @@ up to three dimensions.
 - Summarize behavioral trends over the last 1, 2, or 3 days.
 
 ## When NOT to use
-- Ingesting the export into the epistemic-graph knowledge graph → use
+- Ingesting the export into the medulla knowledge graph → use
   `clarity-analytics-ingestion`.
 - Windows longer than 3 days or historical backfill — the Live Insights API only
   supports `number_of_days` of 1, 2, or 3.

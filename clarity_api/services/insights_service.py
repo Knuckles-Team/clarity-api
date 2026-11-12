@@ -45,7 +45,7 @@ class InsightsService:
 
         CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Strips ``None`` values
         from ``kwargs`` and delegates to the injected client, then serializes. As a
-        authoritative side effect it natively ingests the export into the epistemic-graph
+        authoritative side effect it natively ingests the export into the medulla
         knowledge graph (typed :ClaritySession/:BehaviorInsight nodes + a :Document
         summary); ingestion failures propagate.
         """
