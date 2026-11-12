@@ -33,23 +33,18 @@ Connect via the `mcp-client` skill against the **`clarity-api`** MCP server.
 | `CLARITY_TLS_PROFILE` | optional | Named AgentConfig TLS profile; peer and hostname verification are mandatory. |
 | `CLARITY_TLS_PROFILE_REF` | optional | Reference-backed AgentConfig TLS profile selector. |
 
-`MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed surface
-(used below) vs. the one-to-one verbose tools.
+## Tools
+| Tool | Purpose |
+|------|---------|
+| `clarity_get_data_export` | Read the live-insights export for a 1-3 day window with up to three dimension breakdowns. |
 
-## Tools & actions
-Prefer the **condensed** tool; it takes `action` + a `params_json` **JSON string**.
-
-| Condensed tool | Actions |
-|----------------|---------|
-| `clarity_get_data_export` | operation |
-
-### Key parameters (`params_json`)
+### Key parameters
 - `number_of_days` — `1`, `2`, or `3` (the trailing window; required for a useful call).
 - `dimension_1`, `dimension_2`, `dimension_3` — optional breakdowns. Valid values:
   `Browser`, `Device`, `Country`, `OS`, `Source`, `Medium`, `Campaign`,
   `Channel`, `URL` (case-insensitive; normalized server-side).
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Last 3 days, no breakdown (overall totals):
 ```json
 {"number_of_days": 3}
@@ -64,7 +59,6 @@ Two-dimension breakdown (device × country):
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object — serialize it.
 - `number_of_days` outside `{1,2,3}` is rejected by the API's `InputModel`
   validation; there is no wider historical range on this endpoint.
 - At most **three** dimensions per call; an invalid dimension name raises a

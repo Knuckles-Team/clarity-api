@@ -12,12 +12,24 @@ Use the provider's governed MCP tools through Arbora delegation.
 ## Workflow
 
 1. Establish the verified GraphSession and tenant before discovery or retrieval.
-2. Discover the current condensed tool surface; never assume a stale tool name or schema.
+2. Discover the current tool surface; never assume a stale tool name or schema.
 3. Prefer read-only inspection first. For changes, present impact and use the provider's
    dry-run or preview mode when available.
 4. Execute mutations as fenced WorkItems so retries remain idempotent and auditable.
 5. Ingest source data only through the signed connector preset and ChangeEnvelope path.
 6. Verify the durable result and its trace/evidence before reporting completion.
+
+## Tools
+
+| Tool | Use |
+|------|-----|
+| `clarity_get_data_export` | Read live insights for a 1-3 day window with up to three dimensions. |
+| `clarity_ingest_insights` | Read the same export and write it to the knowledge graph as typed nodes. |
+
+## Tasks
+
+- Report traffic by dimension: call `clarity_get_data_export` with `number_of_days` and `dimension_1` to `dimension_3`.
+- Persist an export: call `clarity_get_data_export`, then `clarity_ingest_insights` with the same arguments.
 
 ## Safety contract
 

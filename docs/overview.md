@@ -49,7 +49,7 @@ clarity-api/
 │   ├── api_client.py            # Api facade composed from api/ mixins
 │   ├── auth.py                  # get_client() dependency for MCP tools
 │   ├── mcp/                     # Modular MCP tool registration
-│   │   └── mcp_insights.py      # clarity_insights action-routed tool
+│   │   └── mcp_insights.py      # clarity_ingest_insights tool
 │   └── mcp_server.py            # FastMCP server entry point (clarity-mcp)
 ├── tests/                       # Test suite
 ├── docs/                        # Documentation

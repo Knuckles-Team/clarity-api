@@ -20,22 +20,31 @@ class ClarityApiInsights(ClarityApiBase):
 
     @require_auth
     def get_data_export(
-        self, api_parameters: dict | None = None, **kwargs
+        self,
+        number_of_days: int | None = None,
+        dimension_1: str | None = None,
+        dimension_2: str | None = None,
+        dimension_3: str | None = None,
+        api_parameters: dict | None = None,
     ) -> requests.Response:
         """Retrieve dashboard data insights for a project.
 
         CONCEPT:CY-OS.governance.data-export-live-insights — Data Export / Live Insights. Implements the
         ``GET /export-data/api/v1/project-live-insights`` call backing the
-        ``clarity_insights`` MCP tool.
+        ``clarity_get_data_export`` MCP tool.
 
-        Accepts either a pre-built ``api_parameters`` dict or keyword arguments
-        (``number_of_days``/``numOfDays``, ``dimension_1``/``dimension1``, etc.),
-        which are validated and normalized via :class:`InputModel`.
+        Accepts either a pre-built ``api_parameters`` dict or the typed
+        ``number_of_days`` and ``dimension_1`` to ``dimension_3`` arguments, which are
+        validated and normalized via :class:`InputModel`.
 
         Args:
+            number_of_days: Trailing window in days; the API accepts 1, 2 or 3.
+            dimension_1: First breakdown (Browser, Device, Country, OS, Source,
+                Medium, Campaign, Channel or URL).
+            dimension_2: Second breakdown, same values.
+            dimension_3: Third breakdown, same values.
             api_parameters: Pre-built query parameter dict. When omitted, the
-                parameters are constructed from ``kwargs`` via ``InputModel``.
-            **kwargs: Convenience keyword arguments forwarded to ``InputModel``.
+                parameters are constructed from the typed arguments via ``InputModel``.
 
         Returns:
             The ``requests.Response`` object from the GET request.
@@ -45,7 +54,13 @@ class ClarityApiInsights(ClarityApiBase):
         """
         try:
             if api_parameters is None:
-                model = InputModel(**kwargs)
+                given = {
+                    "number_of_days": number_of_days,
+                    "dimension_1": dimension_1,
+                    "dimension_2": dimension_2,
+                    "dimension_3": dimension_3,
+                }
+                model = InputModel(**{k: v for k, v in given.items() if v is not None})
                 api_parameters = model.api_parameters
 
             response = self._session.get(

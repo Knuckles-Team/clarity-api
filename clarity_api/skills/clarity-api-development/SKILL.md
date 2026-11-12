@@ -22,7 +22,7 @@ change crosses a boundary.
 ## Repository map
 
 - clarity_api/api/ contains the composable HTTP client mixins and Api facade.
-- clarity_api/mcp/ registers action-routed tools over an injected client.
+- clarity_api/mcp/ registers the explicit graph-ingest tool; the SDK derives one typed tool per client method.
 - clarity_api/services/ owns the export use case and its knowledge-graph
   ingestion seam.
 - clarity_api/skills/, prompts/, ontology/, and connectors/ are packaged

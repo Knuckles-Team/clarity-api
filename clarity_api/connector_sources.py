@@ -16,10 +16,7 @@ SOURCES = (
         id_field="metricName",
         preset={
             "doc_type": "clarity-insight",
-            "params": {
-                "action": "get_data_export",
-                "params_json": '{"number_of_days": 3}',
-            },
+            "params": {"number_of_days": 3},
         },
         records_path="data.data",
         server="clarity-mcp",

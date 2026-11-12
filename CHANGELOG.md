@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.9] - 2026-11-12
+
+### Removed
+- The action-routed `clarity_insights` tool. `clarity_get_data_export` is the typed read tool and takes `number_of_days`, `dimension_1`, `dimension_2` and `dimension_3` directly; `clarity_ingest_insights` takes the same typed arguments instead of `params_json`.
+
+### Added
+- Connector surface: tool-use contracts, links, data locations, business roles, an operator prompt and two business-role prompts, ontology classes rooted in core classes, and scion-sdk 0.9.
+
 ## [3.3.8] - 2026-10-30
 
 ### Changed

@@ -14,7 +14,7 @@ docstring marker on the implementing function), **docs** (this registry), and
 
 | Concept ID | Name | Implementation | Test |
 |------------|------|----------------|------|
-| `CONCEPT:CY-OS.governance.data-export-live-insights` | Data Export / Live Insights | `clarity_insights` MCP tool + `ClarityApiInsights.get_data_export` (`/export-data/api/v1/project-live-insights`) | `test_concept_cla_001_*` |
+| `CONCEPT:CY-OS.governance.data-export-live-insights` | Data Export / Live Insights | `clarity_get_data_export` MCP tool + `ClarityApiInsights.get_data_export` (`/export-data/api/v1/project-live-insights`) | `test_concept_cla_001_*` |
 | `CONCEPT:CY-OS.identity.credential-auth-factory-supports` | Credential & Auth Factory | `clarity_api.auth.get_client` — OIDC delegation (RFC 8693) / fixed-token resolution | `test_concept_cla_002_*` |
 | `CONCEPT:CY-OS.governance.input-validation-parameter-modeling` | Input Validation & Parameter Modeling | `clarity_api.clarity_models.InputModel` — date-range + dimension validation | `test_concept_cla_003_*` |
 | `CONCEPT:CY-OS.governance.rest-base-client-owns` | REST Base Client | `clarity_api.api.api_client_base.ClarityApiBase` — session, bearer auth, fail-fast credential validation | `test_concept_cla_004_*` |

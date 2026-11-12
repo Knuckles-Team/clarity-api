@@ -44,11 +44,12 @@ clarity-mcp --transport sse --port 8000
 
 ### Available MCP tools
 
-| Tool | Concept | Actions | Description |
-|------|---------|---------|-------------|
-| `clarity_insights` | `CONCEPT:CY-OS.governance.data-export-live-insights` | `get_data_export` | Export Clarity dashboard data / live insights |
+| Tool | Concept | Description |
+|------|---------|-------------|
+| `clarity_get_data_export` | `CONCEPT:CY-OS.governance.data-export-live-insights` | Export Clarity dashboard data / live insights |
+| `clarity_ingest_insights` | `CONCEPT:CY-OS.governance.data-export-live-insights` | Ingest an export into the knowledge graph |
 
-Tools take an `action` plus a JSON `params_json` payload:
+Tools take typed arguments (`number_of_days`, `dimension_1` to `dimension_3`):
 
 ```json
 {
@@ -64,7 +65,7 @@ surface:
 
 | Toggle | Default | Domain |
 |--------|---------|--------|
-| `INSIGHTSTOOL` | `True` | `clarity_insights` |
+| `INSIGHTSTOOL` | `True` | `clarity_ingest_insights` |
 
 ## Agent server (`clarity-agent`)
 
