@@ -47,7 +47,7 @@ change crosses a boundary.
   get_data_export contract.
 - Validate request bounds and dimensions at the Pydantic boundary. Keep response
   envelopes and redaction behavior consistent with neighboring tools.
-- Use the shared agent-utilities server/agent factories and the injected
+- Use the shared meristem server/agent factories and the injected
   client seam. Do not import runtime code from another connector.
 - Add or update a focused test when behavior changes. Test refusal and malformed
   input paths as well as the successful response shape.

@@ -1,7 +1,7 @@
-"""Native epistemic-graph ingestion for Microsoft Clarity records (typed graph nodes).
+"""Native medulla ingestion for Microsoft Clarity records (typed graph nodes).
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. The clarity-api connector natively
-pushes its behavioral-analytics data into the ONE epistemic-graph knowledge graph as
+pushes its behavioral-analytics data into the ONE medulla knowledge graph as
 **typed OWL nodes** (``:ClarityProject``, ``:ClaritySession``, ``:BehaviorInsight``,
 ``:BehaviorDimension``) + ``:Document`` summaries and links through the
 ``scion_sdk.ingest`` knowledge-ingest facade. Provenance travels in the

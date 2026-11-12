@@ -3,7 +3,7 @@ name: clarity-analytics-ingestion
 skill_type: skill
 description: >-
   Natively ingest a Microsoft Clarity behavioral-analytics export into the
-  epistemic-graph knowledge graph via the clarity-api MCP server — pushing typed
+  medulla knowledge graph via the clarity-api MCP server — pushing typed
   :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension nodes
   plus a :Document summary with their :belongsToProject / :hasInsight /
   :brokenDownBy links. Use when the agent must persist Clarity metrics into the KG
@@ -17,7 +17,7 @@ metadata:
 ---
 # Clarity Analytics Ingestion
 
-Push a Microsoft Clarity Data Export into the ONE epistemic-graph knowledge graph
+Push a Microsoft Clarity Data Export into the ONE medulla knowledge graph
 as **typed OWL nodes** via the `clarity-api` MCP server. Backed by the package's
 native `kg_ingest` mapper (`CONCEPT:AU-KG.ingest.enterprise-source-extractor`) over
 the shared engine-client txn write path.
@@ -44,7 +44,7 @@ credentials as `clarity-behavioral-insights`:
 | `CLARITY_TOKEN` | ✅ | Bearer API token |
 | `CLARITY_SSL_VERIFY` | optional | TLS verification toggle |
 
-Ingestion targets a reachable epistemic-graph engine (the fleet `arbora`); with
+Ingestion targets a reachable medulla engine (the fleet `arbora`); with
 none present the push is a clean no-op. `clarity_get_data_export` only reads; this tool is the explicit,
 Wire-First entry point that writes to the graph.
 

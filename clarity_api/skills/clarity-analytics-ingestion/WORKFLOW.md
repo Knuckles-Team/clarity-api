@@ -1,10 +1,10 @@
 # Clarity Analytics Ingestion
 
-Natively ingest a Microsoft Clarity behavioral-analytics export into the epistemic-graph knowledge graph via the clarity-api MCP server — pushing typed :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension nodes plus a :Document summary with their :belongsToProject / :hasInsight / :brokenDownBy links. Use when the agent must persist Clarity metrics into the KG for cross-source reasoning or semantic search. Do NOT use to merely read/return metrics (use clarity-behavioral-insights) or for non-Clarity sources.
+Natively ingest a Microsoft Clarity behavioral-analytics export into the medulla knowledge graph via the clarity-api MCP server — pushing typed :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension nodes plus a :Document summary with their :belongsToProject / :hasInsight / :brokenDownBy links. Use when the agent must persist Clarity metrics into the KG for cross-source reasoning or semantic search. Do NOT use to merely read/return metrics (use clarity-behavioral-insights) or for non-Clarity sources.
 
 # Clarity Analytics Ingestion
 
-Push a Microsoft Clarity Data Export into the ONE epistemic-graph knowledge graph
+Push a Microsoft Clarity Data Export into the ONE medulla knowledge graph
 as **typed OWL nodes** via the `clarity-api` MCP server. Backed by the package's
 native `kg_ingest` mapper (`CONCEPT:AU-KG.ingest.enterprise-source-extractor`) over
 the shared engine-client txn write path.
@@ -32,7 +32,7 @@ credentials as `clarity-behavioral-insights`:
 | `CLARITY_TLS_PROFILE` | optional | Named AgentConfig TLS profile; peer and hostname verification are mandatory. |
 | `CLARITY_TLS_PROFILE_REF` | optional | Reference-backed AgentConfig TLS profile selector. |
 
-Ingestion requires a reachable epistemic-graph engine (the fleet `arbora`). The
+Ingestion requires a reachable medulla engine (the fleet `arbora`). The
 standard `clarity_get_data_export` call **also** performs the authoritative
 native write; this tool is the explicit, Wire-First entry point.
 
