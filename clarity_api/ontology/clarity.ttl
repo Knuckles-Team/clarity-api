@@ -18,6 +18,11 @@
 # takeaway) carry different meanings, so Clarity defines its own web-analytics
 # :ClaritySession and :BehaviorInsight rather than overloading those.
 
+:WebResource a owl:Class ;
+    rdfs:subClassOf core:Document ;
+    rdfs:label "Web Resource" ;
+    rdfs:comment "A web page whose behaviour metrics Clarity reports for a day (clarity_insights)." .
+
 :ClarityProject a owl:Class ;
     rdfs:subClassOf core:Collection ;
     rdfs:label "Clarity Project" ;
@@ -75,6 +80,36 @@
     rdfs:label "external tool id" ;
     rdfs:comment "Stable external identifier of a Clarity object in its source system." ;
     rdfs:range xsd:string .
+
+:url a owl:DatatypeProperty ;
+    rdfs:label "url" ;
+    rdfs:comment "Address of the web page." ;
+    rdfs:domain :WebResource ;
+    rdfs:range xsd:string .
+
+:date a owl:DatatypeProperty ;
+    rdfs:label "date" ;
+    rdfs:comment "Day a page metric covers." ;
+    rdfs:domain :WebResource ;
+    rdfs:range xsd:date .
+
+:rageClickRate a owl:DatatypeProperty ;
+    rdfs:label "rage click rate" ;
+    rdfs:comment "Share of sessions with rage clicks on the page." ;
+    rdfs:domain :WebResource ;
+    rdfs:range xsd:decimal .
+
+:deadClickRate a owl:DatatypeProperty ;
+    rdfs:label "dead click rate" ;
+    rdfs:comment "Share of sessions with dead clicks on the page." ;
+    rdfs:domain :WebResource ;
+    rdfs:range xsd:decimal .
+
+:rageClickCount a owl:DatatypeProperty ;
+    rdfs:label "rage click count" ;
+    rdfs:comment "Number of rage clicks on the page." ;
+    rdfs:domain :WebResource ;
+    rdfs:range xsd:integer .
 
 :metricName a owl:DatatypeProperty ;
     rdfs:label "metric name" ;

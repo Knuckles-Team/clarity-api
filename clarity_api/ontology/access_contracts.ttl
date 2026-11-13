@@ -1,0 +1,24 @@
+@prefix ac: <https://knuckles-team.github.io/ontology/access#> .
+@prefix : <https://knuckles-team.github.io/ontology/connector/clarity#> .
+
+# Competency read of per-page behaviour metrics served by clarity_get_data_export.
+
+:pageMetricAccess a ac:AccessContract ;
+    ac:classIri :WebResource ;
+    ac:sourceId "clarity-api" ;
+    ac:entity "page_metric" ;
+    ac:keyField "url_date" ;
+    ac:accessKind "mcp_tool" ;
+    ac:operation "clarity_get_data_export" ;
+    ac:pagination "none" .
+
+:pageMetricUrlBinding a ac:PropertyBinding ;
+    ac:contract :pageMetricAccess ; ac:property :url ; ac:field "url" .
+:pageMetricDateBinding a ac:PropertyBinding ;
+    ac:contract :pageMetricAccess ; ac:property :date ; ac:field "date" .
+:pageMetricRageClickRateBinding a ac:PropertyBinding ;
+    ac:contract :pageMetricAccess ; ac:property :rageClickRate ; ac:field "rageClickRate" .
+:pageMetricDeadClickRateBinding a ac:PropertyBinding ;
+    ac:contract :pageMetricAccess ; ac:property :deadClickRate ; ac:field "deadClickRate" .
+:pageMetricRageClickCountBinding a ac:PropertyBinding ;
+    ac:contract :pageMetricAccess ; ac:property :rageClickCount ; ac:field "rageClickCount" .
