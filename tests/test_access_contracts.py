@@ -12,7 +12,12 @@ from scion_sdk.connector import build_server
 from scion_sdk.testing.surface_check import served_surface
 
 ROW_ID = "CONN-CLARITY-API-CONNECTOR-CONTENT-R002"
-CONTRACTS = Path(__file__).resolve().parents[1] / "clarity_api" / "ontology" / "access_contracts.ttl"
+CONTRACTS = (
+    Path(__file__).resolve().parents[1]
+    / "clarity_api"
+    / "ontology"
+    / "access_contracts.ttl"
+)
 RECORDINGS = Path(__file__).resolve().parent / "recordings"
 EXPECTED = {
     "page_metric": {
@@ -33,7 +38,9 @@ def _declared_terms() -> set[str]:
     return set(re.findall(r"^:(\w+)\s+a\s+owl:", text, flags=re.M))
 
 
-def _competency_findings(contracts, tools: set[str], terms: set[str], recordings: Path) -> list[str]:
+def _competency_findings(
+    contracts, tools: set[str], terms: set[str], recordings: Path
+) -> list[str]:
     found: list[str] = []
     by_entity = {c.entity: c for c in contracts}
     for entity, want in EXPECTED.items():
@@ -51,7 +58,11 @@ def _competency_findings(contracts, tools: set[str], terms: set[str], recordings
             found.append(f"{entity}: wrong key or access kind")
         bound = {field: prop for prop, field in contract.predicates}
         for field in want["columns"]:
-            if field not in bound or _local(bound[field]) != field or field not in terms:
+            if (
+                field not in bound
+                or _local(bound[field]) != field
+                or field not in terms
+            ):
                 found.append(f"{entity}: column {field} is not an ontology property")
         path = recordings / f"{entity}.json"
         if not path.is_file():
@@ -74,7 +85,9 @@ def _contracts():
 @pytest.mark.spec(ROW_ID)
 def test_competency_contracts_certified() -> None:
     tools = served_surface(build_server("clarity_api", command_args=[])[1]).tools
-    assert _competency_findings(_contracts(), tools, _declared_terms(), RECORDINGS) == []
+    assert (
+        _competency_findings(_contracts(), tools, _declared_terms(), RECORDINGS) == []
+    )
 
 
 @pytest.mark.spec(ROW_ID)
