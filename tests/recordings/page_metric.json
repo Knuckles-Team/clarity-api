@@ -1,0 +1,18 @@
+[
+  {
+    "url_date": "https://example.invalid/checkout|2026-11-01",
+    "url": "https://example.invalid/checkout",
+    "date": "2026-11-01",
+    "rageClickRate": 0.042,
+    "deadClickRate": 0.087,
+    "rageClickCount": 31
+  },
+  {
+    "url_date": "https://example.invalid/pricing|2026-11-01",
+    "url": "https://example.invalid/pricing",
+    "date": "2026-11-01",
+    "rageClickRate": 0.011,
+    "deadClickRate": 0.034,
+    "rageClickCount": 6
+  }
+]
