@@ -18,11 +18,6 @@
 # takeaway) carry different meanings, so Clarity defines its own web-analytics
 # :ClaritySession and :BehaviorInsight rather than overloading those.
 
-:WebResource a owl:Class ;
-    rdfs:subClassOf core:Document ;
-    rdfs:label "Web Resource" ;
-    rdfs:comment "A web page whose behaviour metrics Clarity reports for a day (clarity_insights)." .
-
 :ClarityProject a owl:Class ;
     rdfs:subClassOf core:Collection ;
     rdfs:label "Clarity Project" ;
@@ -68,65 +63,24 @@
     rdfs:domain :ClaritySession ;
     rdfs:range core:Document .
 
-:ownedBy a owl:ObjectProperty ;
-    rdfs:label "owned by" ;
-    rdfs:comment "Links a ClarityProject to the Person who owns/administers it." ;
-    rdfs:domain :ClarityProject ;
-    rdfs:range core:Person .
-
 # --- fields (owl:DatatypeProperty) ---
-
-:externalToolId a owl:DatatypeProperty ;
-    rdfs:label "external tool id" ;
-    rdfs:comment "Stable external identifier of a Clarity object in its source system." ;
-    rdfs:range xsd:string .
-
-:url a owl:DatatypeProperty ;
-    rdfs:label "url" ;
-    rdfs:comment "Address of the web page." ;
-    rdfs:domain :WebResource ;
-    rdfs:range xsd:string .
 
 :date a owl:DatatypeProperty ;
     rdfs:label "date" ;
     rdfs:comment "Day a page metric covers." ;
-    rdfs:domain :WebResource ;
+    rdfs:domain core:WebResource ;
     rdfs:range xsd:date .
-
-:rageClickRate a owl:DatatypeProperty ;
-    rdfs:label "rage click rate" ;
-    rdfs:comment "Share of sessions with rage clicks on the page." ;
-    rdfs:domain :WebResource ;
-    rdfs:range xsd:decimal .
-
-:deadClickRate a owl:DatatypeProperty ;
-    rdfs:label "dead click rate" ;
-    rdfs:comment "Share of sessions with dead clicks on the page." ;
-    rdfs:domain :WebResource ;
-    rdfs:range xsd:decimal .
 
 :rageClickCount a owl:DatatypeProperty ;
     rdfs:label "rage click count" ;
     rdfs:comment "Number of rage clicks on the page." ;
-    rdfs:domain :WebResource ;
+    rdfs:domain core:WebResource ;
     rdfs:range xsd:integer .
-
-:metricName a owl:DatatypeProperty ;
-    rdfs:label "metric name" ;
-    rdfs:comment "Name of the Clarity metric a BehaviorInsight carries (e.g. Traffic, EngagementTime)." ;
-    rdfs:domain :BehaviorInsight ;
-    rdfs:range xsd:string .
 
 :numOfDays a owl:DatatypeProperty ;
     rdfs:label "number of days" ;
     rdfs:comment "Size of the trailing date-range window (1, 2, or 3) the export covers." ;
     rdfs:range xsd:integer .
-
-:dimensionName a owl:DatatypeProperty ;
-    rdfs:label "dimension name" ;
-    rdfs:comment "Canonical name of a BehaviorDimension (Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL)." ;
-    rdfs:domain :BehaviorDimension ;
-    rdfs:range xsd:string .
 
 :totalSessionCount a owl:DatatypeProperty ;
     rdfs:label "total session count" ;

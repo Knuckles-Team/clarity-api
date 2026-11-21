@@ -1,10 +1,12 @@
 @prefix ac: <https://knuckles-team.github.io/ontology/access#> .
 @prefix : <https://knuckles-team.github.io/ontology/connector/clarity#> .
+@prefix kg: <https://knuckles-team.github.io/ontology/core#> .
+@prefix vg: <https://knuckles-team.github.io/ontology/virtual-graph#> .
 
 # Competency read of per-page behaviour metrics served by clarity_get_data_export.
 
 :pageMetricAccess a ac:AccessContract ;
-    ac:classIri :WebResource ;
+    ac:classIri kg:WebResource ;
     ac:sourceId "clarity-api" ;
     ac:entity "page_metric" ;
     ac:keyField "url_date" ;
@@ -13,12 +15,12 @@
     ac:pagination "none" .
 
 :pageMetricUrlBinding a ac:PropertyBinding ;
-    ac:contract :pageMetricAccess ; ac:property :url ; ac:field "url" .
+    ac:contract :pageMetricAccess ; ac:property vg:url ; ac:field "url" .
 :pageMetricDateBinding a ac:PropertyBinding ;
     ac:contract :pageMetricAccess ; ac:property :date ; ac:field "date" .
 :pageMetricRageClickRateBinding a ac:PropertyBinding ;
-    ac:contract :pageMetricAccess ; ac:property :rageClickRate ; ac:field "rageClickRate" .
+    ac:contract :pageMetricAccess ; ac:property kg:rageClickRate ; ac:field "rageClickRate" .
 :pageMetricDeadClickRateBinding a ac:PropertyBinding ;
-    ac:contract :pageMetricAccess ; ac:property :deadClickRate ; ac:field "deadClickRate" .
+    ac:contract :pageMetricAccess ; ac:property kg:deadClickRate ; ac:field "deadClickRate" .
 :pageMetricRageClickCountBinding a ac:PropertyBinding ;
     ac:contract :pageMetricAccess ; ac:property :rageClickCount ; ac:field "rageClickCount" .
