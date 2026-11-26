@@ -2,13 +2,7 @@
 name: clarity-analytics-ingestion
 skill_type: skill
 description: >-
-  Natively ingest a Microsoft Clarity behavioral-analytics export into the
-  medulla knowledge graph via the clarity-api MCP server — pushing typed
-  :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension nodes
-  plus a :Document summary with their :belongsToProject / :hasInsight /
-  :brokenDownBy links. Use when the agent must persist Clarity metrics into the KG
-  for cross-source reasoning or semantic search. Do NOT use to merely read/return
-  metrics (use clarity-behavioral-insights) or for non-Clarity sources.
+  Natively ingest a Microsoft Clarity behavioral-analytics export into the medulla knowledge graph via the clarity-api MCP server — pushing typed :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension nodes plus a :Document summary with their :belongsToProject / :hasInsight / :brokenDownBy links.
 license: MIT
 tags: [clarity, analytics, knowledge-graph, ingestion, mcp]
 metadata:
@@ -16,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # Clarity Analytics Ingestion
+
+Scope: Natively ingest a Microsoft Clarity behavioral-analytics export into the medulla knowledge graph via the clarity-api MCP server — pushing typed :ClarityProject / :ClaritySession / :BehaviorInsight / :BehaviorDimension nodes plus a :Document summary with their :belongsToProject / :hasInsight / :brokenDownBy links. Use when the agent must persist Clarity metrics into the KG for cross-source reasoning or semantic search. Do NOT use to merely read/return metrics (use clarity-behavioral-insights) or for non-Clarity sources.
 
 Push a Microsoft Clarity Data Export into the ONE medulla knowledge graph
 as **typed OWL nodes** via the `clarity-api` MCP server. Backed by the package's

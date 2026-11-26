@@ -2,10 +2,7 @@
 name: clarity-api-development
 skill_type: skill
 description: >-
-  Develop, test, and publish the clarity-api connector without breaking its
-  typed Clarity export contract, packaged content, spec delivery dashboard, or
-  governed Pages workflow. Use when changing connector code, docs, skills,
-  workflows, or repository-owned specs.
+  Develop, test, and publish the clarity-api connector without breaking its typed Clarity export contract, packaged content, spec delivery dashboard, or governed Pages workflow. Use when changing connector code, docs, skills, workflows, or repository-owned specs.
 license: MIT
 tags: [clarity, connector, development, testing, pages, specs]
 metadata:

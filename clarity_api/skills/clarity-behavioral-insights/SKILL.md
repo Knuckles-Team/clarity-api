@@ -2,14 +2,7 @@
 name: clarity-behavioral-insights
 skill_type: skill
 description: >-
-  Export and interpret Microsoft Clarity behavioral-analytics via the clarity-api
-  MCP server — pull dashboard "live insights" (sessions, bot traffic, distinct
-  users, pages-per-session) over a 1-3 day window, optionally segmented by up to
-  three dimensions (Browser, Device, Country, OS, Source, Medium, Campaign,
-  Channel, URL). Use when the agent must read Clarity metrics, compare traffic by
-  a dimension, or summarize recent behavioral trends. Do NOT use to push those
-  metrics into the knowledge graph (use clarity-analytics-ingestion) or for any
-  non-Clarity web analytics.
+  Export and interpret Microsoft Clarity behavioral-analytics via the clarity-api MCP server — pull dashboard "live insights" (sessions, bot traffic, distinct users, pages-per-session) over a 1-3 day window, optionally segmented by up to three dimensions (Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL).
 license: MIT
 tags: [clarity, analytics, behavioral, web-analytics, mcp]
 metadata:
@@ -17,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # Clarity Behavioral Insights
+
+Scope: Export and interpret Microsoft Clarity behavioral-analytics via the clarity-api MCP server — pull dashboard "live insights" (sessions, bot traffic, distinct users, pages-per-session) over a 1-3 day window, optionally segmented by up to three dimensions (Browser, Device, Country, OS, Source, Medium, Campaign, Channel, URL). Use when the agent must read Clarity metrics, compare traffic by a dimension, or summarize recent behavioral trends. Do NOT use to push those metrics into the knowledge graph (use clarity-analytics-ingestion) or for any non-Clarity web analytics.
 
 Domain-typed access to the Microsoft Clarity **Data Export / Live Insights**
 endpoint (`GET /export-data/api/v1/project-live-insights`) via the `clarity-api`
