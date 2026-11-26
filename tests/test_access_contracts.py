@@ -11,7 +11,6 @@ from scion_sdk.access_contract import parse_access_contracts
 from scion_sdk.connector import build_server
 from scion_sdk.testing.surface_check import served_surface
 
-ROW_ID = "CONN-CLARITY-API-CONNECTOR-CONTENT-R002"
 CONTRACTS = (
     Path(__file__).resolve().parents[1]
     / "clarity_api"
@@ -82,7 +81,7 @@ def _contracts():
     return parse_access_contracts(CONTRACTS.read_text(encoding="utf-8"))
 
 
-@pytest.mark.spec(ROW_ID)
+@pytest.mark.spec("CONN-CLARITY-API-CONNECTOR-CONTENT-R002")
 def test_competency_contracts_certified() -> None:
     tools = served_surface(build_server("clarity_api", command_args=[])[1]).tools
     assert (
@@ -90,7 +89,7 @@ def test_competency_contracts_certified() -> None:
     )
 
 
-@pytest.mark.spec(ROW_ID)
+@pytest.mark.spec("CONN-CLARITY-API-CONNECTOR-CONTENT-R002")
 def test_missing_tool_or_column_fails_certification(tmp_path: Path) -> None:
     entity, want = next(iter(EXPECTED.items()))
     (tmp_path / f"{entity}.json").write_text(json.dumps([{want["key"]: "x"}]))
