@@ -1,21 +1,32 @@
 # Microsoft Clarity API
+## MCP
 
 ![PyPI - Version](https://img.shields.io/pypi/v/clarity-api)
+![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
 ![PyPI - Downloads](https://img.shields.io/pypi/dd/clarity-api)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Knuckles-Team/clarity-api)
 ![GitHub forks](https://img.shields.io/github/forks/Knuckles-Team/clarity-api)
 ![GitHub contributors](https://img.shields.io/github/contributors/Knuckles-Team/clarity-api)
 ![PyPI - License](https://img.shields.io/pypi/l/clarity-api)
 ![GitHub](https://img.shields.io/github/license/Knuckles-Team/clarity-api)
-![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
-
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/clarity-api)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Knuckles-Team/clarity-api)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Knuckles-Team/clarity-api)
 ![GitHub issues](https://img.shields.io/github/issues/Knuckles-Team/clarity-api)
-
 ![GitHub top language](https://img.shields.io/github/languages/top/Knuckles-Team/clarity-api)
+![GitHub language count](https://img.shields.io/github/languages/count/Knuckles-Team/clarity-api)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/clarity-api)
+![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/Knuckles-Team/clarity-api)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/clarity-api)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/clarity-api)
+
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
+> [official documentation](https://knuckles-team.github.io/clarity-api/).
+
+---
+
+## Overview
 
 **Microsoft Clarity API + MCP Server + A2A Agent**
 
@@ -30,20 +41,7 @@ down by up to three dimensions.
 
 This repository is actively maintained — contributions are welcome!
 
-## Table of Contents
-
-- [Architecture](#architecture)
-- [Key Features](#key-features)
-- [Available MCP Tools](#available-mcp-tools)
-- [Dynamic Tool Selection](#dynamic-tool-selection)
-- [Environment Variables](#environment-variables)
-- [Configuration](#configuration)
-- [Agent](#agent)
-- [Usage (Python client)](#usage-python-client)
-- [Security & Governance](#security--governance)
-- [Installation](#installation)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
+---
 
 ## Architecture
 
@@ -74,6 +72,8 @@ graph TD
 | Client | `clarity_api/api/` | `ClarityApiBase` + `ClarityApiInsights` mixins composed into `Api` |
 | Models | `clarity_api/clarity_models.py` | Pydantic request/response validation |
 
+---
+
 ## Key Features
 
 - **Typed Python client** — `clarity_api.api_client.Api`, composed from modular per-domain
@@ -85,7 +85,11 @@ graph TD
 - **Enterprise-ready** — inherits OIDC auth, OpenTelemetry, audit logging, prompt-injection
   defense, and guardrails from `scion-sdk`.
 
-## Available MCP Tools
+---
+
+## MCP
+
+### Available MCP Tools
 
 _Auto-generated — do not edit (synced by the `mcp-readme-table` pre-commit hook)._
 
@@ -112,20 +116,108 @@ _Auto-generated — do not edit (synced by the `mcp-readme-table` pre-commit hoo
 _1 action-routed tool(s) (default) · 1 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
-### Parameters
+#### Parameters
 - `number_of_days` (1, 2, or 3): last 24, 48, or 72 hours.
 - `dimension_1`, `dimension_2`, `dimension_3`: breakdown dimensions.
 
-#### Dimension Options
+##### Dimension Options
 `Browser`, `Device`, `Country`, `OS`, `Source`, `Medium`, `Campaign`, `Channel`, `URL`.
 
-## Dynamic Tool Selection
+### Dynamic Tool Selection
 
 Each tool domain is gated behind an env toggle so deployments can trim their surface:
 
 | Toggle | Default | Domain |
 |--------|---------|--------|
 | `INSIGHTSTOOL` | `True` | `clarity_ingest_insights` |
+
+---
+
+## Agent
+
+The `clarity-agent` entry point (`clarity_api/agent_server.py`) starts a
+Pydantic-AI A2A server that auto-discovers the MCP tools and exposes an AG-UI web
+interface.
+
+### Run locally
+
+```bash
+clarity-agent --web --provider openai --model-id gpt-4o
+```
+
+The agent reads its identity from `clarity_api/agent_data/IDENTITY.md` and discovers
+tools via `mcp_config.json`.
+
+### Deploy with Docker Compose
+
+`docker/agent.compose.yml` runs the MCP server and the agent server side by side;
+the agent connects to the MCP server over `MCP_URL`:
+
+```yaml
+services:
+  clarity-api-mcp:
+    image: example/clarity-api:mcp
+    restart: always
+    env_file: [ ../.env ]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - TRANSPORT=streamable-http
+    ports: [ "8000:8000" ]
+
+  clarity-api-agent:
+    image: example/clarity-api@sha256:<digest>
+    restart: always
+    depends_on: [ clarity-api-mcp ]
+    command: [ "clarity-agent" ]
+    env_file: [ ../.env ]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=9017
+      - MCP_URL=http://clarity-api-mcp:8000/mcp
+      - PROVIDER=${PROVIDER:-openai}
+      - MODEL_ID=${MODEL_ID:-gpt-4o}
+      - ENABLE_WEB_UI=True
+      - ENABLE_OTEL=True
+    ports: [ "9017:9017" ]
+```
+
+```bash
+docker compose -f docker/agent.compose.yml up -d
+```
+
+---
+
+## Usage (Python client)
+
+```python
+#!/usr/bin/python
+# coding: utf-8
+import clarity_api
+
+token = "<TOKEN>"
+url = "https://www.clarity.ms"
+client = clarity_api.Api(url=url, token=token)
+
+response = client.get_data_export(
+    number_of_days=2, dimension_1="OS", dimension_2="Channel"
+)
+print("Status Code:", response.status_code)
+print("JSON Output:", response.json())
+```
+
+---
+
+## Security & Governance
+
+`clarity-api` inherits enterprise infrastructure from `scion-sdk`: JWT/OIDC
+authentication, OpenTelemetry instrumentation, HashiCorp Vault secret resolution,
+append-only audit logging (scion-sdk `AU-OS.governance.wasm-micro-agent-sandbox`), prompt-injection defense
+(`OS-5.1`), and the guardrail engine (`AU-OS.governance.reactive-multi-axis-budget`). The connector stays
+inactive until `CLARITY_URL` and `CLARITY_TOKEN` are configured. Never commit `.env`
+files or tokens.
+
+---
 
 ## Environment Variables
 
@@ -218,6 +310,8 @@ file — see [`.env.example`](.env.example)). Never commit real tokens.
 | `UV_COMPILE_BYTECODE` | `1` | Set in the Docker image to precompile bytecode for faster cold starts. |
 | `NO_COLOR` / `TERM` | `1` / `dumb` | Terminal-control variables set at MCP startup to keep stdio transport output machine-clean. Not app configuration — listed for completeness. |
 
+---
+
 ## Configuration
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `clarity-api[mcp]` to add
@@ -279,85 +373,7 @@ the detailed transport contract.
   `MCP_ALLOWED_HOSTS` in `AgentConfig`.
 <!-- END GENERATED: additional-deployment-options -->
 
-## Agent
-
-The `clarity-agent` entry point (`clarity_api/agent_server.py`) starts a
-Pydantic-AI A2A server that auto-discovers the MCP tools and exposes an AG-UI web
-interface.
-
-### Run locally
-
-```bash
-clarity-agent --web --provider openai --model-id gpt-4o
-```
-
-The agent reads its identity from `clarity_api/agent_data/IDENTITY.md` and discovers
-tools via `mcp_config.json`.
-
-### Deploy with Docker Compose
-
-`docker/agent.compose.yml` runs the MCP server and the agent server side by side;
-the agent connects to the MCP server over `MCP_URL`:
-
-```yaml
-services:
-  clarity-api-mcp:
-    image: example/clarity-api:mcp
-    restart: always
-    env_file: [ ../.env ]
-    environment:
-      - HOST=0.0.0.0
-      - PORT=8000
-      - TRANSPORT=streamable-http
-    ports: [ "8000:8000" ]
-
-  clarity-api-agent:
-    image: example/clarity-api@sha256:<digest>
-    restart: always
-    depends_on: [ clarity-api-mcp ]
-    command: [ "clarity-agent" ]
-    env_file: [ ../.env ]
-    environment:
-      - HOST=0.0.0.0
-      - PORT=9017
-      - MCP_URL=http://clarity-api-mcp:8000/mcp
-      - PROVIDER=${PROVIDER:-openai}
-      - MODEL_ID=${MODEL_ID:-gpt-4o}
-      - ENABLE_WEB_UI=True
-      - ENABLE_OTEL=True
-    ports: [ "9017:9017" ]
-```
-
-```bash
-docker compose -f docker/agent.compose.yml up -d
-```
-
-## Usage (Python client)
-
-```python
-#!/usr/bin/python
-# coding: utf-8
-import clarity_api
-
-token = "<TOKEN>"
-url = "https://www.clarity.ms"
-client = clarity_api.Api(url=url, token=token)
-
-response = client.get_data_export(
-    number_of_days=2, dimension_1="OS", dimension_2="Channel"
-)
-print("Status Code:", response.status_code)
-print("JSON Output:", response.json())
-```
-
-## Security & Governance
-
-`clarity-api` inherits enterprise infrastructure from `scion-sdk`: JWT/OIDC
-authentication, OpenTelemetry instrumentation, HashiCorp Vault secret resolution,
-append-only audit logging (scion-sdk `AU-OS.governance.wasm-micro-agent-sandbox`), prompt-injection defense
-(`OS-5.1`), and the guardrail engine (`AU-OS.governance.reactive-multi-axis-budget`). The connector stays
-inactive until `CLARITY_URL` and `CLARITY_TOKEN` are configured. Never commit `.env`
-files or tokens.
+---
 
 ## Installation
 
@@ -415,6 +431,8 @@ diagrams are documented in the
 1. Go to the operator's Clarity project. Select `Settings` → `Data Export` → `Generate new API token`.
 2. Provide a descriptive name for the token for easy identification.
 
+---
+
 ## Documentation
 
 - [Documentation site](https://knuckles-team.github.io/clarity-api/)
@@ -424,7 +442,18 @@ diagrams are documented in the
 - [Deployment](docs/deployment.md)
 - [Concepts](docs/concepts.md)
 
-## Contributing
+---
+
+## Repository Owners
+
+<img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=example&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
+
+![GitHub followers](https://img.shields.io/github/followers/example)
+![GitHub User's stars](https://img.shields.io/github/stars/example)
+
+---
+
+## Contribute
 
 Contributions are welcome. Run quality checks before pushing:
 
@@ -432,7 +461,6 @@ Contributions are welcome. Run quality checks before pushing:
 pre-commit run --all-files
 python -m pytest -q
 ```
-
 
 <!-- BEGIN scion-sdk-deployment (generated; do not edit between markers) -->
 
